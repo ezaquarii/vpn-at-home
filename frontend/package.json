@@ -57,6 +57,6 @@
         "test": "jest --watch",
         "build-prod": "webpack --config webpack.prod.js",
         "build-devel": "webpack --config webpack.config.js",
-        "lint": "eslint src/**"
+        "lint": "eslint src"
     }
 }
