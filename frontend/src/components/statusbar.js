@@ -1,22 +1,12 @@
+import PropTypes from "prop-types";
 import React from "react";
-import ReactDOM from "react-dom";
-import {Route, Switch, Link} from "react-router-dom";
-import Dashboard from "./clients";
-import LoginView from "./login";
-import { Container, Button, Divider, Dropdown, Grid, Header, Image, List, Menu, Segment } from "semantic-ui-react";
-
-import OpenVpnIcon from "../icons/openvpn.png";
+import {Link} from "react-router-dom";
+import {Container, Button, Menu} from "semantic-ui-react";
 
 export class StatusBar extends React.Component {
 
-    handleItemClick(args) {
-        this.props.history.push("/servers");
-    }
-
     render() {
-
-        const {onLogout, onAddClient, onAddServer, history, features, account} = this.props;
-
+        const {onAddClient, onAddServer, features, account} = this.props;
         return(
             <Menu fixed='top' style={{backgroundColor: "white"}}>
                 <Container>
@@ -47,3 +37,11 @@ export class StatusBar extends React.Component {
         );
     }
 }
+
+StatusBar.propTypes = {
+    onAddServer: PropTypes.func.isRequired,
+    onAddClient: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired,
+    features: PropTypes.object.isRequired,
+    account: PropTypes.object.isRequired
+};
