@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import {bindActionCreators} from "redux";
 import {reduxForm, formValueSelector, Field} from "redux-form";
 
@@ -17,7 +18,6 @@ import {
 import {
     CheckboxField,
     InputField,
-    RangeField
 } from "./forms";
 
 import {
@@ -116,6 +116,13 @@ class SettingsComponent extends React.Component {
         );
     }
 }
+
+SettingsComponent.propTypes = {
+    fetchSettings: PropTypes.func.isRequired,
+    updateSettings: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+    email_enabled: PropTypes.bool.isRequired
+};
 
 const selector = formValueSelector("settings-form");
 function mapStateToProps(state) {
