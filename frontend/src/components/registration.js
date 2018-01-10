@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import {bindActionCreators} from "redux";
 import {reduxForm, Field as ReduxFormField} from "redux-form";
 
@@ -5,9 +6,9 @@ import React from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 
-import {Container, Divider, Dropdown, Grid, Header, Image, List, Menu, Segment, Button, Form, Message} from "semantic-ui-react";
+import {Grid, Header, Segment, Button, Form, Message} from "semantic-ui-react";
 
-import {InputField, InputFormField} from "./forms";
+import {InputField} from "./forms";
 import {register} from "../actions";
 
 
@@ -15,7 +16,6 @@ class RegistrationComponent extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {in_progress: false};
         this.onClickedRegister = this.onClickedRegister.bind(this);
     }
 
@@ -59,9 +59,14 @@ class RegistrationComponent extends React.Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
+RegistrationComponent.propTypes = {
+    register: PropTypes.bool.isRequired,
+    handleSubmit: PropTypes.func.isRequired
+};
 
+function mapStateToProps() {
+    return {
+        // nothing for now
     };
 }
 
@@ -71,5 +76,5 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-const RegistrationFormComponent = reduxForm({form: "login-form"})(RegistrationComponent);
+const RegistrationFormComponent = reduxForm({form: "registration-form"})(RegistrationComponent);
 export const Registration = connect(mapStateToProps, mapDispatchToProps)(RegistrationFormComponent);
