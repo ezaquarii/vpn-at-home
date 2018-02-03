@@ -33,7 +33,8 @@ class CreateServer(APITestWithBaseFixture):
     name = 'Server Name'
     email = 'admin@email.com'
     hostname = 'localhost.localdomain.net'
-    request_dto = {'name': name, 'email': email, 'hostname': hostname}
+    non_default_protocol = Server.PROTOCOL_TCP # non-default protocol
+    request_dto = {'name': name, 'email': email, 'hostname': hostname, 'protocol': non_default_protocol}
 
     def setUp(self):
         response = self.admin_client.post(self.url, self.request_dto)
@@ -53,6 +54,9 @@ class CreateServer(APITestWithBaseFixture):
     def test_cert_name_is_derived_from_server_name(self):
         cert = self.server.cert
         self.assertTrue(self.server.name in cert.name)
+
+    def test_protocol_is_set_to_tcp(self):
+        self.assertEquals(self.server.protocol, self.non_default_protocol)
 
 
 class ListServers(APITestWithBaseFixture):

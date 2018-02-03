@@ -10,6 +10,7 @@ from .models import Server, Client, DhParams
 from .serializers import CreateServerSerializer, ServerSerializer, AdminServerSerializer, CreateClientSerializer, ClientSerializer
 from .utils import ConfigEmailSender
 
+
 class ServerApi(ViewSet):
 
     def create(self, request):

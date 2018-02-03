@@ -16,6 +16,13 @@ class Server(models.Model):
     MAX_NAME_LENGTH = 64
     MAX_HOSTNAME_LENGTH = 128
 
+    PROTOCOL_UDP = 'udp'
+    PROTOCOL_TCP = 'tcp'
+    PROTOCOL_CHOICES = (
+        (PROTOCOL_UDP, 'UDP'),
+        (PROTOCOL_TCP, 'TCP'),
+    )
+
     class Meta:
         permissions = (
             ('download_server_config', 'Download server config'),
@@ -29,6 +36,7 @@ class Server(models.Model):
     cert = models.ForeignKey('x509.Cert', on_delete=models.CASCADE, related_name='+')
     tls_auth_key = models.CharField(max_length=8192)
     dhparams = models.ForeignKey(DhParams, on_delete=models.CASCADE)
+    protocol = models.CharField(choices=PROTOCOL_CHOICES, default=PROTOCOL_UDP, max_length=10)
 
     def __str__(self):
         return 'Server {name}, {hostname}, {owner}'.format(name=self.name, hostname=self.hostname, owner=self.email)
@@ -57,7 +65,8 @@ class Server(models.Model):
             'cert': self.cert.certificate.strip(),
             'key': self.cert.private_key.strip(),
             'dh': self.dhparams.dhparams.strip(),
-            'tls_auth': self.tls_auth_key.strip()
+            'tls_auth': self.tls_auth_key.strip(),
+            'protocol': self.protocol
         }
         return render_to_string('server.ovpn', context=context)
 
@@ -99,6 +108,7 @@ class Client(models.Model):
             'cert': self.cert.certificate.strip(),
             'key': self.cert.private_key.strip(),
             'tls_auth': self.server.tls_auth_key,
-            'server_hostname': self.server.hostname
+            'server_hostname': self.server.hostname,
+            'protocol': self.server.protocol
         }
         return render_to_string('client.ovpn', context=context)

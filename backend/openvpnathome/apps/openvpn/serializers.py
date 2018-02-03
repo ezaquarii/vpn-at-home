@@ -39,6 +39,7 @@ class CreateServerSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=Server.MAX_NAME_LENGTH)
     hostname = serializers.CharField(max_length=Server.MAX_HOSTNAME_LENGTH, allow_blank=False)
     email = serializers.EmailField(required=False)
+    protocol = serializers.RegexField(regex="tcp|udp", required=False, default="udp")
 
     def create(self, validated_data):
         owner = self.context['owner']
@@ -65,7 +66,8 @@ class CreateServerSerializer(serializers.Serializer):
                                        ca=ca,
                                        cert=cert,
                                        tls_auth_key=tls_auth_key,
-                                       dhparams=dhparams)
+                                       dhparams=dhparams,
+                                       protocol=validated_data['protocol'])
 
         return server
 

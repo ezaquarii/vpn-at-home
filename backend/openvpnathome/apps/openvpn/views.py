@@ -10,7 +10,7 @@ from .models import Client, Server
 @method_decorator(login_required, name='dispatch')
 class DownloadServerConfig(View):
 
-    def get(self, request, server_id):
+    def get(self, request, server_id, **kwargs):
         server = get_object_or_404(Server, owner=self.request.user, id=server_id)
         return HttpResponse(content=server.render_to_string(), content_type=server.mimetype)
 
