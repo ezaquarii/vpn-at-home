@@ -29,5 +29,5 @@ lint:
 distclean:
 	rm -rf node_modules
 	rm -rf dist
-	rm -f yarn.lock
+	rm -f package-lock.json
 	@echo "All frontend build data deleted."
