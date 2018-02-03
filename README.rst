@@ -5,7 +5,7 @@ OpenVPN@Home
 Legal mumbo-jumbo
 =================
 
-© 2002-2017 OpenVPN Inc.
+© 2002-2018 OpenVPN Inc.
 OpenVPN is a registered trademark of OpenVPN  Inc.
 
 This project is not endorsed by, sponsored or affiliated with OpenVPN Inc.
