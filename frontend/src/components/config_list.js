@@ -1,6 +1,7 @@
+import PropTypes from "prop-types";
 import React from "react";
 
-import {Table, Icon, Loader, Segment} from "semantic-ui-react";
+import {Table, Icon, Loader} from "semantic-ui-react";
 
 import moment from "moment";
 
@@ -42,6 +43,12 @@ const ConfigListItem = function (props) {
             </Table.Cell>
         </Table.Row>
     );
+};
+
+ConfigListItem.propTypes = {
+    item: PropTypes.object.isRequired,
+    onSendEmail: PropTypes.func,
+    sending: PropTypes.bool
 };
 
 export const ConfigList = function(props) {
