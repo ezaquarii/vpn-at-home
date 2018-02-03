@@ -8,7 +8,7 @@ import {
 import {Button, Icon, Modal, Container} from "semantic-ui-react";
 
 import {ConfigList} from "./config_list";
-import {InputField} from "./forms";
+import {InputField, SelectField} from "./forms";
 
 
 export class ServersList extends React.Component {
@@ -29,6 +29,12 @@ ServersList.propTypes = {
 const AddServerForm = function (props) {
 
     const {onDiscard, handleSubmit, valid} = props;
+
+    const protocolOptions = [
+        {key: "udp", value: "udp", text: "UDP"},
+        {key: "tcp", value: "tcp", text: "TCP"},
+    ];
+
     return(
         <Modal open as='form' className="form" onSubmit={handleSubmit}>
 
@@ -36,8 +42,9 @@ const AddServerForm = function (props) {
             <Modal.Content>
 
                 <Container>
-                    <ReduxFormField component={InputField} icon='user' iconPosition='left' name='vpn_name' placeholder={"VPN Server Name"}/>
-                    <ReduxFormField component={InputField} icon='server' iconPosition='left' name='vpn_hostname' placeholder={"VPN Server IP Address Or Hostname"}/>
+                    <ReduxFormField component={InputField} label="VPN Server Name" icon='user' iconPosition='left' name='vpn_name' placeholder={"VPN Server Name"}/>
+                    <ReduxFormField component={InputField} label="VPN Server IP Address Or Hostname" icon='server' iconPosition='left' name='vpn_hostname' placeholder={"VPN Server IP Address Or Hostname"}/>
+                    <ReduxFormField component={SelectField} label="VPN carrier protocol" name="vpn_protocol" options={protocolOptions} placeholder={"VPN carrier protocol"}/>
                 </Container>
 
             </Modal.Content>
@@ -75,4 +82,8 @@ const addServerValidator = function (values) {
     return errors;
 };
 
-export const AddServer = reduxForm({form: "add-server-form", validate: addServerValidator})(AddServerForm);
+export const AddServer = reduxForm({
+    form: "add-server-form",
+    validate: addServerValidator,
+    initialValues: {vpn_protocol: "udp"}
+})(AddServerForm);

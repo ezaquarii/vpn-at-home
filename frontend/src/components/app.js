@@ -66,7 +66,7 @@ class AppComponent extends React.Component {
 
     onAddServer(form) {
         this.setState({adding_server: false});
-        this.props.addServer({name: form.vpn_name, hostname: form.vpn_hostname});
+        this.props.addServer({name: form.vpn_name, hostname: form.vpn_hostname, protocol: form.vpn_protocol});
     }
 
     renderAuthenticated() {
