@@ -25,6 +25,14 @@ from .email import *
 
 ROOT_URLCONF = 'openvpnathome.urls'
 WSGI_APPLICATION = 'openvpnathome.wsgi.application'
-ALLOWED_HOSTS = ['*']
-INTERNAL_IPS = ['127.0.0.1']
 
+
+try:
+    from openvpnathome.config import ALLOWED_HOSTS
+except:
+    ALLOWED_HOSTS = ['*']
+
+try:
+    from openvpnathome.config import INTERNAL_IPS
+except:
+    INTERNAL_IPS = ['127.0.0.1']
