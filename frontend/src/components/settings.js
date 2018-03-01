@@ -121,7 +121,7 @@ SettingsComponent.propTypes = {
     fetchSettings: PropTypes.func.isRequired,
     updateSettings: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    email_enabled: PropTypes.bool.isRequired
+    email_enabled: PropTypes.bool
 };
 
 const selector = formValueSelector("settings-form");
