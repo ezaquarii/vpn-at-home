@@ -65,7 +65,7 @@ const AddServerForm = function (props) {
 AddServerForm.propTypes = {
     onDiscard: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    valid: PropTypes.bools
+    valid: PropTypes.bool
 };
 
 const addServerValidator = function (values) {

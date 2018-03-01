@@ -41,7 +41,6 @@ export class StatusBar extends React.Component {
 StatusBar.propTypes = {
     onAddServer: PropTypes.func.isRequired,
     onAddClient: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired,
     features: PropTypes.object.isRequired,
     account: PropTypes.object.isRequired
 };
