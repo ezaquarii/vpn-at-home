@@ -26,6 +26,8 @@ class Command(ManagementCommand):
         super().add_arguments(parser)
         parser.add_argument('-d', '--development', action='store_true', help="Configure for development")
         parser.add_argument('-p', '--preview', action='store_true', help="Dump generated config to stdout, do not write.")
+        parser.add_argument('-c', '--config-template', help='Supply your own configuration file template.')
+        parser.add_argument('-f', '--force', action='store_true', help="Force overwriting config if it already exists")
 
     @property
     def option_development(self):
@@ -36,16 +38,25 @@ class Command(ManagementCommand):
         return self.options.get('development', False)
 
     @property
+    def option_config_template(self):
+        template = self.options.get('config_template')
+        return template if template is not None else CONFIG_TEMPLATE_FILE_PATH
+
+    @property
     def option_preview(self):
         return self.options.get('preview', False)
 
+    @property
+    def option_force(self):
+        return self.options.get('force', False)
+
     def run(self, *args, **options):
-        if path.exists(CONFIG_FILE_PATH) and not self.option_preview:
-            self.warn('Config file already exist.')
+        if path.exists(CONFIG_FILE_PATH) and not self.option_preview and not self.option_force:
+            self.warn('Config file already exist. Skipping.')
         else:
-            if not path.isfile(CONFIG_TEMPLATE_FILE_PATH):
-                raise FileNotFoundError('Config template {} not found'.format(CONFIG_TEMPLATE_FILE_PATH))
-            with open(CONFIG_TEMPLATE_FILE_PATH, "r") as config_template_file:
+            if not path.isfile(self.option_config_template):
+                raise FileNotFoundError('Config template {} not found'.format(self.option_config_template))
+            with open(self.option_config_template, "r") as config_template_file:
                 config_template = config_template_file.read()
 
             engine = engines['django']
