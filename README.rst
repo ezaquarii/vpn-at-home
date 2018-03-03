@@ -201,6 +201,7 @@ Known issues
 
 I left this as the last point, hoping not to scare anybody.
 
+ * database schema migrations doesn't work - you need to bootstrap new DB when upgrading
  * only one sever can be managed (I don't need more for now)
  * network errors are handled displaying alert() - happy path only, works for me 100%
  * frontend has 0% test coverage :o)
