@@ -1,5 +1,5 @@
 asn1crypto==0.24.0
-cffi==1.11.2
+cffi==1.11.5
 coverage==4.4.2
 cryptography==2.1.4
 decorator==4.1.2
@@ -7,9 +7,9 @@ Django==2.0.1
 django-constance==2.0.0
 django-cors-headers==2.1.0
 django-debug-toolbar==1.9.1
-django-model-utils==3.0.0
+django-model-utils==3.1.1
 django-picklefield==1.0.0
-django-x509==0.3.5a0
+django-x509==0.4
 djangorestframework==3.7.7
 idna==2.6
 ipdb==0.10.3
@@ -25,7 +25,7 @@ ptyprocess==0.5.2
 pycparser==2.18
 Pygments==2.2.0
 pyOpenSSL==17.5.0
-pytz==2017.3
+pytz==2018.3
 simplegeneric==0.8.1
 six==1.11.0
 sqlparse==0.2.4

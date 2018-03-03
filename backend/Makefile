@@ -19,7 +19,6 @@ devel: install configure
 
 install: $(ENV)
 	$(PIP) install -U setuptools
-	$(PIP) install deps/django_x509-0.3.5a0-py2.py3-none-any.whl
 	$(PIP) install -r requirements.txt
 
 configure: install
