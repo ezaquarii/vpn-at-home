@@ -22,8 +22,8 @@
         "redux-promise": "^0.5.3",
         "redux-thunk": "^2.2.0",
         "reselect": "^3.0.1",
-        "semantic-ui-css": "^2.2.12",
-        "semantic-ui-react": "^0.77.1",
+        "semantic-ui-css": "2.2.12",
+        "semantic-ui-react": "0.77.1",
         "universal-cookie": "^2.1.2",
         "uuid4": "^1.0.0"
     },

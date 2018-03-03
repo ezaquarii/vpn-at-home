@@ -2,7 +2,4 @@
 .full-height {
     height: 100%;
 }
-//Temp fix misposition modal
-.ui.page.modals.dimmer.transition.visible.active {
-	display: flex !important;
-}
+
