@@ -16,6 +16,7 @@ all:
 
 devel: install configure
 	$(PYTHON) manage.py bootstrap
+	$(PYTHON) manage.py configure
 
 install: $(ENV)
 	$(PIP) install -U setuptools
