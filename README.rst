@@ -75,7 +75,7 @@ with a single command:
 
 ::
 
-    $ git clone https://github.com/ezaquarii/openvpnathome
+    $ git clone https://github.com/ezaquarii/openvpn-at-home
     $ cd openvpnathome
     $ make devel
     ... frontend is bootstrapped ...
