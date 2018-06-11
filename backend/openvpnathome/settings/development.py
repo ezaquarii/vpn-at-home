@@ -1,9 +1,5 @@
-DEVELOPMENT = False
+from openvpnathome.settings import USER_SETTINGS
 
-try:
-    from openvpnathome.config import DEVELOPMENT
-except:
-    pass
-
-DEBUG = DEVELOPMENT
-DEBUG_TOOLBAR_ENABLED = DEVELOPMENT
+DEVELOPMENT = USER_SETTINGS.development
+DEBUG = USER_SETTINGS.development
+DEBUG_TOOLBAR_ENABLED = USER_SETTINGS.development

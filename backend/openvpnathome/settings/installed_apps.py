@@ -1,3 +1,5 @@
+from openvpnathome.settings import USER_SETTINGS
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -18,6 +20,5 @@ INSTALLED_APPS = [
     'openvpnathome.apps.openvpn'
 ]
 
-from django.conf import settings as _settings
-if _settings.DEBUG_TOOLBAR_ENABLED:
+if USER_SETTINGS.development:
     INSTALLED_APPS.append('debug_toolbar')

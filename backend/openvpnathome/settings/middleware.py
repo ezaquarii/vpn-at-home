@@ -1,4 +1,4 @@
-from django.conf import settings
+from openvpnathome.settings import USER_SETTINGS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -10,5 +10,5 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-if settings.DEBUG_TOOLBAR_ENABLED:
+if USER_SETTINGS.development:
     MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')

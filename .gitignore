@@ -1,6 +1,6 @@
 .idea
 env
 tmp
-db.sqlite3
 /static
-
+settings.json
+db

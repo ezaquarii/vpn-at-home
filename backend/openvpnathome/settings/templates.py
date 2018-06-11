@@ -1,9 +1,9 @@
-from django.conf import settings as _settings
+from openvpnathome.settings import USER_SETTINGS
 from openvpnathome import get_frontend_path
 
 
 def extra_template_dirs():
-    if _settings.DEVELOPMENT:
+    if USER_SETTINGS.development:
         return [get_frontend_path('dist')]
     else:
         return []

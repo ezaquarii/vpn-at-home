@@ -7,6 +7,16 @@ from operator import attrgetter as _attrgetter
 from django.core.validators import ValidationError
 
 
+def get_nested_item(obj, path):
+    keys = path.split('.')
+    try:
+        for key in keys:
+            obj = obj[key]
+        return obj
+    except Exception:
+        raise KeyError(path)
+
+
 def get_nested_attr(obj, path, default_value=None, raise_exception=False):
     """
     Get nested object property. It uses ``operator.attrgetter`` internally.

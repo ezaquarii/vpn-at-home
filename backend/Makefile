@@ -1,43 +1,39 @@
-ENV := "env"
-PYTHON := $(ENV)/bin/python3
-PIP := $(ENV)/bin/pip3
+VIRTUALENV ?= "$(CURDIR)/env"
+PYTHON := $(VIRTUALENV)/bin/python3
+PIP := $(VIRTUALENV)/bin/pip3
 
-.PHONY: install configure
+.PHONY: install configure virtualenv
 
 all:
 	@echo "Welcome to OpenVPN@Home make system"
 	@echo ""
 	@echo "Available targets:"
-	@echo " * devel     - boostrap project for development (your first choice)"
-	@echo " * install   - install virtual environment and all dependencies"
-	@echo " * distclean - clean project, delete all data (start from 'git clone' state)"
-	@echo " * runserver - start development server"
-	@echo " * test      - run full test suite"
+	@echo " * devel      - boostrap project for development (your first choice)"
+	@echo " * virtualenv - install virtual environment and all dependencies"
+	@echo " * runserver  - start development server"
+	@echo " * test       - run full test suite"
+	@echo
+	@echo "Python virtualenv installed in VIRTUALENV = $(VIRTUALENV)"
 
-devel: install configure
+devel: virtualenv configure
 	$(PYTHON) manage.py bootstrap
 	$(PYTHON) manage.py configure
 
-install: $(ENV)
-	$(PIP) install -U setuptools
-	$(PIP) install -r requirements.txt
-
-configure: install
+configure:
 	$(PYTHON) manage.py configure -d
 
-$(ENV):
+virtualenv: $(VIRTUALENV)
+
+$(VIRTUALENV):
+	@echo
 	@echo "Creating Python virtual environemnt"
-	virtualenv -p python3 --no-setuptools $(ENV)
+	@echo
+	virtualenv -p python3 --no-setuptools $(VIRTUALENV)
+	$(PIP) install -U setuptools
+	$(PIP) install -r requirements.txt
 
 test:
 	$(PYTHON) manage.py test
 
 runserver:
 	$(PYTHON) manage.py runserver 8001
-
-distclean:
-	@[ -d openvpnathome ];
-	rm -f db.sqlite3
-	rm -rf env
-	rm -f openvpnathome/config.py
-	@echo "All backend data deleted."

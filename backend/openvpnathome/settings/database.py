@@ -1,13 +1,5 @@
-from openvpnathome import get_root_path
+from openvpnathome.settings import USER_SETTINGS
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': get_root_path('db.sqlite3'),
-    }
+    'default': USER_SETTINGS.database
 }
-
-try:
-    from openvpnathome.config import DATABASES
-except:
-    pass

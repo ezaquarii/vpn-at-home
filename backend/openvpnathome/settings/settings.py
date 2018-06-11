@@ -10,8 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
+ROOT_URLCONF = 'openvpnathome.urls'
+WSGI_APPLICATION = 'openvpnathome.wsgi.application'
+
+from openvpnathome.settings import USER_SETTINGS
+
+SECRET_KEY = USER_SETTINGS.secret_key
+ALLOWED_HOSTS = USER_SETTINGS.allowed_hosts
+INTERNAL_IPS = USER_SETTINGS.internal_ips
+
 from .development import *
-from .secret import *
 from .installed_apps import *
 from .middleware import *
 from .templates import *
@@ -23,16 +31,4 @@ from .database import *
 from .static import *
 from .email import *
 
-ROOT_URLCONF = 'openvpnathome.urls'
-WSGI_APPLICATION = 'openvpnathome.wsgi.application'
 
-
-try:
-    from openvpnathome.config import ALLOWED_HOSTS
-except:
-    ALLOWED_HOSTS = ['*']
-
-try:
-    from openvpnathome.config import INTERNAL_IPS
-except:
-    INTERNAL_IPS = ['127.0.0.1']
