@@ -12,15 +12,15 @@ User = get_user_model()
 
 class Command(ManagementCommand):
 
-    DEFAULT_ADMIN_USER_EMAIL = 'admin@openvpnathome.net'
-    DEFAULT_ADMIN_PASSWORD = 'admin123'
+    DEFAULT_ADMIN_USER_EMAIL = 'admin@localhost'
+    DEFAULT_ADMIN_PASSWORD = 'admin1234'
 
     def add_arguments(self, parser):
         super().add_arguments(parser)
         parser.add_argument('-d', '--development', action='store_true', help="Bootstrap for development")
         parser.add_argument('-m', '--disable-migrations', action='store_true', help="Do not run DB migrations")
-        parser.add_argument('-a', '--admin-user', help='Admin account email')
-        parser.add_argument('-p', '--admin-password', help='Admin account password')
+        parser.add_argument('-a', '--admin-user', default=self.DEFAULT_ADMIN_USER_EMAIL, help='Admin account email')
+        parser.add_argument('-p', '--admin-password', default=self.DEFAULT_ADMIN_PASSWORD, help='Admin account password')
 
     @property
     def option_disable_migrations(self):

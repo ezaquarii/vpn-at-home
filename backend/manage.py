@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/srv/openvpnathome/env/bin/python3
 import os
 import sys
 

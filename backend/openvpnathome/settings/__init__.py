@@ -36,8 +36,6 @@ DEFAULT_USER_SETTINGS = {
     },
     'database': {
         '__doc__': "This object will be put verbatim into Django DATABASES['default'] setting. See Django DATABASES documentation.",
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': _get_root_path('db/db.sqlite3'),
     }
 }
 

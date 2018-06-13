@@ -1,0 +1,16 @@
+[Unit]
+Description=OpenVPN@Home app
+After=syslog.target
+
+[Service]
+ExecStart=/srv/openvpnathome/bin/uwsgi.sh
+User=openvpnathome
+Group=openvpnathome
+Restart=on-failure
+Type=notify
+StandardError=syslog
+NotifyAccess=all
+WorkingDirectory=/srv/openvpnathome/
+
+[Install]
+WantedBy=default.target

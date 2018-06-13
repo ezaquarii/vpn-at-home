@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 
 from . import ManagementCommand
 
+from openvpnathome import get_root_path
 from openvpnathome.settings import UserSettings, DEFAULT_USER_SETTINGS
 from openvpnathome.utils import get_object_or_none
 
@@ -51,6 +52,10 @@ class Command(ManagementCommand):
             new_settings['development'] = self.option_development
             new_settings['email']['to'] = admin.email if admin else ''
             new_settings['email']['from'] = admin.email if admin else ''
+            new_settings['database'].update(**{
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': get_root_path('db/db.sqlite3'),
+            })
 
             if self.option_preview:
                 settings_json =json.dumps(new_settings, indent=4)
