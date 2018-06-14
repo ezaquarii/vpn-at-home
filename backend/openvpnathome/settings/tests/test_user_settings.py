@@ -3,14 +3,14 @@ from os import path
 from unittest import TestCase
 import uuid
 
-from openvpnathome.settings import UserSettings, DEFAULT_SETTINGS
+from openvpnathome.settings import UserSettings, DEFAULT_USER_SETTINGS
 
 
 class TestDefaultUserSettings(TestCase):
 
     def test_loads_default_settings(self):
         settings = UserSettings(settings_file_path='/some-non-existing-file')
-        self.assertEqual(settings.email_enabled, DEFAULT_SETTINGS['email']['enabled'])
+        self.assertEqual(settings.email_enabled, DEFAULT_USER_SETTINGS['email']['enabled'])
 
 
 class TestWriteUserSettings(TestCase):
@@ -19,7 +19,7 @@ class TestWriteUserSettings(TestCase):
         self.tmp_dir = tempfile.mkdtemp()
         self.settings_file_path = path.join(self.tmp_dir, 'settings.json')
         self.assertFalse(path.exists(self.settings_file_path))
-        self.settings = DEFAULT_SETTINGS.copy()
+        self.settings = DEFAULT_USER_SETTINGS.copy()
         self.secret_key = str(uuid.uuid4())
         self.settings['secret_key'] = self.secret_key
 

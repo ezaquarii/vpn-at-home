@@ -52,3 +52,6 @@ class APITestWithBaseFixture(APITestCase, BaseFixtureMixin):
         self.assertEqual(response.status_code, status, message)
 
 
+def is_running_under_test():
+    import sys
+    return 'test' in sys.argv

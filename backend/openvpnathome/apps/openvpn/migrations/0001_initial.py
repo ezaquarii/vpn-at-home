@@ -4,6 +4,23 @@ from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
 
+from openvpnathome.tests import is_running_under_test
+from openvpnathome.apps.openvpn.utils import generate_dhparams
+
+
+TEST_DHPARAMS = "-----BEGIN DH PARAMETERS-----\n"\
+                "MCYCIQCZRsh+9KB+NQA6sDHCEyhCUgNcEx4cz7P6ale/UpygWwIBAg==\n"\
+                "-----END DH PARAMETERS-----"
+
+
+def create_dhparams(apps, schema_editor):
+    DhParams = apps.get_model('openvpn', 'DhParams')
+    if not is_running_under_test():
+        generated_dhparams = generate_dhparams()
+        DhParams.objects.create(dhparams=generated_dhparams)
+    else:
+        DhParams.objects.create(dhparams=TEST_DHPARAMS)
+
 
 class Migration(migrations.Migration):
 
@@ -55,4 +72,5 @@ class Migration(migrations.Migration):
             name='server',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='openvpn.Server'),
         ),
+        migrations.RunPython(create_dhparams)
     ]

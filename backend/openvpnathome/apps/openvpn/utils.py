@@ -1,10 +1,9 @@
 import subprocess
 
 from django.core.mail import EmailMessage
-from django.template.loader import get_template, render_to_string
 
 from openvpnathome.apps.management.mail import EmailSender
-from .models import DhParams
+
 
 def generate_dhparams():
     """
