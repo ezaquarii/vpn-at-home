@@ -20,5 +20,5 @@ INSTALLED_APPS = [
     'openvpnathome.apps.openvpn'
 ]
 
-if USER_SETTINGS.development:
+if USER_SETTINGS.debug_toolbar_enabled and USER_SETTINGS.development:
     INSTALLED_APPS.append('debug_toolbar')

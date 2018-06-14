@@ -1,6 +1,8 @@
 from unittest import TestCase
 
 from openvpnathome.utils import get_nested_item
+from openvpnathome import utils
+
 
 class TestGetNestedItem(TestCase):
 
@@ -23,3 +25,12 @@ class TestGetNestedItem(TestCase):
             self.fail()
         except KeyError:
             pass
+
+
+class TestIsDatabaseMigrated(TestCase):
+
+    def test_is_migrated(self):
+        self.assertTrue(utils.is_database_migrated())
+
+    def test_unknown_database_is_not_migrated(self):
+        self.assertFalse(utils.is_database_migrated('unknown-database'))

@@ -1,4 +1,5 @@
 from openvpnathome.settings import USER_SETTINGS
+from openvpnathome.utils import is_database_migrated
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -10,5 +11,5 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-if USER_SETTINGS.development:
+if USER_SETTINGS.debug_toolbar_enabled and USER_SETTINGS.development:
     MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')

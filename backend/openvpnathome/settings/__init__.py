@@ -20,8 +20,11 @@ SETTINGS_FILE_PATH = _get_root_path("settings.json")
 
 DEFAULT_USER_SETTINGS = {
     '__version__': 1,
-    '__doc__': 'This is the application settings file. Do not modify Python files.',
+    '__doc__': 'This is the application settings file. Do not modify Python files. '
+               'Review it and change configured to True.',
+    'configured': False,
     'development': True,
+    'debug_toolbar_enabled': False,
     'secret_key': 'secret-key-not-set',
     'allowed_hosts': ['*'],
     'internal_ips': ['127.0.0.1'],
@@ -36,6 +39,8 @@ DEFAULT_USER_SETTINGS = {
     },
     'database': {
         '__doc__': "This object will be put verbatim into Django DATABASES['default'] setting. See Django DATABASES documentation.",
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ':memory:',
     }
 }
 
@@ -64,6 +69,10 @@ class UserSettings(object):
     def write(self):
         with open(self.settings_file_path, 'w') as of:
             json.dump(self._settings, of, indent=4)
+
+    @property
+    def is_configured(self):
+        return self.get('configured')
 
     @property
     def has_settings_file(self):
@@ -112,11 +121,13 @@ class UserSettings(object):
     @property
     def internal_ips(self):
         return self.get('internal_ips')
-    
+
     @property
     def development(self):
         return self.get('development')
 
+    @property
+    def debug_toolbar_enabled(self):
+        return self.get('debug_toolbar_enabled')
 
 USER_SETTINGS = UserSettings()
-pass
