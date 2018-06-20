@@ -1,5 +1,5 @@
-openvpnathome (1.0.0-1) unstable; urgency=medium
+openvpnathome (1.4.0-1) unstable; urgency=medium
 
-  * Initial release
+  * Initial packaged release
 
- -- Chris Narkiewicz <hello@ezaquarii.com>  Mon, 11 Jun 2018 15:38:30 +0100
+ -- Chris Narkiewicz <hello@ezaquarii.com>  Mon, 20 Jun 2018 21:20:30 +0100

@@ -11,6 +11,7 @@ echo ""
 
 exec uwsgi --ini ${APP_DIR}/uwsgi.ini \
            --chdir ${APP_DIR} \
-           --static-map "/static=${STATIC_DIR}"
+           --static-map "/static=${STATIC_DIR}" \
            --uid ${APP_USER} \
-           --gid ${APP_USER}
+           --gid ${APP_USER} \
+           --logger file:logfile=${LOGS_DIR}/uwsgi.log,maxsize=10485760

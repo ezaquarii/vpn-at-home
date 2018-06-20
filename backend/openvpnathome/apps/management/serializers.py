@@ -7,5 +7,10 @@ class SettingsSerializer(serializers.ModelSerializer):
 
     class Meta():
         model = Settings
-        fields = '__all__'
-        read_only_fields = ['id']
+        fields = ('email_enabled',
+                  'email_from',
+                  'email_smtp_server',
+                  'email_smtp_port',
+                  'email_smtp_login',
+                  'email_smtp_password',
+                  'registration_enabled')

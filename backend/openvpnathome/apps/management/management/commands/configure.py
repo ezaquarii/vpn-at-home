@@ -24,6 +24,7 @@ class Command(ManagementCommand):
         parser.add_argument('-d', '--development', action='store_true', help="Configure for development")
         parser.add_argument('-p', '--preview', action='store_true', help="Dump generated config to stdout, do not write.")
         parser.add_argument('-f', '--force', action='store_true', help="Force overwriting config if it already exists")
+        parser.add_argument('-a', '--accept', action='store_true', help="Accept configuration (sets 'configured' flag to true)")
 
     @property
     def option_development(self):
@@ -41,6 +42,10 @@ class Command(ManagementCommand):
     def option_force(self):
         return self.options.get('force', False)
 
+    @property
+    def option_accept(self):
+        return self.options.get('accept', False)
+
     def run(self, *args, **options):
         user_settings = UserSettings()
         if user_settings.has_settings_file and not self.option_preview and not self.option_force:
@@ -56,6 +61,13 @@ class Command(ManagementCommand):
                 'ENGINE': 'django.db.backends.sqlite3',
                 'NAME': get_root_path('db/db.sqlite3'),
             })
+            if self.option_development:
+                new_settings['configured'] = True
+                new_settings['debug_toolbar_enabled'] = True
+
+            if self.option_accept:
+                self.log('Automatically accepting default configuration.')
+                new_settings['configured'] = True
 
             if self.option_preview:
                 settings_json =json.dumps(new_settings, indent=4)
@@ -65,9 +77,9 @@ class Command(ManagementCommand):
                 user_settings.write()
 
             if self.option_development:
-                self.log('Created configuration file to {file} (development)'.format(file=user_settings.settings_file_path))
+                self.log('Created configuration file {file} (development)'.format(file=user_settings.settings_file_path))
             else:
-                self.log('Created configuration file to {file}'.format(file=user_settings.settings_file_path))
+                self.log('Created configuration file {file}'.format(file=user_settings.settings_file_path))
 
     @staticmethod
     def create_secret_key():

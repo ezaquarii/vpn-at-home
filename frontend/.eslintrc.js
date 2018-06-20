@@ -1,34 +1,22 @@
 module.exports = {
-    "env": {
-        "browser": true,
-        "es6": true
+    root: true,
+    env: {
+        node: true,
+        es6: true
     },
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended"
+    extends: [
+        'eslint:recommended',
+        'plugin:vue/essential',
+        '@vue/standard'
     ],
-    "parserOptions": {
-        "sourceType": "module",
+    rules: {
+        'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+        'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+        'indent': ['error', 4],
+        'semi': ['error', 'always'],
+        'padded-blocks': ['error', {classes: 'always'}],
     },
-    "plugins": [
-        "react"
-    ],
-    "rules": {
-        "indent": [
-            "error",
-            4
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "double"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ]
+    parserOptions: {
+        parser: 'babel-eslint'
     }
-};
+}

@@ -1,4 +1,4 @@
-VIRTUALENV ?= "$(CURDIR)/env"
+VIRTUALENV ?= "$(CURDIR)/../env"
 PYTHON := $(VIRTUALENV)/bin/python3
 PIP := $(VIRTUALENV)/bin/pip3
 
@@ -15,18 +15,17 @@ all:
 	@echo
 	@echo "Python virtualenv installed in VIRTUALENV = $(VIRTUALENV)"
 
-devel: virtualenv configure
-	$(PYTHON) manage.py bootstrap
-	$(PYTHON) manage.py configure
-
-configure:
-	$(PYTHON) manage.py configure -d
+devel: virtualenv
+	$(PYTHON) manage.py configure --devel
+	$(PYTHON) manage.py migrate
+	$(PYTHON) manage.py set_admin admin@localhost admin1234
 
 virtualenv: $(VIRTUALENV)
 
 $(VIRTUALENV):
 	@echo
 	@echo "Creating Python virtual environemnt"
+	@echo "Destination: $(VIRTUALENV)"
 	@echo
 	virtualenv -p python3 --no-setuptools $(VIRTUALENV)
 	$(PIP) install -U setuptools
@@ -36,4 +35,4 @@ test:
 	$(PYTHON) manage.py test
 
 runserver:
-	$(PYTHON) manage.py runserver 8001
+	$(PYTHON) manage.py runserver --insecure 8001

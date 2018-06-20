@@ -22,10 +22,17 @@ DEPLOYMENT_DIR=/srv/openvpnathome
 DEPLOYMENT_DB_DIR="${DEPLOYMENT_DIR}/db/"
 APP_USER="openvpnathome"
 
+remove_user() {
+    if [ $(getent passwd ${APP_USER}) ]; then
+        echo "Removing user ${APP_USER}"
+        userdel ${APP_USER}
+    fi
+}
+
+
 case "$1" in
     remove)
-        echo "Removing ${APP_USER}"
-        userdel ${APP_USER}
+        remove_user
     ;;
 
     purge)

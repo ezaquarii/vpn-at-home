@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2018-06-20
+----------
+
+* frontend rewritten in Vue.js
+* debian package!
+* onboarding tutorial
+
 2018-03-03
 ----------
 

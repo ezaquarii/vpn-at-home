@@ -20,7 +20,6 @@ all:
 
 devel: devel_backend devel_frontend
 	@echo "Development environment is ready"
-	@echo "Run backend/manage.py bootstrap to initialize the database
 
 
 devel_backend:
@@ -36,45 +35,39 @@ distclean:
 	@echo
 	@echo "Cleaning working directory"
 	@echo
-	#$(MAKE) -C frontend distclean
-	#rm -rf $(DEVEL_VIRTUALENV_DIR)
-	#rm -rf $(DATABASE_DIR)
-	#rm -rf $(CONFIG_FILE)
+	$(MAKE) -C frontend distclean
+	rm -rf $(DEVEL_VIRTUALENV_DIR)
+	rm -rf $(DATABASE_DIR)
+	rm -rf $(CONFIG_FILE)
+	rm -rf static
 
 
 runserver:
-	$(MAKE) -C backend runserver
+	$(MAKE) -C backend runserver VIRTUALENV=$(DEVEL_VIRTUALENV_DIR)
 
-
-install: install_virtualenv install_backend install_etc
-	@echo "Backend installed in $(TARGET_ROOT)"
-
-
-install_virtualenv:
+install:
 	@echo
 	@echo "Installing virtualenv"
 	@echo
 	mkdir -p $(INSTALL_VIRTUALENV)
-	mkdir -p $(DEPLOYMENT_ROOT)
+	sudo mkdir -p $(DEPLOYMENT_ROOT)
 	sudo mount -o bind $(INSTALL_ROOT) $(DEPLOYMENT_ROOT)
 	virtualenv -p python3 $(DEPLOYMENT_VIRTUALENV)
 	$(DEPLOYMENT_VIRTUALENV)/bin/pip install -r backend/requirements.txt
-	sudo umount -l $(DEPLOYMENT_ROOT)
-
-
-install_backend:
 	@echo
 	@echo "Installing backend files"
 	@echo
 	mkdir -p $(INSTALL_ROOT)
+	$(DEPLOYMENT_VIRTUALENV)/bin/python3 ./backend/manage.py collectstatic --no-input
+	sudo umount -l $(DEPLOYMENT_ROOT)
 	cp -r static $(INSTALL_ROOT)
 	cp -r backend $(INSTALL_ROOT)
 	cp -r bin $(INSTALL_ROOT)
 	cp README.rst $(INSTALL_ROOT)
-
-
-install_etc:
 	cp -r etc ${DESTDIR}/
+	@echo
+	@echo "Backend installed in $(INSTALL_ROOT)"
+	@echo
 
 deb:
 	rm -rf debian/openvpnathome
@@ -84,5 +77,9 @@ deb:
 install_deb:
 	sudo dpkg -i ../openvpnathome*.deb
 
-uninstall_deb:
+remove_deb:
 	sudo dpkg --remove openvpnathome
+
+purge_deb:
+	sudo dpkg --purge openvpnathome
+

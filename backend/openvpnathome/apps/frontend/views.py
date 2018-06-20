@@ -19,10 +19,17 @@ class FrontendView(View):
                 'state': json.dumps({
                     'authenticated': self.request.user.is_authenticated,
                     'registration_enabled': settings.registration_enabled,
-                    'email_enabled': settings.email_enabled,
-                    'hydrated': False
+                    'email_enabled': settings.email_enabled
                 })
             }
             return TemplateResponse(request, 'index.html', context=context)
         else:
-            return TemplateResponse(request, 'not_configured.html', context=request.app_not_ready)
+            context = {
+                'state': json.dumps({
+                    'authenticated': False,
+                    'registration_enabled': False,
+                    'email_enabled': False,
+                    'app_not_ready': request.app_not_ready
+                })
+            }
+            return TemplateResponse(request, 'index.html', context=context)

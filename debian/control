@@ -1,5 +1,5 @@
 Source: openvpnathome
-Section: unknown
+Section: admin
 Priority: optional
 Maintainer: Chris Narkiewicz <hello@ezaquarii.com>
 Build-Depends: debhelper (>= 10)
@@ -9,7 +9,7 @@ Vcs-Git: https://github.com/ezaquarii/openvpn-at-home.git
 
 Package: openvpnathome
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends} ufw (>= 0.35)
+Depends: ${shlibs:Depends}, ${misc:Depends}, openssl (>= 1.1.0), openvpn (>= 2.4.4)
 Description: Web OpenVPN Management UI
  This app provides easy management console to keep OpenVPN
  configuration files in one place, provided in self-contained,
