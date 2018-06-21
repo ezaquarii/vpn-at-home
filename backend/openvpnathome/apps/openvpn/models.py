@@ -52,7 +52,14 @@ class Server(models.Model):
     @property
     def mimetype(self):
         return 'application/x-openvpn-profile'
-        #return 'text/plain'
+
+    @property
+    def protocol_server_option(self):
+        return 'udp' if self.protocol == 'udp' else 'tcp-server'
+
+    @property
+    def protocol_client_option(self):
+        return 'udp' if self.protocol == 'udp' else 'tcp-client'
 
     def render_to_string(self):
         """
@@ -66,11 +73,9 @@ class Server(models.Model):
             'key': self.cert.private_key.strip(),
             'dh': self.dhparams.dhparams.strip(),
             'tls_auth': self.tls_auth_key.strip(),
-            'protocol': self.protocol
+            'protocol': self.protocol_server_option
         }
         return render_to_string('server.ovpn', context=context)
-
-
 class Client(models.Model):
 
     MAX_NAME_LENGTH = 64
@@ -109,6 +114,6 @@ class Client(models.Model):
             'key': self.cert.private_key.strip(),
             'tls_auth': self.server.tls_auth_key,
             'server_hostname': self.server.hostname,
-            'protocol': self.server.protocol
+            'protocol': self.server.protocol_client_option
         }
         return render_to_string('client.ovpn', context=context)
