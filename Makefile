@@ -13,9 +13,11 @@ all:
 	@echo "Welcome to OpenVPN@Home make system"
 	@echo ""
 	@echo "Available top-level targets:"
-	@echo " * devel      - boostrap both projects for development"
-	@echo " * distclean  - clean projects, delete all data (start from 'git clone' state)"
-	@echo " * runserver  - run runserver target of backend/Makefile - start django server"
+	@echo " * devel            - bootstrap both projects for development"
+	@echo "   * devel_backend  - bootstrap backend for development (dependency of devel)"
+	@echo "   * devel_frontend - bootstrap frontend for development (dependency of devel)"
+	@echo " * distclean        - clean projects, delete all data (start from 'git clone' state)"
+	@echo " * runserver        - run runserver target of backend/Makefile - start django server"
 
 
 devel: devel_backend devel_frontend
