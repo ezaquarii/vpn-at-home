@@ -1,10 +1,14 @@
+import uuid
+
 from django.urls import reverse
 from django.utils.text import slugify
+
 from rest_framework import serializers
 
 from openvpnathome.apps.x509.models import Ca, Cert
 from .models import Server, Client
 from .utils import generate_tls_auth_key
+
 
 class ServerSerializer(serializers.ModelSerializer):
 
@@ -51,12 +55,13 @@ class CreateServerSerializer(serializers.Serializer):
                                common_name=slugify(ca_name))
 
         cert_name = '{name} Server Certificate'.format(name=validated_data['name'])
+        common_name = uuid.uuid4().hex
         cert = Cert.objects.create(owner=owner,
                                    ca=ca,
                                    name=cert_name,
                                    type=Cert.TYPE_SERVER,
                                    email=owner.email,
-                                   common_name=slugify(cert_name))
+                                   common_name=common_name)
 
         tls_auth_key = generate_tls_auth_key()
         dhparams = self.context['dhparams']
@@ -101,13 +106,14 @@ class CreateClientSerializer(serializers.Serializer):
         owner = self.context['owner']
         server = self.context['server']
         cert_name = '{name} Client Certificate'.format(name=validated_data['name'])
+        common_name = uuid.uuid4().hex
 
         cert = Cert.objects.create(owner=owner,
                                    ca=server.ca,
                                    name=cert_name,
                                    type=Cert.TYPE_CLIENT,
                                    email=owner.email,
-                                   common_name=slugify(cert_name))
+                                   common_name=common_name)
 
         client = Client.objects.create(name=validated_data['name'],
                                        owner=owner,
