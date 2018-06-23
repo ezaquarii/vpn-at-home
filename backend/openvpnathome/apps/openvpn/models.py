@@ -76,6 +76,8 @@ class Server(models.Model):
             'protocol': self.protocol_server_option
         }
         return render_to_string('server.ovpn', context=context)
+
+
 class Client(models.Model):
 
     MAX_NAME_LENGTH = 64
