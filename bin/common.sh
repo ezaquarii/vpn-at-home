@@ -1,4 +1,8 @@
 #!/bin/sh
+#
+# This script is sourced from all utility scripts
+# and provides common environment variables and functions.
+#
 
 export ROOT_DIR=$(readlink -f $(dirname "$0")/../)
 export APP_DIR="${ROOT_DIR}/backend/"
@@ -9,6 +13,7 @@ export DATABASE_FILE="${DATABASE_DIR}/db.sqlite3"
 export SETTINGS_FILE="${ROOT_DIR}/settings.json"
 export LOGS_DIR="${ROOT_DIR}/logs"
 
+export PYTHON="${VIRTUALENV_DIR}/bin/python3"
 export MANAGE=${APP_DIR}/manage.py
 
 if [ ${USER} = "root" ]; then
