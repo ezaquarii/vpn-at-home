@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.template.loader import render_to_string
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
@@ -84,6 +85,7 @@ class Server(models.Model):
 
     DEFAULT_NETWORK = ipaddress.IPv4Network('172.30.0.0/16')
     DEFAULT_PROTOCOL = PROTOCOL_UDP
+    DEFAULT_PORT = 1194
 
     class Meta:
         permissions = (
@@ -93,6 +95,7 @@ class Server(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=MAX_NAME_LENGTH)
     hostname = models.CharField(max_length=MAX_HOSTNAME_LENGTH, blank=False)
+    port = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(65535)], default=DEFAULT_PORT)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     ca = models.ForeignKey('x509.Ca', on_delete=models.CASCADE, related_name='+')
     cert = models.ForeignKey('x509.Cert', on_delete=models.CASCADE, related_name='+')
@@ -145,7 +148,8 @@ class Server(models.Model):
             'protocol': self.protocol_server_option,
             'client_connect_script': self.client_connect_script,
             'network': self.network.network_address,
-            'netmask': self.network.netmask
+            'netmask': self.network.netmask,
+            'port': self.port
         }
         return render_to_string('server.ovpn', context=context)
 

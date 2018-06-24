@@ -73,6 +73,9 @@ class CreateServer(APITestWithBaseFixture, CreateServerFixture):
     def test_default_network_is_set(self):
         self.assertEquals(self.server.network, Server.DEFAULT_NETWORK)
 
+    def test_default_port_is_set(self):
+        self.assertEqual(self.server.port, Server.DEFAULT_PORT)
+
 
 class CreateServerWithNetwork(APITestWithBaseFixture, CreateServerFixture):
 
@@ -94,6 +97,18 @@ class CreateServerWithNetwork(APITestWithBaseFixture, CreateServerFixture):
         request_dto = self.create_request_dto(network=invalid_network)
         response = self.admin_client.post(self.url, request_dto)
         self.assertStatus(response, status.HTTP_400_BAD_REQUEST)
+
+
+class CreateServerWithPort(APITestWithBaseFixture, CreateServerFixture):
+
+    CUSTOM_PORT = 10000
+
+    def test_create_server_with_cusom_port(self):
+        request_dto = self.create_request_dto(port=self.CUSTOM_PORT)
+        response = self.admin_client.post(self.url, request_dto)
+        self.assertStatus(response, status.HTTP_201_CREATED)
+        server = Server.objects.get(id=response.data['id'])
+        self.assertEquals(server.port, self.CUSTOM_PORT)
 
 
 class ListServers(APITestWithBaseFixture):

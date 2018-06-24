@@ -57,6 +57,7 @@ class CreateServerSerializer(serializers.Serializer):
 
     name = serializers.CharField(max_length=models.Server.MAX_NAME_LENGTH)
     hostname = serializers.CharField(max_length=models.Server.MAX_HOSTNAME_LENGTH, allow_blank=False)
+    port = serializers.IntegerField(required=False, default=models.Server.DEFAULT_PORT)
     email = serializers.EmailField(required=False)
     protocol = serializers.RegexField(regex="tcp|udp", required=False, default="udp")
     network = NetworkAddressSerializerField(required=False, default=models.Server.DEFAULT_NETWORK)
@@ -83,6 +84,7 @@ class CreateServerSerializer(serializers.Serializer):
         dhparams = self.context['dhparams']
         server = models.Server.objects.create(name=validated_data['name'],
                                               hostname=validated_data['hostname'],
+                                              port=validated_data['port'],
                                               owner=owner,
                                               ca=ca,
                                               cert=cert,

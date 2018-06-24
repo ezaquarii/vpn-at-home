@@ -41,17 +41,26 @@ class TestServerModelNetwork(APITestWithBaseFixture):
 
 class TestServerModelConfigRender(APITestWithBaseFixture):
 
+    CUSTOM_PORT = 10000
+
     @classmethod
     def setUpClass(cls):
         super(TestServerModelConfigRender, cls).setUpClass()
         cls.builder.server()
 
+    def assertEntryPresent(self, entry):
+        self.assertTrue(entry in self.config, 'Entry [{entry}] not found'.format(entry=entry))
+
     def setUp(self):
         self.server = Server.objects.first()
+        self.server.port = self.CUSTOM_PORT
         self.config = self.server.render_to_string()
 
     def test_config_contains_server_network_entry(self):
         entry = 'server {network} {netmask}'.format(network=self.server.network.network_address,
                                                      netmask=self.server.network.netmask)
-        print(self.config)
-        self.assertTrue(entry in self.config, 'Entry [{entry}] not found'.format(entry=entry))
+        self.assertEntryPresent(entry)
+
+    def test_config_contains_port_entry(self):
+        entry = 'port {}'.format(self.CUSTOM_PORT)
+        self.assertEntryPresent(entry)
