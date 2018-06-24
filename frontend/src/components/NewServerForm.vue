@@ -27,6 +27,13 @@
                 <option value="tcp">TCP</option>
             </select>
         </div>
+        <div class="field">
+            <label>Internal VPN network (private IP range, CIDR notation)</label>
+            <div class="ui left icon input">
+                <input v-model="form.network" placeholder="Ex. 172.30.0.0/16" type="text">
+                <i aria-hidden="true" class="server icon"></i>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -42,7 +49,8 @@ export default {
                 name: '',
                 hostname: '',
                 port: 1194,
-                protocol: 'udp'
+                protocol: 'udp',
+                network: '172.30.0.0/16'
             }
         };
     },
@@ -51,7 +59,8 @@ export default {
             name: {required},
             hostname: {required},
             port: {required},
-            protocol: {required}
+            protocol: {required},
+            network: {required},
         }
     },
     computed: {
