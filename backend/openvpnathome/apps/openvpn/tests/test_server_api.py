@@ -1,3 +1,5 @@
+from ipaddress import IPv4Network
+
 from django.urls import reverse
 
 from rest_framework import status
@@ -27,17 +29,27 @@ class CreateServerPermissions(APITestWithBaseFixture):
         self.assertForbidden(response)
 
 
-class CreateServer(APITestWithBaseFixture):
-
+class CreateServerFixture(object):
     url = reverse('openvpn-api:servers')
     name = 'Server Name'
     email = 'admin@email.com'
     hostname = 'localhost.localdomain.net'
     non_default_protocol = Server.PROTOCOL_TCP # non-default protocol
-    request_dto = {'name': name, 'email': email, 'hostname': hostname, 'protocol': non_default_protocol}
+    non_default_network = IPv4Network('192.168.1.0/24')
+
+    def create_request_dto(self, **kwargs):
+        return {'name': self.name,
+                'email': self.email,
+                'hostname': self.hostname,
+                'protocol': self.non_default_protocol,
+                **kwargs}
+
+
+class CreateServer(APITestWithBaseFixture, CreateServerFixture):
 
     def setUp(self):
-        response = self.admin_client.post(self.url, self.request_dto)
+        request_dto = self.create_request_dto()
+        response = self.admin_client.post(self.url, request_dto)
         self.assertStatus(response, status.HTTP_201_CREATED)
         self.server = Server.objects.get(id=response.data['id'])
 
@@ -57,6 +69,31 @@ class CreateServer(APITestWithBaseFixture):
 
     def test_protocol_is_set_to_tcp(self):
         self.assertEquals(self.server.protocol, self.non_default_protocol)
+
+    def test_default_network_is_set(self):
+        self.assertEquals(self.server.network, Server.DEFAULT_NETWORK)
+
+
+class CreateServerWithNetwork(APITestWithBaseFixture, CreateServerFixture):
+
+    def test_create_server_with_valid_network(self):
+        request_dto = self.create_request_dto(network=str(self.non_default_network))
+        response = self.admin_client.post(self.url, request_dto)
+        self.assertStatus(response, status.HTTP_201_CREATED)
+        server = Server.objects.get(id=response.data['id'])
+        self.assertEquals(self.non_default_network, server.network)
+
+    def test_create_server_with_invalid_network(self):
+        for invalid_network in ['192.168.1.1/24', 'some random string', '01010101']:
+            request_dto = self.create_request_dto(network=invalid_network)
+            response = self.admin_client.post(self.url, request_dto)
+            self.assertStatus(response, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_server_with_network_with_unsupported_netmask(self):
+        invalid_network = '192.168.1.0/4'
+        request_dto = self.create_request_dto(network=invalid_network)
+        response = self.admin_client.post(self.url, request_dto)
+        self.assertStatus(response, status.HTTP_400_BAD_REQUEST)
 
 
 class ListServers(APITestWithBaseFixture):

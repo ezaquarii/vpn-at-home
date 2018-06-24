@@ -1,23 +1,38 @@
 import uuid
-
+import ipaddress
 from django.urls import reverse
 from django.utils.text import slugify
 
 from rest_framework import serializers
 
 from openvpnathome.apps.x509.models import Ca, Cert
-from .models import Server, Client
+
+from . import models
 from .utils import generate_tls_auth_key
 
 
+class NetworkAddressSerializerField(serializers.Field):
+
+    def to_internal_value(self, data):
+        return models.NetworkAddressField.parse_ipv4_network(data)
+
+    def to_representation(self, value):
+        return value.compressed
+
+
 class ServerSerializer(serializers.ModelSerializer):
+
+    serializer_field_mapping = {
+        **serializers.ModelSerializer.serializer_field_mapping,
+        models.NetworkAddressField: NetworkAddressSerializerField
+    }
 
     email = serializers.SerializerMethodField()
     validity_end = serializers.SerializerMethodField()
 
     class Meta:
-        model = Server
-        fields = ['id', 'created', 'name', 'email', 'validity_end']
+        model = models.Server
+        fields = ['id', 'created', 'name', 'email', 'validity_end', 'network']
 
     def get_email(self, instance):
         return instance.ca.email
@@ -40,10 +55,11 @@ class AdminServerSerializer(ServerSerializer):
 
 class CreateServerSerializer(serializers.Serializer):
 
-    name = serializers.CharField(max_length=Server.MAX_NAME_LENGTH)
-    hostname = serializers.CharField(max_length=Server.MAX_HOSTNAME_LENGTH, allow_blank=False)
+    name = serializers.CharField(max_length=models.Server.MAX_NAME_LENGTH)
+    hostname = serializers.CharField(max_length=models.Server.MAX_HOSTNAME_LENGTH, allow_blank=False)
     email = serializers.EmailField(required=False)
     protocol = serializers.RegexField(regex="tcp|udp", required=False, default="udp")
+    network = NetworkAddressSerializerField(required=False, default=models.Server.DEFAULT_NETWORK)
 
     def create(self, validated_data):
         owner = self.context['owner']
@@ -65,14 +81,15 @@ class CreateServerSerializer(serializers.Serializer):
 
         tls_auth_key = generate_tls_auth_key()
         dhparams = self.context['dhparams']
-        server = Server.objects.create(name=validated_data['name'],
-                                       hostname=validated_data['hostname'],
-                                       owner=owner,
-                                       ca=ca,
-                                       cert=cert,
-                                       tls_auth_key=tls_auth_key,
-                                       dhparams=dhparams,
-                                       protocol=validated_data['protocol'])
+        server = models.Server.objects.create(name=validated_data['name'],
+                                              hostname=validated_data['hostname'],
+                                              owner=owner,
+                                              ca=ca,
+                                              cert=cert,
+                                              tls_auth_key=tls_auth_key,
+                                              dhparams=dhparams,
+                                              protocol=validated_data['protocol'],
+                                              network=validated_data['network'])
 
         return server
 
@@ -84,7 +101,7 @@ class ClientSerializer(serializers.ModelSerializer):
     download_url = serializers.SerializerMethodField()
 
     class Meta:
-        model = Client
+        model = models.Client
         fields = ['id', 'created', 'name', 'email', 'validity_end', 'download_url']
 
     def get_email(self, instance):
@@ -100,7 +117,7 @@ class ClientSerializer(serializers.ModelSerializer):
 
 class CreateClientSerializer(serializers.Serializer):
 
-    name = serializers.CharField(max_length=Client.MAX_NAME_LENGTH)
+    name = serializers.CharField(max_length=models.Client.MAX_NAME_LENGTH)
 
     def create(self, validated_data):
         owner = self.context['owner']
@@ -115,9 +132,9 @@ class CreateClientSerializer(serializers.Serializer):
                                    email=owner.email,
                                    common_name=common_name)
 
-        client = Client.objects.create(name=validated_data['name'],
-                                       owner=owner,
-                                       server=server,
-                                       cert=cert)
+        client = models.Client.objects.create(name=validated_data['name'],
+                                              owner=owner,
+                                              server=server,
+                                              cert=cert)
 
         return client

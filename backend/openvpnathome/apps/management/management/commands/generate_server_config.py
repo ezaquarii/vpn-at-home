@@ -1,4 +1,5 @@
 from os.path import abspath
+from os import chmod
 from django.contrib.auth import get_user_model
 from django.core.management.base import CommandError
 from openvpnathome.apps.openvpn.models import Server
@@ -39,9 +40,11 @@ class Command(ManagementCommand):
 
     def write_to_file(self, config):
         absolute_path = abspath(self.option_output_file)
-        self.log('Writing file to {file}'.format(file=absolute_path))
+        self.log('Writing file to {file} with permissions 0600'.format(file=absolute_path))
         with open(absolute_path, 'w') as f:
             f.write(config)
+        chmod(absolute_path, 0o600)
+
 
     def run(self, *args, **options):
         server = self.get_server()

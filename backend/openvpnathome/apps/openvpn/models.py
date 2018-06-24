@@ -1,10 +1,69 @@
+import ipaddress
+
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
+from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
 from django.utils.text import slugify
+from django.utils.translation import gettext_lazy as _
+
+from openvpnathome import get_bin_path
+
 
 User = get_user_model()
-from django.contrib.auth.models import Permission
+
+
+class NetworkAddressField(models.Field):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    @staticmethod
+    def parse_ipv4_network(value):
+        if isinstance(value, ipaddress.IPv4Network):
+            address = value
+        else:
+            try:
+                address = ipaddress.IPv4Network(value)
+            except ValueError as e:
+                raise ValidationError(_('Enter a valid IPv4 network address.'), code='invalid')
+
+        if address.netmask.compressed not in ['255.0.0.0', '255.255.0.0', '255.255.255.0']:
+            raise ValidationError(_('Only 8/16/24 networks are supported'), code='invalid')
+
+        return address
+
+    def get_internal_type(self):
+        return "CharField"
+
+    def from_db_value(self, value, expression, connection):
+        if value is None or value is '':
+            return None
+        else:
+            return self.parse_ipv4_network(value)
+
+    def to_python(self, value):
+        if isinstance(value, ipaddress.IPv4Network):
+            return value
+        elif isinstance(value, str):
+            return self.parse_ipv4_network(value)
+        elif value is None:
+            return value
+        else:
+            raise ValidationError('Unknown type {type}'.format(type=type(value)))
+
+    def get_prep_value(self, value):
+        if value is None:
+            return None
+        elif isinstance(value, str):
+            self.parse_ipv4_network(value)
+            return value
+        elif isinstance(value, ipaddress.IPv4Network):
+            self.parse_ipv4_network(value)  # ok for parsed value, will check value only
+            return str(value)
+        else:
+            raise ValidationError('Value {value} of unexpected type {type}'.format(value=str(value), type=type(value)))
 
 
 class DhParams(models.Model):
@@ -23,6 +82,9 @@ class Server(models.Model):
         (PROTOCOL_TCP, 'TCP'),
     )
 
+    DEFAULT_NETWORK = ipaddress.IPv4Network('172.30.0.0/16')
+    DEFAULT_PROTOCOL = PROTOCOL_UDP
+
     class Meta:
         permissions = (
             ('download_server_config', 'Download server config'),
@@ -36,7 +98,8 @@ class Server(models.Model):
     cert = models.ForeignKey('x509.Cert', on_delete=models.CASCADE, related_name='+')
     tls_auth_key = models.CharField(max_length=8192)
     dhparams = models.ForeignKey(DhParams, on_delete=models.CASCADE)
-    protocol = models.CharField(choices=PROTOCOL_CHOICES, default=PROTOCOL_UDP, max_length=10)
+    protocol = models.CharField(choices=PROTOCOL_CHOICES, default=DEFAULT_PROTOCOL, max_length=10)
+    network = NetworkAddressField(max_length=100, default=str(DEFAULT_NETWORK), null=True)
 
     def __str__(self):
         return 'Server {name}, {hostname}, {owner}'.format(name=self.name, hostname=self.hostname, owner=self.email)
@@ -61,9 +124,15 @@ class Server(models.Model):
     def protocol_client_option(self):
         return 'udp' if self.protocol == 'udp' else 'tcp-client'
 
+    @property
+    def client_connect_script(self):
+        return get_bin_path('connect.sh')
+
     def render_to_string(self):
         """
         Render server's configuration to string, using OpenVPN configuration template.
+        Resulting config contains deployment-specific paths, so you should make
+        sure to re-generate server config when app deployment path changes.
 
         :return: Rendered configuration file contents.
         """
@@ -73,7 +142,10 @@ class Server(models.Model):
             'key': self.cert.private_key.strip(),
             'dh': self.dhparams.dhparams.strip(),
             'tls_auth': self.tls_auth_key.strip(),
-            'protocol': self.protocol_server_option
+            'protocol': self.protocol_server_option,
+            'client_connect_script': self.client_connect_script,
+            'network': self.network.network_address,
+            'netmask': self.network.netmask
         }
         return render_to_string('server.ovpn', context=context)
 
@@ -102,7 +174,6 @@ class Client(models.Model):
     @property
     def mimetype(self):
         return 'application/x-openvpn-profile'
-        #return 'text/plain'
 
     def render_to_string(self):
         """

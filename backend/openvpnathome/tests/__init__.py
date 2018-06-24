@@ -5,6 +5,7 @@ This module provides all test fixtures and test-related utilities.
 from unittest import skipIf
 
 from django.contrib.auth import get_user_model
+from django.test import TestCase
 from rest_framework.test import APITestCase
 
 from openvpnathome import CONFIG_PATH
@@ -26,6 +27,14 @@ def configRequired(precondition, reason):
     message = "{reason}\nPlease run './manage.py configure' and inspect configuration in '{config_path}'.".format(reason=reason,
                                                                                                                   config_path=CONFIG_PATH)
     return skipIf(not precondition, message)
+
+
+class TestWithBaseFixture(TestCase, BaseFixtureMixin):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestCase, cls).setUpClass()
+        cls.load_base_fixture()
 
 
 class APITestWithBaseFixture(APITestCase, BaseFixtureMixin):
