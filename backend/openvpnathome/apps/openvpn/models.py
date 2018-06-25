@@ -1,4 +1,5 @@
 import ipaddress
+import re
 
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -13,6 +14,14 @@ from openvpnathome import get_bin_path
 
 
 User = get_user_model()
+
+
+def filter_empty_config_lines(input):
+    """Filter out comments and empty lines from OpenVPN config file"""
+    if input is not None:
+        return re.sub(r'(?m)^(#.*\n+|;.*\n+|\s+\n+|\n+)', '', input)
+    else:
+        return None
 
 
 class NetworkAddressField(models.Field):
@@ -151,7 +160,8 @@ class Server(models.Model):
             'netmask': self.network.netmask,
             'port': self.port
         }
-        return render_to_string('server.ovpn', context=context)
+        config = render_to_string('server.ovpn', context=context)
+        return filter_empty_config_lines(config)
 
 
 class Client(models.Model):
@@ -193,4 +203,5 @@ class Client(models.Model):
             'server_hostname': self.server.hostname,
             'protocol': self.server.protocol_client_option
         }
-        return render_to_string('client.ovpn', context=context)
+        config = render_to_string('client.ovpn', context=context)
+        return filter_empty_config_lines(config)

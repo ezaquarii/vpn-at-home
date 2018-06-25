@@ -1,4 +1,4 @@
-from openvpnathome.tests import APITestWithBaseFixture
+from openvpnathome.tests import APITestWithBaseFixture, TestCase
 from django.core.exceptions import ValidationError
 from ipaddress import IPv4Network
 from ..models import Server
@@ -64,3 +64,27 @@ class TestServerModelConfigRender(APITestWithBaseFixture):
     def test_config_contains_port_entry(self):
         entry = 'port {}'.format(self.CUSTOM_PORT)
         self.assertEntryPresent(entry)
+
+
+from openvpnathome.apps.openvpn.models import filter_empty_config_lines
+class TestFilterEmptyConfigLines(TestCase):
+
+
+    input = "# commented line\n" \
+            "valid option 1\n"\
+            "; commented option\n"\
+            "    \n"\
+            "valid option 2\n"
+
+    def test_comments_filtered_out(self):
+        output = filter_empty_config_lines(self.input)
+        expected =  "valid option 1\nvalid option 2\n"
+        self.assertEquals(expected, output)
+
+    def test_filter_handles_none(self):
+        output = filter_empty_config_lines(None)
+        self.assertIsNone(output)
+
+    def test_filter_handles_empty_string(self):
+        output = filter_empty_config_lines('')
+        self.assertEquals('', output)
