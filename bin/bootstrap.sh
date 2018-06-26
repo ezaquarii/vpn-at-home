@@ -31,13 +31,13 @@ ask_for_password() {
 
 
 bootstrap_default_config() {
-    ${MANAGE} configure --accept
+    ${PYTHON} ${MANAGE} configure --accept
     echo "Database init can take a bit of time... Please be patient."
     mkdir -p "${DATABASE_DIR}"
-    ${MANAGE} migrate
+    ${PYTHON} ${MANAGE} migrate
 
     echo "Creating admin account $1 $2"
-    ${MANAGE} set_admin "${1}" "${2}"
+    ${PYTHON} ${MANAGE} set_admin "${1}" "${2}"
 }
 
 if [ -z "$1" ]; then
