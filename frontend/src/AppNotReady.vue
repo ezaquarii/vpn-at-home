@@ -47,6 +47,37 @@
                 </div>
 
                 <div class="issue">
+                    <div v-if="isEmailConfigured">
+                        <h2><i aria-hidden="true" class="green circular inverted check icon"> </i> E-mail configured</h2>
+                        <p v-if="isEmailEnabled">E-mail is <span class="green bold">enabled</span> and configured.</p>
+                        <p v-else>E-mail is <span class="red bold">disabled.</span> You won't receive error logs nor you can send config files.</p>
+                    </div>
+                    <div v-else>
+                        <h2><i aria-hidden="true" class="red circular inverted times icon"> </i> You must configure e-mail</h2>
+                        <p>
+                            E-mail is <span class="green bold">enabled</span> but not fully configured yet. If you don't want to use
+                            e-mail, set <span class="shell">enabled</span> to <span class="shell">false</span> and you can skip the configuration.
+                            Open <span class="shell">settings.json</span> and fill email related fields:
+                            <div class="example">
+                                {<br>&nbsp;&nbsp;...<br>
+                                    &nbsp;&nbsp;"email": {<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;"enabled": <i>true / false</i>,<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;"smtp_server": <i>"your.smtp.host"</i>,<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;"smtp_port": <i>TLS port</i>,<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;"smtp_user": <i>most likely your e-mail address</i>,<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;"smtp_password": <i>password</i>,<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;"server_from": <i>e-mail showing in From:</i>,<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;"admin_emails": <i>[list of e-mails to send crash logs to]</i><br>
+                                &nbsp;&nbsp;}<br>
+                                &nbsp;&nbsp;...<br>}
+                            </div>
+                            Your <span class="shell">server_from</span> should be set to a valid e-mail address. Many SMTP servers
+                            will refuse to send e-mail with bogus <i>From</i> field. <span class="important">You must restart the service to pick up new configuration.</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="issue">
                     <div v-if="isConfigured">
                         <h2><i aria-hidden="true" class="green circular inverted check icon"> </i> Settings reviewed and accepted</h2>
                         <p>Settings file is reviewed and accepted.</p>
@@ -131,6 +162,18 @@ export default {
 
         deploymentDir() {
             return this.$store.state.status.appNotReady.deployment_dir;
+        },
+
+        hasAdminUser() {
+            return this.$store.state.status.appNotReady.has_active_admin;
+        },
+
+        isEmailConfigured() {
+            return this.$store.state.status.appNotReady.is_email_configured;
+        },
+
+        isEmailEnabled() {
+            return this.$store.state.status.appNotReady.is_email_enabled;
         }
     },
 }
@@ -163,6 +206,18 @@ export default {
     .important {
         color: orangered;
         font-weight: bold;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+
+    .red {
+        color: orangered;
+    }
+
+    .green {
+        color: green;
     }
 
     .shell {
