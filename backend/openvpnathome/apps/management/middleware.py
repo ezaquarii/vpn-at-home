@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import OperationalError
 from openvpnathome.settings import USER_SETTINGS
@@ -19,6 +20,8 @@ class CheckIsAppReadyMiddleware:
                 'is_configured': USER_SETTINGS.is_configured,
                 'is_migrated': is_database_migrated(),
                 'has_active_admin': self.has_active_admin,
+                'is_email_configured': self.is_email_configured,
+                'is_email_enabled': settings.EMAIL_ENABLED,
                 'manage_py': get_backend_path('manage.py'),
                 'bootstrap_sh': get_root_path('bin/bootstrap.sh'),
                 'deployment_dir': get_root_path('')
@@ -34,8 +37,22 @@ class CheckIsAppReadyMiddleware:
             return False
 
     @property
+    def is_email_configured(self):
+        if not settings.EMAIL_ENABLED:
+            return True
+        else:
+            return all([settings.EMAIL_HOST,
+                        settings.EMAIL_PORT,
+                        settings.EMAIL_HOST_USER,
+                        settings.EMAIL_HOST_PASSWORD,
+                        settings.SERVER_EMAIL,
+                        settings.ADMINS])
+
+
+    @property
     def is_configured(self):
         return all((is_database_migrated(),
                     USER_SETTINGS.is_configured,
                     USER_SETTINGS.has_settings_file,
-                    self.has_active_admin))
+                    self.has_active_admin,
+                    self.is_email_configured))
