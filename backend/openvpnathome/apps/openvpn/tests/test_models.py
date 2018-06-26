@@ -1,7 +1,7 @@
 from openvpnathome.tests import APITestWithBaseFixture, TestCase
 from django.core.exceptions import ValidationError
 from ipaddress import IPv4Network
-from ..models import Server
+from ..models import Server, filter_empty_config_lines
 
 
 class TestServerModelNetwork(APITestWithBaseFixture):
@@ -66,9 +66,7 @@ class TestServerModelConfigRender(APITestWithBaseFixture):
         self.assertEntryPresent(entry)
 
 
-from openvpnathome.apps.openvpn.models import filter_empty_config_lines
 class TestFilterEmptyConfigLines(TestCase):
-
 
     input = "# commented line\n" \
             "valid option 1\n"\
