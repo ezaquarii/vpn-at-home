@@ -55,8 +55,8 @@ class Command(ManagementCommand):
             new_settings = DEFAULT_USER_SETTINGS.copy()
             new_settings['secret_key'] = self.create_secret_key()
             new_settings['development'] = self.option_development
-            new_settings['email']['to'] = admin.email if admin else ''
-            new_settings['email']['from'] = admin.email if admin else ''
+            new_settings['email']['server_from'] = admin.email if admin is not None else ''
+            new_settings['email']['admin_emails'] = [admin.email] if admin is not None else []
             new_settings['database'].update(**{
                 'ENGINE': 'django.db.backends.sqlite3',
                 'NAME': get_root_path('db/db.sqlite3'),
