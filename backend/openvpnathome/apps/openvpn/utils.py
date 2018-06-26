@@ -1,5 +1,6 @@
 import subprocess
 
+from django.conf import settings
 from django.core.mail import EmailMessage
 
 from openvpnathome.apps.management.mail import EmailSender
@@ -58,6 +59,7 @@ class ConfigEmailSender():
         email = EmailMessage(
             subject='OpenVPN configuration file',
             body='Please find attached OpenVPN configuration file',
+            from_email=settings.SERVER_EMAIL,
             to=[config.owner.email]
         )
         email.attach(config.filename, config.render_to_string(), config.mimetype)

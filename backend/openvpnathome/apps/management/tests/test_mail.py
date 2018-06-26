@@ -5,13 +5,14 @@ from openvpnathome.tests import APITestWithBaseFixture
 
 from ..mail import EmailSender
 
+
 @skipIf(not settings.EMAIL_ENABLED, "This test require private email configuration. Provide settings.private and re-run test.")
 class TestEmailSender(APITestWithBaseFixture):
 
     def setUp(self):
         self.settings = mock.MagicMock()
         self.settings.email_enabled = settings.EMAIL_ENABLED
-        self.settings.email_from = settings.EMAIL_FROM
+        self.settings.email_server_from = settings.SERVER_EMAIL
         self.settings.email_smtp_server = settings.EMAIL_HOST
         self.settings.email_smtp_port = settings.EMAIL_PORT
         self.settings.email_smtp_login = settings.EMAIL_HOST_USER

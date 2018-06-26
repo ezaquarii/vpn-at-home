@@ -29,13 +29,14 @@ DEFAULT_USER_SETTINGS = {
     'allowed_hosts': ['*'],
     'internal_ips': ['127.0.0.1'],
     'email': {
+        '__doc__': 'server_email will be visible in From: for outgoing e-mails.',
         'enabled': False,
         'smtp_server': None,
         'smtp_server_port': 0,
         'smtp_user': '',
         'smtp_password': '',
-        'from': '',
-        'to': ''
+        'server_from': None,
+        'admin_emails': [],
     },
     'database': {
         '__doc__': "This object will be put verbatim into Django DATABASES['default'] setting. See Django DATABASES documentation.",
@@ -99,12 +100,12 @@ class UserSettings(object):
         return self.get('email.smtp_password')
 
     @property
-    def email_from(self):
-        return self.get('email.from')
+    def email_server_from(self):
+        return self.get('email.server_from')
 
     @property
-    def email_to(self):
-        return self.get('email.to')
+    def email_admin_emails(self):
+        return self.get('email.admin_emails')
 
     @property
     def database(self):

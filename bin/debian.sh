@@ -14,6 +14,7 @@ case "$1" in
     postinst)
         create_user
         create_database_dir
+        create_logs_dir
         set_manage_py_interpreter
         systemctl enable openvpnathome
         systemctl start openvpnathome.service

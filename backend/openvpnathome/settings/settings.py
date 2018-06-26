@@ -30,5 +30,4 @@ from .locale import *
 from .database import *
 from .static import *
 from .email import *
-
-
+from .logging import *

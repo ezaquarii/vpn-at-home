@@ -4,3 +4,4 @@ tmp
 /static
 settings.json
 db
+logs
