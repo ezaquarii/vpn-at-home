@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+#
+# This script performs application setup: db and user creation, etc.
+# You should call it after installation to finalize the app deployment.
+#
 
 . $(dirname $0)/common.sh
 

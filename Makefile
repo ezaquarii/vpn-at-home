@@ -1,6 +1,6 @@
 DEVEL_VIRTUALENV_DIR=$(CURDIR)/env
 DATABASE_DIR=$(CURDIR)/db
-CONFIG_FILE=$(CURDIR)/config.json
+CONFIG_FILE=$(CURDIR)/settings.json
 
 INSTALL_ROOT=$(DESTDIR)/srv/openvpnathome
 INSTALL_VIRTUALENV=$(INSTALL_ROOT)/env
@@ -67,6 +67,7 @@ install:
 	cp -r bin $(INSTALL_ROOT)
 	cp README.rst $(INSTALL_ROOT)
 	cp -r etc ${DESTDIR}/
+	cp -r ansible ${INSTALL_ROOT}
 	@echo
 	@echo "Backend installed in $(INSTALL_ROOT)"
 	@echo

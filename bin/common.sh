@@ -12,6 +12,8 @@ export DATABASE_DIR="${ROOT_DIR}/db/"
 export DATABASE_FILE="${DATABASE_DIR}/db.sqlite3"
 export SETTINGS_FILE="${ROOT_DIR}/settings.json"
 export LOGS_DIR="${ROOT_DIR}/logs"
+export BIN_DIR="${ROOT_DIR}/bin"
+export ANSIBLE_DIR="${ROOT_DIR}/ansible"
 
 export PYTHON="${VIRTUALENV_DIR}/bin/python3"
 export MANAGE=${APP_DIR}/manage.py

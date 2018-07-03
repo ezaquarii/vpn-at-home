@@ -7,10 +7,9 @@
 #
 # See --client-connect in OpenVPN manual.
 #
-
+# You should not call this script manually.
+#
 . $(dirname $0)/common.sh
-
-echo "Dupa!"
 
 if [ -z "${common_name}" ]; then
     echo "No common_name environment variable set."

@@ -4,7 +4,7 @@ all:
 	@echo ""
 	@echo "Available targets:"
 	@echo " * build-prod  - build production build; backend project is NOT updated"
-	@echo " * build-devel - watch and make development build on change; output written to './dist'"
+	@echo " * build-devel - watch and make development build on change; output is written to './dist'"
 	@echo " * install     - install packages from package.json"
 	@echo " * distclean   - clean project, delete all data (start from 'git clone' state)"
 

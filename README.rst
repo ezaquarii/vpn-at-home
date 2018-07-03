@@ -45,6 +45,8 @@ Features:
 #. automatic generation of OpenVPN profiles
 #. all crypto stuff is inlined into OpenVPN profiles
 #. profiles can be sent by e-mail or downloaded as files
+#. Ansible scripts to automatically deploy configured VPN server
+#. Tested on DigitalOcean's Ubuntu 18.04 droplet
 
 That's all folks. No fancy stuff. It's not a toolbox, it's a screwdriver to manage 3-5 home machines (and phones).
 
@@ -54,10 +56,15 @@ That's all folks. No fancy stuff. It's not a toolbox, it's a screwdriver to mana
 Project structure
 =================
 
-The project is split into *backend* and *frontend*.
+The project is split into *backend*, *frontend*. and *ansible* scripts.
 
 The backend is written in **Django** and **Django REST Framework**. The frontend is a **Vue.js** SPA application served by **Django**.
 That division makes the build slightly more complicated, but provided *Makefiles* make it a breeze. It should just work.
+
+**Ansible** is a set of scripts to deploy OpenVPN automatically either on localhost or remote machine.
+
+Scripts located in **bin** are created either to automate and facilitate various tasks or provide a glue.
+All scripts have internal documentation.
 
 Installation
 ============
@@ -68,6 +75,7 @@ Prerequisites
 #. Working Node.js installation (tested with 9.2.1 & 9.3.0)
 #. Python 3 with virtualenv
 #. GNU Make (or compatible)
+#. Ansible (tested with 2.5.0, but no fancy functionality is used)
 #. OpenVPN in ${PATH}
 #. OpenSSL in ${PATH}
 #. Internet connection (no off-line build possible)
@@ -110,11 +118,11 @@ Open ``http://localhost:8000`` and follow on-boarding tutorial.
 The package needs virtually zero configuration:
 
 - ``deb`` is self-deployable
-- installs into ``/srv/openvpnathome``
+- installs into ``/srv/openvpnathome`` (referred to as ``${ROOT}``)
 - Python3 virtual environment, static files, etc are all in the ``deb`` package
 - ``systemd`` service script ``openvpnathome.service`` is installed and starts by default
 - ``uwsgi`` runs on ``http://127.0.0.1:8000``
-- Contains bootstrapping script to automate app configuration
+- Contains bootstrapping script to automate app configuration (``${ROOT}/bin/bootstrap.sh``)
 
 Building a package will call ``sudo`` and ask you for a password. Root privileges are required
 in Python's virtual environment installation step, as we must ``sudo mount -o bind ...`` and
@@ -123,6 +131,31 @@ relocation is not reliable (and discouraged), so we decided to hack during the b
 rather than at runtime. Refer to ``Makefile`` ``install`` target.
 
 .. note:: If ``make deb`` fails for whatever reason, make sure ``/srv/openvpnathome`` is left unmounted.
+
+OpenVPN server deployment
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once the app is up and running, you can log in as admin (using credentials set during bootstrapping phase) and
+create your server.
+
+After a server is configured, you can deploy it using provided **Ansible** scripts. Beware that *Ansible* will modify
+the target system!
+
+#. required packages will be installed
+#. iptables rules will be altered (using Uncomplicated FireWall - ``UFW``)
+#. IPv4 forwarding will be enabled (using ``sysctl.conf``)
+
+It is advised to deploy the server on a remote machine, but you can do it on localhost too. I personally test it
+on DigitalOcean's droplet.
+
+::
+
+    # ${ROOT}/bin/deploy_vpn.sh [local|remote]
+
+Supplying ``local`` will deploy the server on localhost. ``remote`` will try to deploy on a remote machine
+using the address provided during configuration.
+
+.. note:: This feature is work-in-progress.
 
 Configuration
 -------------
@@ -138,15 +171,18 @@ configuration:
 App config
 ~~~~~~~~~~
 
-Configuration is loaded from ``settings.json`` located in deployment directory. Settings file must be generated first.
+Configuration is loaded from ``settings.json`` located in deployment directory. The settings file is generated
+during a bootstrap stage, so there is no need to generate it manually. However, should you need to generate the
+script during development, you can do it with a supplied Django management command:
 
 ::
 
-    (virtuanenv) $ ./backend/manage.py configure [--accept] [--devel] [--help]
+    $ ${ROOT}/bin/manage configure [--accept] [--devel] [--help] [--force]
 
-Once the file is generated, you must accept it by flipping a ``configured`` flag inside.
+Once the file is generated (ie. after bootstrap), you must review and accept it by flipping the ``configured`` flag inside.
 
-.. note:: ``settings.json`` is excluded from Git repository, so you can safely put your real e-mail credentials there.
+.. note:: ``settings.json`` is excluded from Git repository, so you can safely put your real e-mail credentials there
+          during development.
 
 You can also access **Django Admin** app, which is left enabled.
 
@@ -167,7 +203,7 @@ I made it as easy to start development as possible. Top-level project directory 
 ``backend`` and ``frontend``.
 
 Top-level ``Makefile`` delegates targets to sub-projects and is provided for convenience. Once ``make devel`` is
-done, you can work inside individual subproject with your favorite IDE.
+done, you can work inside individual subproject with your favourite IDE.
 
 I personally use *JetBrains WebStorm* and *PyCharm*, but you can use whatever you want.
 IDE files are not even in the repo.
@@ -215,7 +251,7 @@ Provided ``Makefile``'s default target displays help:
 
     Available targets:
      * build-prod  - build production build; backend project is NOT updated
-     * build-devel - watch and make development build on change; output written to './dist'
+     * build-devel - watch and make development build on change; output is written to './dist'
      * install     - install packages from package.json
      * distclean   - clean project, delete all data (start from 'git clone' state)
 
@@ -243,4 +279,3 @@ I left this as the last point, hoping not to scare anybody.
  * no real user management - I rely on Django Admin panel for it
  * not tested on Windows, as I don't touch it even with a 10-foot stick, in rubber gloves - patches are welcome, however
  * no cert revocation (yet)
- * no automatic OpenVPN configuration (yet)

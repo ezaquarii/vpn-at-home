@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  become: true
+  connection: local
+  roles:
+    - openvpn

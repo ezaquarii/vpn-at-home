@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2018-07-03
+----------
+* Automatic VPN deployment using Ansible scriptsssss
+
 2018-06-20
 ----------
 

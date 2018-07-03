@@ -1,4 +1,8 @@
 #!/bin/sh
+#
+# Starts uWSGI process. This can be used either manually or from
+# systemd service script.
+#
 
 . $(dirname $0)/common.sh
 . ${VIRTUALENV_DIR}/bin/activate

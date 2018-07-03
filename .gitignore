@@ -3,5 +3,6 @@ env
 tmp
 /static
 settings.json
+settings.json.old
 db
 logs
