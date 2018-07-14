@@ -3,10 +3,10 @@ This module contains all app configuration.
 
 Configuration is split into individual, topic files.
 Some settings can be overwritten by private configuration file
-located in main module (``config.py``).
+located in main app directory ('settings.json')
 
 You should not edit this file (usually). If you want to alter
-configuration, check private ``config.py`` file first.
+configuration, check private ``settings.json`` file first.
 """
 
 import copy

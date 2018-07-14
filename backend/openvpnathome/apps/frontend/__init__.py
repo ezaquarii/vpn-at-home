@@ -1,5 +1,5 @@
 """
-This app serves React SPA frontend. It doesn't have any
+This app serves SPA frontend. It doesn't have any
 functionality besides rendering index.html from
 webpack-ified frontend project.
 
