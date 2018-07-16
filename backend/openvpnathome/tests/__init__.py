@@ -15,6 +15,16 @@ from .fixture import FixtureBuilder, BaseFixtureMixin
 User = get_user_model()
 
 
+def is_email_configured():
+    from django.conf import settings
+    return all([settings.EMAIL_HOST,
+                settings.EMAIL_PORT,
+                settings.EMAIL_HOST_USER,
+                settings.EMAIL_HOST_PASSWORD,
+                settings.EMAIL_ENABLED,
+                settings.SERVER_EMAIL])
+
+
 def configRequired(precondition, reason):
     """
     Test annotation. Test will be skipped if specific config precondition is false.
@@ -27,6 +37,11 @@ def configRequired(precondition, reason):
     message = "{reason}\nPlease run './manage.py configure' and inspect configuration in '{config_path}'.".format(reason=reason,
                                                                                                                   config_path=CONFIG_PATH)
     return skipIf(not precondition, message)
+
+
+def skip_if_email_not_configured():
+    return skipIf(not is_email_configured(), 'This test requires e-mail configuration. '
+                                             'Inspect your settings.json and re-run the test')
 
 
 class TestWithBaseFixture(TestCase, BaseFixtureMixin):
@@ -56,6 +71,10 @@ class APITestWithBaseFixture(APITestCase, BaseFixtureMixin):
     def assertForbidden(self, response):
         from rest_framework import status
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def assertNotFound(self, response):
+        from rest_framework import status
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def assertStatus(self, response, status, message=None):
         self.assertEqual(response.status_code, status, message)

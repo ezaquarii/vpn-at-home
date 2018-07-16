@@ -1,9 +1,7 @@
 from rest_framework.permissions import IsAdminUser
 from rest_framework.generics import RetrieveUpdateAPIView
-from rest_framework.views import APIView
 
 from django.views import View
-from django.http import HttpResponse
 
 from .models import Settings
 from .serializers import SettingsSerializer

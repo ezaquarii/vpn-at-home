@@ -8,7 +8,7 @@ from openvpnathome.apps.management.models import Settings
 
 from .models import Server, Client, DhParams
 from .serializers import CreateServerSerializer, ServerSerializer, AdminServerSerializer, CreateClientSerializer, ClientSerializer
-from .utils import ConfigEmailSender
+from .utils import send_client_config
 
 
 class ServerApi(ViewSet):
@@ -47,6 +47,8 @@ class ClientApi(ViewSet):
 
     def create(self, request):
         server = Server.objects.first()
+        if server is None:
+            return Response(data='Server not found', status=status.HTTP_404_NOT_FOUND)
         context = dict(owner=request.user, server=server)
         create_serializer = CreateClientSerializer(data=request.data, context=context)
         create_serializer.is_valid(raise_exception=True)
@@ -64,13 +66,14 @@ class ClientApi(ViewSet):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def send_email(self, request, id):
+        settings = Settings.instance()
+        if not settings.email_enabled:
+            return Response(status=status.HTTP_200_OK)
+
         if request.user.is_superuser:
             client = get_object_or_404(Client, id=id)
         else:
             client = get_object_or_404(Client, id=id, owner=request.user)
 
-        settings = Settings.instance()
-        sender = ConfigEmailSender(settings)
-        sender.send_client_config(client)
-
+        send_client_config(client)
         return Response(status=status.HTTP_200_OK)

@@ -3,8 +3,6 @@ import subprocess
 from django.conf import settings
 from django.core.mail import EmailMessage
 
-from openvpnathome.apps.management.mail import EmailSender
-
 
 def generate_dhparams():
     """
@@ -44,23 +42,12 @@ def generate_tls_auth_key():
                                             stderr=completed_process.stderr)
 
 
-class ConfigEmailSender():
-
-    def __init__(self, settings=None):
-        """
-        Create config sender. If no configuration is provided, it fetches
-        current settings from database.
-
-        :param settings: management.Settings instance or None
-        """
-        self.sender = EmailSender(settings)
-
-    def send_client_config(self, config):
-        email = EmailMessage(
-            subject='OpenVPN configuration file',
-            body='Please find attached OpenVPN configuration file',
-            from_email=settings.SERVER_EMAIL,
-            to=[config.owner.email]
-        )
-        email.attach(config.filename, config.render_to_string(), config.mimetype)
-        self.sender.send(email)
+def send_client_config(config):
+    email = EmailMessage(
+        subject='OpenVPN configuration file',
+        body='Please find attached OpenVPN configuration file',
+        from_email=settings.SERVER_EMAIL,
+        to=[config.owner.email]
+    )
+    email.attach(config.filename, config.render_to_string(), config.mimetype)
+    email.send(fail_silently=False) # default backend will be used internally
