@@ -2,11 +2,17 @@
 
 import django.core.validators
 from django.db import migrations, models
+from openvpnathome.settings import USER_SETTINGS
 
 
 def create_settings(apps, schema_editor):
     Settings = apps.get_model('management', 'Settings')
-    Settings.objects.create(pk=1)
+    Settings.objects.create(pk=1,
+                            email_enabled=USER_SETTINGS.email_enabled,
+                            email_smtp_server=USER_SETTINGS.email_smtp_server or '',
+                            email_smtp_port=USER_SETTINGS.email_smtp_port or 0,
+                            email_smtp_login=USER_SETTINGS.email_smtp_login or '',
+                            email_smtp_password=USER_SETTINGS.email_smtp_password or '')
 
 
 def remove_settings(apps, schema_editor):

@@ -29,14 +29,19 @@ DEFAULT_USER_SETTINGS = {
     'allowed_hosts': ['*'],
     'internal_ips': ['127.0.0.1'],
     'email': {
-        '__doc__': 'server_email will be visible in From: for outgoing e-mails.',
+        '__doc__': 'Django e-mail backend configuration. '
+                   'Make sure you set server_from and admin_emails to correct values.',
         'enabled': False,
-        'smtp_server': None,
-        'smtp_server_port': 0,
-        'smtp_user': '',
-        'smtp_password': '',
         'server_from': None,
         'admin_emails': [],
+        'smtp': {
+            '__doc__': 'Optional SMTP settings are used by tests. '
+                       'You can configure SMTP via web panel at any time.',
+            'server': None,
+            'port': 0,
+            'login': None,
+            'password': None,
+        },
     },
     'database': {
         '__doc__': "This object will be put verbatim into Django DATABASES['default'] setting. See Django DATABASES documentation.",
@@ -85,19 +90,19 @@ class UserSettings(object):
 
     @property
     def email_smtp_server(self):
-        return self.get('email.smtp_server')
+        return self.get('email.smtp.server')
 
     @property
-    def email_smtp_server_port(self):
-        return self.get('email.smtp_server_port')
+    def email_smtp_port(self):
+        return self.get('email.smtp.port')
 
     @property
-    def email_smtp_user(self):
-        return self.get('email.smtp_user')
-    
+    def email_smtp_login(self):
+        return self.get('email.smtp.login')
+
     @property
     def email_smtp_password(self):
-        return self.get('email.smtp_password')
+        return self.get('email.smtp.password')
 
     @property
     def email_server_from(self):

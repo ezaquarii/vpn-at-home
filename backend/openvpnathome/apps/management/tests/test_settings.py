@@ -9,11 +9,11 @@ from ..models import Settings
 class GetSettings(APITestWithBaseFixture):
 
     url = reverse('management-api:settings')
-    update = {'email_enabled': True}
 
     def setUp(self):
         self.assertTrue(Settings.objects.exists(), "Settings entry must exist")
         self.settings = Settings.objects.first()
+        self.update = {'email_enabled': not self.settings.email_enabled}
 
     def test_requires_authorization(self):
         response_anonymous = self.client.get(self.url)
