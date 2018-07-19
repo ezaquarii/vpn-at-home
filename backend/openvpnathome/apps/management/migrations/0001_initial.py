@@ -9,6 +9,7 @@ def create_settings(apps, schema_editor):
     Settings = apps.get_model('management', 'Settings')
     Settings.objects.create(pk=1,
                             email_enabled=USER_SETTINGS.email_enabled,
+                            email_from=USER_SETTINGS.email_server_from,
                             email_smtp_server=USER_SETTINGS.email_smtp_server or '',
                             email_smtp_port=USER_SETTINGS.email_smtp_port or 0,
                             email_smtp_login=USER_SETTINGS.email_smtp_login or '',
