@@ -23,7 +23,7 @@ DEFAULT_USER_SETTINGS = {
     '__doc__': 'This is the application settings file. Do not modify Python files. '
                'Review it and change configured to True.',
     'configured': False,
-    'development': False,
+    'development': True,
     'debug_toolbar_enabled': False,
     'secret_key': 'secret-key-not-set',
     'allowed_hosts': ['*'],
@@ -31,7 +31,7 @@ DEFAULT_USER_SETTINGS = {
     'email': {
         '__doc__': 'Django e-mail backend configuration. '
                    'Make sure you set server_from and admin_emails to correct values.',
-        'enabled': False,
+        'enabled': True,
         'server_from': None,
         'admin_emails': [],
         'smtp': {
