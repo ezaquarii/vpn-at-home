@@ -6,10 +6,11 @@ SERVER_EMAIL = USER_SETTINGS.email_server_from
 ADMINS = [('', email) for email in USER_SETTINGS.email_admin_emails]
 
 #
-# Configured dynamically via management.Settings:
+# Configurable backend is ignoring those settings; SMTP config is
+# taken from DB, but those values will be used during db migration
 #
-# EMAIL_HOST
-# EMAIL_PORT
-# EMAIL_HOST_USER
-# EMAIL_HOST_PASSWORD
-#
+EMAIL_HOST = USER_SETTINGS.email_smtp_server
+EMAIL_PORT = USER_SETTINGS.email_smtp_port
+EMAIL_HOST_USER = USER_SETTINGS.email_smtp_login
+EMAIL_HOST_PASSWORD = USER_SETTINGS.email_smtp_password
+
