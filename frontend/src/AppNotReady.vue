@@ -11,14 +11,11 @@
                 <div class="issue">
                     Default, sane config can be bootstrapped with a single command (must be run from <span class="important">root</span> account):
                     <div class="example">
-                        # {{bootstrapSh}} my@email.com<br>
-                        Provide admin password: (no echo)<br>
-                        Repeat the password: (no echo)<br>
-                        ... bootstrapping output...
+                        # {{bootstrapSh}}<br>
                     </div>
-                    If you want to modify the configuration, please follow the guide below. Don't forget
+                    If you want to perform manual configuration, please follow the guide below. Don't forget
                     that <span class="important">you need to restart the server</span> to reload updated config.
-                    <span class="shell">bootstrap.sh</span> will do it for you.
+                    <span class="shell">bootstrap.sh</span> will do it for you.<br><br>
                     <p class="note">
                         For all below examples,
                         <span class="shell">${ROOT}</span> equals to <span class="shell">{{deploymentDir}}</span>,
@@ -29,14 +26,14 @@
                     <div v-if="hasSettingsFile">
                         <h2><i aria-hidden="true" class="green circular inverted check icon"> </i> Has settings file</h2>
                         <p>
-                            Configuration file <span class="shell">settings.json</span> is present in deployment directory.
+                            Configuration file <span class="shell">settings.json</span> is present in th deployment directory.
                         </p>
                     </div>
                     <div v-else>
                         <h2><i aria-hidden="true" class="red circular inverted times icon"> </i> No settings file yet</h2>
                         <p>
                             OpenVPN@Home is configured through a JSON <span class="shell">settings.json</span> file placed in deployment
-                            directory. File can be generated with a managemen command:
+                            directory. File can be generated with a management command:
                             <p class="example">
                                 # ${ROOT}/backend/manage.py configure<br>
                                 cat settings.json
@@ -62,13 +59,14 @@
                                 {<br>&nbsp;&nbsp;...<br>
                                     &nbsp;&nbsp;"email": {<br>
                                     &nbsp;&nbsp;&nbsp;&nbsp;"enabled": <i>true / false</i>,<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"smtp_server": <i>"your.smtp.host"</i>,<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"smtp_port": <i>TLS port</i>,<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"smtp_user": <i>most likely your e-mail address</i>,<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"smtp_password": <i>password</i>,<br>
                                     &nbsp;&nbsp;&nbsp;&nbsp;"server_from": <i>e-mail showing in From:</i>,<br>
                                     &nbsp;&nbsp;&nbsp;&nbsp;"admin_emails": <i>[list of e-mails to send crash logs to]</i><br>
-                                &nbsp;&nbsp;}<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;"smtp": {<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"server": <i>"your.smtp.host"</i>,<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"port": <i>TLS port</i>,<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"user": <i>most likely your e-mail address</i>,<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"password": <i>password</i>,<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
                                 &nbsp;&nbsp;...<br>}
                             </div>
                             Your <span class="shell">server_from</span> should be set to a valid e-mail address. Many SMTP servers
@@ -126,7 +124,7 @@
                         <p>
                             Admin user is a must. You want to use your real e-mail address and sane password for this one.
                             <div class="example">
-                                # ${ROOT}/backend/manage.py my@email.com my-secret-password
+                                # ${ROOT}/backend/manage.py set_admin my@email.com my-secret-password
                             </div>
                         </p>
                     </div>
