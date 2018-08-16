@@ -1,6 +1,8 @@
 DEVEL_VIRTUALENV_DIR=$(CURDIR)/env
 DATABASE_DIR=$(CURDIR)/db
+LOG_DIR=$(CURDIR)/logs
 CONFIG_FILE=$(CURDIR)/settings.json
+DJANGO_LOG_FILE=$(LOG_DIR)/django.log
 
 INSTALL_ROOT=$(DESTDIR)/srv/openvpnathome
 INSTALL_VIRTUALENV=$(INSTALL_ROOT)/env
@@ -26,6 +28,9 @@ devel: devel_backend devel_frontend
 
 devel_backend:
 	mkdir -p $(DATABASE_DIR)
+	mkdir -p $(LOG_DIR)
+	touch $(DJANGO_LOG_FILE)
+
 	$(MAKE) -C backend devel VIRTUALENV=$(DEVEL_VIRTUALENV_DIR)
 
 
@@ -41,6 +46,7 @@ distclean:
 	rm -rf $(DEVEL_VIRTUALENV_DIR)
 	rm -rf $(DATABASE_DIR)
 	rm -rf $(CONFIG_FILE)
+	rm -rf $(LOG_DIR)
 	rm -rf static
 
 
@@ -85,4 +91,3 @@ remove_deb:
 
 purge_deb:
 	sudo dpkg --purge openvpnathome
-
