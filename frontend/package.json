@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "core-js": "^2.5.7",
     "jquery": "^3.3.1",
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.10",
