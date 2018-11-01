@@ -18,7 +18,7 @@ import NewClientDialog from '@/components/NewClientDialog.vue';
 import {
     EVENT_CLICKED_ADD_CLIENT,
     EVENT_CLICKED_ADD_SERVER
-} from "@/eventbus";
+} from '@/eventbus';
 
 @Component({
     name: 'Home',
@@ -27,11 +27,11 @@ import {
         ConfigList,
         NewServerDialog,
         NewClientDialog
-    },
+    }
 })
 export default class Home extends Vue {
 
-    constructor() {
+    constructor () {
         super();
         this.onClickedAddClient = this.onClickedAddClient.bind(this);
         this.onClickedAddServer = this.onClickedAddServer.bind(this);
@@ -61,12 +61,12 @@ export default class Home extends Vue {
         this.$refs.newServerDialog.open = true;
     }
 
-    mounted() {
+    mounted () {
         this.$root.$on(EVENT_CLICKED_ADD_CLIENT, this.onClickedAddClient);
         this.$root.$on(EVENT_CLICKED_ADD_SERVER, this.onClickedAddServer);
     }
 
-    beforeDestroy() {
+    beforeDestroy () {
         this.$root.$off(EVENT_CLICKED_ADD_CLIENT, this.onClickedAddClient);
         this.$root.$off(EVENT_CLICKED_ADD_SERVER, this.onClickedAddServer);
     }

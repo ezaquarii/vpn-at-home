@@ -30,18 +30,18 @@
 </template>
 
 <script lang="js">
-    import { Component, Vue } from 'vue-property-decorator';
-    import {required, email, minLength} from 'vuelidate/lib/validators';
+import { Component, Vue } from 'vue-property-decorator';
+import { required, email, minLength } from 'vuelidate/lib/validators';
 
     @Component({
         components: {
         },
         validations: {
-            login: {required, email},
-            password: {required, minLength: minLength(8)}
+            login: { required, email },
+            password: { required, minLength: minLength(8) }
         }
     })
-    export default class Login extends Vue {
+export default class Login extends Vue {
 
         login = '';
         password = '';

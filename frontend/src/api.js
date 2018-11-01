@@ -14,7 +14,7 @@ const SETTINGS_URL = '/api/management/settings/';
 export default class Api {
 
     login (email, password, onSuccess, onError) {
-        this.client().post(LOGIN_URL, {email, password}).then(
+        this.client().post(LOGIN_URL, { email, password }).then(
             (response) => {
                 onSuccess();
             },
@@ -25,7 +25,7 @@ export default class Api {
     }
 
     register (email, password, onSuccess, onError) {
-        this.client().post(REGISTER_URL, {email, password}).then(
+        this.client().post(REGISTER_URL, { email, password }).then(
             (response) => {
                 onSuccess();
             },
@@ -111,7 +111,7 @@ export default class Api {
     client () {
         const token = Cookies.get('csrftoken');
         return axios.create({
-            headers: {'X-CSRFToken': token}
+            headers: { 'X-CSRFToken': token }
         });
     }
 

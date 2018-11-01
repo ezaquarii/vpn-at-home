@@ -25,7 +25,7 @@ import moment from 'moment';
 
 @Component({
     name: 'ConfigListItem',
-    props: ['item', 'emailEnabled'],
+    props: ['item', 'emailEnabled']
 })
 export default class ConfigListItem extends Vue {
 
@@ -45,12 +45,12 @@ export default class ConfigListItem extends Vue {
         return this.$store.getters.canSendEmail(this.item.email);
     }
 
-    sendMail() {
+    sendMail () {
         console.log('ConfigListItem.sendMail()', this.item);
         this.$store.dispatch('sendClientConfigEmail', this.item.id);
     }
 
-};
+}
 </script>
 
 <style scoped lang="scss">

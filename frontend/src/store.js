@@ -35,7 +35,7 @@ const getters = {
     hasPermission: (state) => (permission) => _.includes(state.user.permissions, permission),
     isSendingClientConfigEmail: (state) => (id) => _.includes(state.status.sendingClientConfigEmail, id),
     email: (state) => state.user.email,
-    canSendEmail: ({settings, user}) => (email) => settings.email_enabled && (email === user.email || user.superuser)
+    canSendEmail: ({ settings, user }) => (email) => settings.email_enabled && (email === user.email || user.superuser)
 };
 
 const mutations = {
@@ -89,35 +89,35 @@ const mutations = {
 };
 
 const actions = {
-    hydrate ({dispatch}) {
+    hydrate ({ dispatch }) {
         dispatch('getSettings');
         dispatch('getUser');
         dispatch('getServers');
         dispatch('getClients');
     },
 
-    getUser ({commit}) {
+    getUser ({ commit }) {
         api.getUser(
             (user) => commit('setUser', user),
             (_) => {}
         );
     },
 
-    getServers ({commit}) {
+    getServers ({ commit }) {
         api.getServers(
             (servers) => commit('setServers', servers),
             (_) => {}
         );
     },
 
-    getClients ({commit}) {
+    getClients ({ commit }) {
         api.getClients(
             (servers) => commit('setClients', servers),
             (_) => {}
         );
     },
 
-    addServer ({commit}, server) {
+    addServer ({ commit }, server) {
         api.addServer(
             server,
             (server) => commit('addServer', server),
@@ -125,7 +125,7 @@ const actions = {
         );
     },
 
-    addClient ({commit}, client) {
+    addClient ({ commit }, client) {
         api.addClient(
             client,
             (client) => commit('addClient', client),
@@ -133,7 +133,7 @@ const actions = {
         );
     },
 
-    sendClientConfigEmail ({commit}, id) {
+    sendClientConfigEmail ({ commit }, id) {
         commit('setSendingClientConfigEmail', id);
         api.sendClientConfig(
             id,
@@ -142,7 +142,7 @@ const actions = {
         );
     },
 
-    setSettings ({commit}, settings) {
+    setSettings ({ commit }, settings) {
         api.setSettings(
             settings,
             (setting) => commit('setSettings', settings),
@@ -150,7 +150,7 @@ const actions = {
         );
     },
 
-    getSettings ({commit}) {
+    getSettings ({ commit }) {
         api.getSettings(
             (settings) => commit('setSettings', settings),
             () => {}

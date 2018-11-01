@@ -42,12 +42,12 @@ export default class NewServerDialog extends Vue {
         this.isValid = valid;
     }
 
-    onAccept() {
+    onAccept () {
         this.$store.dispatch('addServer', this.$refs.form.value);
         this.open = false;
     }
 
-    onReject() {
+    onReject () {
         console.log('onReject()');
         this.open = false;
     }

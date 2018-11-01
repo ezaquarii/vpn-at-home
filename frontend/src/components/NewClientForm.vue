@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import {required} from 'vuelidate/lib/validators';
+import { required } from 'vuelidate/lib/validators';
 
 export default {
     name: 'NewClientForm',
@@ -19,13 +19,13 @@ export default {
         return {
             open: false,
             form: {
-                name: '',
+                name: ''
             }
         };
     },
     validations: {
         form: {
-            name: {required},
+            name: { required }
         }
     },
     computed: {
@@ -33,7 +33,7 @@ export default {
             return !this.$v.$invalid;
         },
         value () {
-            return {...this.form};
+            return { ...this.form };
         }
     },
     mounted () {

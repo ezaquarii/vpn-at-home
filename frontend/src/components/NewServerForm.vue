@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import {required} from 'vuelidate/lib/validators';
+import { required } from 'vuelidate/lib/validators';
 
 export default {
     name: 'NewServerForm',
@@ -56,11 +56,11 @@ export default {
     },
     validations: {
         form: {
-            name: {required},
-            hostname: {required},
-            port: {required},
-            protocol: {required},
-            network: {required},
+            name: { required },
+            hostname: { required },
+            port: { required },
+            protocol: { required },
+            network: { required }
         }
     },
     computed: {
@@ -68,7 +68,7 @@ export default {
             return !this.$v.$invalid;
         },
         value () {
-            return {...this.form};
+            return { ...this.form };
         }
     },
     mounted () {

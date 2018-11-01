@@ -24,16 +24,15 @@
 
 <script>
 import { Component, Vue } from 'vue-property-decorator';
-import {ROUTE_HOME} from '@/router';
+import { ROUTE_HOME } from '@/router';
 import {
     EVENT_CLICKED_ADD_CLIENT,
     EVENT_CLICKED_ADD_SERVER
-} from "@/eventbus";
+} from '@/eventbus';
 
 @Component({
     name: 'NavigationBar',
     components: {
-        NavigationBar
     }
 })
 export default class NavigationBar extends Vue {
@@ -52,14 +51,14 @@ export default class NavigationBar extends Vue {
 
     onLogoutCompleted () {
         this.$store.commit('logout');
-        this.$router.push({path: '/login'});
+        this.$router.push({ path: '/login' });
     }
 
     get canAddServer () {
-        return this.$route.name === ROUTE_HOME && !this.$store.getters.hasServer
+        return this.$route.name === ROUTE_HOME && !this.$store.getters.hasServer;
     }
 
-    get canAddClient() {
+    get canAddClient () {
         return this.$route.name === ROUTE_HOME && this.$store.getters.hasServer;
     }
 

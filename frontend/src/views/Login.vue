@@ -31,14 +31,14 @@
 
 <script lang="js">
 import { Component, Vue } from 'vue-property-decorator';
-import {required, email, minLength} from 'vuelidate/lib/validators';
+import { required, minLength } from 'vuelidate/lib/validators';
 
 @Component({
     components: {
     },
     validations: {
-        login: {required},
-        password: {required, minLength: minLength(8)}
+        login: { required },
+        password: { required, minLength: minLength(8) }
     }
 })
 export default class Login extends Vue {

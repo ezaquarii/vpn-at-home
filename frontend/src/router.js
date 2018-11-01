@@ -25,13 +25,13 @@ const router = new Router({
             path: '/login',
             name: ROUTE_LOGIN,
             component: Login,
-            meta: {isPublic: true, noNavbar: true}
+            meta: { isPublic: true, noNavbar: true }
         },
         {
             path: '/register',
             name: ROUTE_REGISTER,
             component: Register,
-            meta: {isPublic: true, noNavbar: true}
+            meta: { isPublic: true, noNavbar: true }
         },
         {
             path: '/settings',
@@ -44,7 +44,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
     const canVisit = !store.getters.isAuthenticated && !to.meta.isPublic;
     if (canVisit) {
-        next({path: '/login'});
+        next({ path: '/login' });
     } else {
         next();
     }

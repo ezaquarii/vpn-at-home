@@ -17,20 +17,20 @@
             <th v-if="emailEnabled" class="center"><i aria-hidden="true" class="icon mail"></i></th>
             </tr></thead>
             <tbody>
-                <ConfigListItem v-for="item in items" :item="item" v-bind:emailEnabled="emailEnabled"/>
+                <ConfigListItem v-for="item in items" :item="item" :key="item" v-bind:emailEnabled="emailEnabled"/>
             </tbody>
         </table>
     </div>
 </template>
 
 <script>
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import ConfigListItem from '@/components/ConfigListItem';
 
 @Component({
     name: 'ConfigList',
     props: ['items', 'title', 'emailEnabled'],
-    components: {ConfigListItem}
+    components: { ConfigListItem }
 })
 export default class ConfigList extends Vue {}
 </script>

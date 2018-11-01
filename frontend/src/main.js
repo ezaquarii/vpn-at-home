@@ -9,7 +9,7 @@ import App from './App.vue';
 import AppNotReady from './AppNotReady.vue';
 import router from './router';
 import store from './store';
-import {ApiPlugin} from '@/api';
+import { ApiPlugin } from '@/api';
 import SuiVue from 'semantic-ui-vue';
 
 Vue.config.productionTip = false;
@@ -19,7 +19,7 @@ Vue.use(Vuelidate);
 Vue.use(SuiVue);
 
 if (store.state.status.appNotReady) {
-    new Vue({store, render: h => h(AppNotReady)}).$mount('#app');
+    new Vue({ store, render: h => h(AppNotReady) }).$mount('#app');
 } else {
-    new Vue({router, store, render: h => h(App)}).$mount('#app');
+    new Vue({ router, store, render: h => h(App) }).$mount('#app');
 }

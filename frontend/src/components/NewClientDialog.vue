@@ -41,12 +41,12 @@ export default class NewClientDialog extends Vue {
         this.isValid = valid;
     }
 
-    onAccept() {
+    onAccept () {
         this.$store.dispatch('addClient', this.$refs.form.value);
         this.open = false;
     }
 
-    onReject() {
+    onReject () {
         this.open = false;
     }
 

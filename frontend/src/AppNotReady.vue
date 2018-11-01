@@ -31,15 +31,15 @@
                     </div>
                     <div v-else>
                         <h2><i aria-hidden="true" class="red circular inverted times icon"> </i> No settings file yet</h2>
-                        <p>
-                            OpenVPN@Home is configured through a JSON <span class="shell">settings.json</span> file placed in deployment
-                            directory. File can be generated with a management command:
-                            <p class="example">
-                                # ${ROOT}/backend/manage.py configure<br>
-                                cat settings.json
-                            </p>
-                            You can also check <span class="shell">./manage.py configure --help</span> for details.
-                        </p>
+                        <div>
+                          OpenVPN@Home is configured through a JSON <span class="shell">settings.json</span> file placed in deployment
+                          directory. File can be generated with a management command:
+                          <p class="example">
+                            # ${ROOT}/backend/manage.py configure<br>
+                            cat settings.json
+                          </p>
+                          You can also check <span class="shell">./manage.py configure --help</span> for details.
+                        </div>
                     </div>
                 </div>
 
@@ -51,7 +51,7 @@
                     </div>
                     <div v-else>
                         <h2><i aria-hidden="true" class="red circular inverted times icon"> </i> You must configure e-mail</h2>
-                        <p>
+                        <div>
                             E-mail is <span class="green bold">enabled</span> but not fully configured yet. If you don't want to use
                             e-mail, set <span class="shell">enabled</span> to <span class="shell">false</span> and you can skip the configuration.
                             Open <span class="shell">settings.json</span> and fill email related fields:
@@ -71,7 +71,7 @@
                             </div>
                             Your <span class="shell">server_from</span> should be set to a valid e-mail address. Many SMTP servers
                             will refuse to send e-mail with bogus <i>From</i> field. <span class="important">You must restart the service to pick up new configuration.</span>
-                        </p>
+                        </div>
                     </div>
                 </div>
 
@@ -82,7 +82,7 @@
                     </div>
                     <div v-else>
                         <h2><i aria-hidden="true" class="red circular inverted times icon"> </i> You must review and accept settings first</h2>
-                        <p>
+                        <div>
                             Settings file must be reviewed and accepted before proceeding. Open <span class="shell">settings.json</span> in
                             your favorite editor and set <span class="shell">configured</span> flag to <span class="shell">true</span>.
                             Most interesting part is your <span class="shell">database</span> field.
@@ -90,7 +90,7 @@
                             {<br>&nbsp;&nbsp;...<br>&nbsp;&nbsp;"configured": "true"<br>&nbsp;&nbsp;"database": {...}<br>
                         &nbsp;&nbsp;...<br>}
                             </div>
-                        </p>
+                        </div>
                      </div>
                 </div>
 
@@ -103,12 +103,12 @@
                     </div>
                     <div v-else>
                         <h2><i aria-hidden="true" class="red circular inverted times icon"> </i> Database is not initialized (migrated) yet</h2>
-                        <p>
+                        <div>
                             Database must be initialized (migrated) before the app is usable. Use standard Django migration utility.
                             <div class="example">
                                 # ${ROOT}/backend/manage.py migrate
                             </div>
-                        </p>
+                        </div>
                     </div>
                 </div>
 
@@ -121,12 +121,12 @@
                     </div>
                     <div v-else>
                         <h2><i aria-hidden="true" class="red circular inverted times icon"> </i> Admin user is not configured yet</h2>
-                        <p>
+                        <div>
                             Admin user is a must. You want to use your real e-mail address and sane password for this one.
                             <div class="example">
                                 # ${ROOT}/backend/manage.py set_admin my@email.com my-secret-password
                             </div>
-                        </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -138,43 +138,43 @@
 
 export default {
     computed: {
-        hasSettingsFile() {
+        hasSettingsFile () {
             return this.$store.state.status.appNotReady.has_settings_file;
         },
 
-        isConfigured() {
+        isConfigured () {
             return this.$store.state.status.appNotReady.is_configured && this.hasSettingsFile;
         },
 
-        isDatabaseInitialized() {
+        isDatabaseInitialized () {
             return this.$store.state.status.appNotReady.is_migrated;
         },
 
-        managePy() {
-            return this.$store.state.status.appNotReady.manage_py
+        managePy () {
+            return this.$store.state.status.appNotReady.manage_py;
         },
 
-        bootstrapSh() {
+        bootstrapSh () {
             return this.$store.state.status.appNotReady.bootstrap_sh;
         },
 
-        deploymentDir() {
+        deploymentDir () {
             return this.$store.state.status.appNotReady.deployment_dir;
         },
 
-        hasAdminUser() {
+        hasAdminUser () {
             return this.$store.state.status.appNotReady.has_active_admin;
         },
 
-        isEmailConfigured() {
+        isEmailConfigured () {
             return this.$store.state.status.appNotReady.is_email_configured;
         },
 
-        isEmailEnabled() {
+        isEmailEnabled () {
             return this.$store.state.status.appNotReady.is_email_enabled;
         }
-    },
-}
+    }
+};
 
 </script>
 
@@ -225,6 +225,5 @@ export default {
         font-weight: bold;
         font-family: monospace, monospace;
     }
-
 
 </style>

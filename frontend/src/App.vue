@@ -20,12 +20,12 @@ export default {
         }
     },
     methods: {
-        onClickedAddClient() {
+        onClickedAddClient () {
             console.log('onClickedAddClient()', this);
             window.x = this;
         },
 
-        onClickedAddServer() {
+        onClickedAddServer () {
 
         }
     }

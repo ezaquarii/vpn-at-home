@@ -59,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="ui button" role="button" :disabled="!isValid" @submit>Submit</button>
+                <button type="submit" class="ui button" role="button" :disabled="!isValid" @submit="{}">Submit</button>
                 <span v-if="status === 'error'" class="ui red header"><i aria-hidden="true" class="times icon"></i> Update failed</span>
                 <span v-if="status === 'success'" class="ui green header"><i aria-hidden="true" class="check icon"></i> Settings updated</span>
             </form>
@@ -68,9 +68,10 @@
 </template>
 
 <script>
-import {Component, Vue} from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import NavigationBar from '@/components/NavigationBar.vue';
-import { required, email, minLength, between } from 'vuelidate/lib/validators';
+import { required, email } from 'vuelidate/lib/validators';
+import _ from 'lodash';
 
 @Component({
     name: 'Settings',
@@ -79,18 +80,18 @@ import { required, email, minLength, between } from 'vuelidate/lib/validators';
     },
     validations () {
         const validators = {
-            registration_enabled: {required}
+            registration_enabled: { required }
         };
         if (this.settings.email_enabled) {
             Object.assign(validators, {
-                email_from: {required, email},
-                email_smtp_server: {required},
-                email_smtp_port: {required},
-                email_smtp_login: {required},
-                email_smtp_password: {required}
+                email_from: { required, email },
+                email_smtp_server: { required },
+                email_smtp_port: { required },
+                email_smtp_login: { required },
+                email_smtp_password: { required }
             });
         }
-        return {settings: validators};
+        return { settings: validators };
     }
 })
 export default class Settings extends Vue {
@@ -126,6 +127,6 @@ export default class Settings extends Vue {
             this.settings = _.cloneDeep(this.$store.state.settings);
         }
 
-    }
+}
 
 </script>
