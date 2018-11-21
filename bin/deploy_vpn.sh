@@ -24,6 +24,9 @@ if [ "${1}" = "local" ]; then
 fi
 
 if [ "${1}" = "remote" ]; then
-    ansible-playbook -i "${BIN_DIR}/inventory.sh" "${ANSIBLE_DIR}/remote.yml"
+    ansible-playbook --inventory "${BIN_DIR}/inventory.sh" \
+                     --private-key "${SSH_KEY_DIR}/openvpnathome_server_deployment_key" \
+                     --ssh-common-args "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+                     "${ANSIBLE_DIR}/remote.yml"
     exit $?
 fi

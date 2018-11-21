@@ -1,7 +1,10 @@
 from unittest import TestCase
 
+from openvpnathome import get_bin_path
 from openvpnathome.utils import get_nested_item
-from openvpnathome import utils
+from openvpnathome.utils import is_database_migrated, AsyncProcess, SubprocessThread
+
+import asyncio
 
 
 class TestGetNestedItem(TestCase):
@@ -29,8 +32,54 @@ class TestGetNestedItem(TestCase):
 
 class TestIsDatabaseMigrated(TestCase):
 
+
     def test_is_migrated(self):
-        self.assertTrue(utils.is_database_migrated())
+        self.assertTrue(is_database_migrated())
 
     def test_unknown_database_is_not_migrated(self):
-        self.assertFalse(utils.is_database_migrated('unknown-database'))
+        self.assertFalse(is_database_migrated('unknown-database'))
+
+
+def async_test(f):
+    def wrapper(*args, **kwargs):
+        coro = asyncio.coroutine(f)
+        future = coro(*args, **kwargs)
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(future)
+    return wrapper
+
+
+class TestSubprocessThread(TestCase):
+
+    ITERATIONS = 3
+
+    def on_stdout(self, line):
+        self.stdout.append(line)
+
+    def on_stderr(self, line):
+        self.stderr.append(line)
+
+    def on_finished(self):
+        self.finished = True
+
+    def setUp(self):
+        self.cmd = ["python3", get_bin_path("process.py"), '--stdout', '--stderr', '--iterations', str(self.ITERATIONS)]
+        self.stderr = []
+        self.stdout = []
+        self.finished = False
+
+        self.process_thread = SubprocessThread(
+            cmd=self.cmd,
+            on_stderr=self.on_stderr,
+            on_stdout=self.on_stdout,
+            on_finished=self.on_finished
+        )
+
+        self.process_thread.start()
+        self.process_thread.join(10)
+        self.assertFalse(self.process_thread.is_alive())
+
+    def test_callbacks_fired(self):
+        self.assertEqual(self.ITERATIONS, len(self.stdout))
+        self.assertEqual(self.ITERATIONS, len(self.stderr))
+        self.assertTrue(self.finished)

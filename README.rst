@@ -20,7 +20,7 @@ And with love, of course.
    :width: 512
    :align: center
 
-.. image:: onboarding.png
+.. image:: deployment.png
    :width: 512
    :align: center
 
@@ -43,15 +43,59 @@ Features:
 #. users with admin/casual privilege separation
 #. simple user registration
 #. automatic generation of OpenVPN profiles
-#. all crypto stuff is inlined into OpenVPN profiles
+#. all crypto stuff is inlined into OpenVPN profiles (single file deployment)
 #. profiles can be sent by e-mail or downloaded as files
 #. Ansible scripts to automatically deploy configured VPN server
-#. Tested on DigitalOcean's Ubuntu 18.04 droplet
+#. 1-click server deployment
+#. tested on Ubuntu 18.04 (Vultr VPS)
 
 That's all folks. No fancy stuff. It's not a toolbox, it's a screwdriver to manage 3-5 home machines (and phones).
 
 .. note:: This is a work-in-progress app, hacked together during x-mas break to solve a specific need of mine.
           Feel free to submit PRs with improvements.
+
+FAQ
+===
+
+**Why?**
+
+To quickly deploy VPN server when I need it. I can spin VPS and deploy my own VPN any time, tear it down
+when not used and not paying a monthly fee for all my devices.
+
+I travel a lot and I need to have on-demand VPN when browsing stuff in hotels, airports, etc.
+
+**Does it hide my ass? Can I haz torrentz?**
+
+No. Do not use it to do any stupid things.
+
+**Is the app secure?**
+
+Since the app manages OpenVPN server deployment, it must have root access to the VPN machine.
+It is not wise to keep it facing the open internet, I guess.
+
+**So how to host it?**
+
+Preferably on your internal network. Keep the server bound to *localhost* and connect to it
+via SSH tunnel. This way you don't need to configure SSL certificate and a lot of security
+headaches go away.
+
+I personally use it installed on my private laptop, the same way I use CUPS (printer stuff).
+
+**Why can I manage only 1 server?**
+
+I don't need more. It would be very easy to add more servers in the future, but the UI/UX is a rabbit hole.
+This is a problem I don't have, but I'm happy to work with somebody who has it. :o)
+
+**How to change server address after it is created?**
+
+Use Django Admin panel to modify host field and re-deploy. All client configs must be re-deployed too.
+
+**Why Ansible? It's slow and weights 30MB.**
+
+#. It does the job like a champ lifting tons of system complexity
+#. Zero-effort deployment (no master nodes, etc)
+#. Very easy to extend
+#. I'd like to have more complex setup in the future and simply bash won't cut it
 
 Project structure
 =================
@@ -78,6 +122,7 @@ Prerequisites
 #. Ansible (tested with 2.5.0, but no fancy functionality is used)
 #. OpenVPN in ${PATH}
 #. OpenSSL in ${PATH}
+#. OpenSSH in ${PATH}
 #. Internet connection (no off-line build possible)
 
 Deployment
@@ -274,7 +319,7 @@ Known issues
 I left this as the last point, hoping not to scare anybody.
 
  * only one sever can be managed (I don't need more for now)
- * frontend has 0% test coverage and many lint issues :o)
+ * frontend has 0% test coverage -and many lint issues- :o)
  * security is not a major concern for this app, I'm not running a CA company
  * no real user management - I rely on Django Admin panel for it
  * not tested on Windows, as I don't touch it even with a 10-foot stick, in rubber gloves - patches are welcome, however

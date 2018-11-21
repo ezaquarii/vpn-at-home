@@ -9,7 +9,7 @@ Vcs-Git: https://github.com/ezaquarii/openvpn-at-home.git
 
 Package: openvpnathome
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, openssl (>= 1.1.0), openvpn (>= 2.4.4), ansible (>=2.5.0)
+Depends: ${shlibs:Depends}, ${misc:Depends}, openssl (>= 1.1.0), openvpn (>= 2.4.4), ansible (>=2.5.0), openssh-client (>=7.0)
 Description: Web OpenVPN Management UI
  This app provides easy management console to keep OpenVPN
  configuration files in one place, provided in self-contained,

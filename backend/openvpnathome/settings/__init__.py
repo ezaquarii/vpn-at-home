@@ -23,7 +23,7 @@ DEFAULT_USER_SETTINGS = {
     '__doc__': 'This is the application settings file. Do not modify Python files. '
                'Review it and change configured to True.',
     'configured': False,
-    'development': True,
+    'development': False,
     'debug_toolbar_enabled': False,
     'secret_key': 'secret-key-not-set',
     'allowed_hosts': ['*'],

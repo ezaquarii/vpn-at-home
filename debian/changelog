@@ -1,3 +1,12 @@
+openvpnathome (1.5.0-1) unstable; urgency=medium
+
+  * daphne replaced uwsgi server
+  * 1-click server deployment
+  * FAQ
+  * jQuery is no longer downloaded from internet
+
+ -- Chris Narkiewicz <hello@ezaquarii.com>  Mon, 21 Nov 2018 05:44:00 +0100
+
 openvpnathome (1.4.0-1) unstable; urgency=medium
 
   * Initial packaged release

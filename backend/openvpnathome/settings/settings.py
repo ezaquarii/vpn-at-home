@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 ROOT_URLCONF = 'openvpnathome.urls'
 WSGI_APPLICATION = 'openvpnathome.wsgi.application'
+ASGI_APPLICATION = "openvpnathome.routing.application"
 
 from openvpnathome.settings import USER_SETTINGS
 

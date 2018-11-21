@@ -15,6 +15,8 @@ case "$1" in
         create_user
         create_database_dir
         create_logs_dir
+	    create_ssh_key
+	    set_ssh_permissions
         set_manage_py_interpreter
         systemctl enable openvpnathome
         systemctl start openvpnathome.service

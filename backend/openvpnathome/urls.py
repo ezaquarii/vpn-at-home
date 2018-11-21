@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, re_path, include
+from django.views.static import serve
 
 from openvpnathome.apps.accounts.urls import api_urlpatterns as account_api_urls
 from openvpnathome.apps.management.urls import api_urlpatterns as management_api_urls

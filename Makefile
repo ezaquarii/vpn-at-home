@@ -20,7 +20,10 @@ all:
 	@echo "   * devel_frontend - bootstrap frontend for development (dependency of devel)"
 	@echo " * distclean        - clean projects, delete all data (start from 'git clone' state)"
 	@echo " * runserver        - run runserver target of backend/Makefile - start django server"
-
+	@echo " * deb              - build debian package"
+	@echo "   * remove_deb     - remove installed Debian package"
+	@echo "   * purge_deb      - purge installed Debian package"
+	@echo "   * install_deb    - install previously built debian package"
 
 devel: devel_backend devel_frontend
 	@echo "Development environment is ready"
@@ -30,7 +33,6 @@ devel_backend:
 	mkdir -p $(DATABASE_DIR)
 	mkdir -p $(LOG_DIR)
 	touch $(DJANGO_LOG_FILE)
-
 	$(MAKE) -C backend devel VIRTUALENV=$(DEVEL_VIRTUALENV_DIR)
 
 
@@ -66,9 +68,8 @@ install:
 	@echo "Installing backend files"
 	@echo
 	mkdir -p $(INSTALL_ROOT)
-	$(DEPLOYMENT_VIRTUALENV)/bin/python3 ./backend/manage.py collectstatic --no-input
+	mkdir -p $(LOG_DIR)
 	sudo umount -l $(DEPLOYMENT_ROOT)
-	cp -r static $(INSTALL_ROOT)
 	cp -r backend $(INSTALL_ROOT)
 	cp -r bin $(INSTALL_ROOT)
 	cp README.rst $(INSTALL_ROOT)

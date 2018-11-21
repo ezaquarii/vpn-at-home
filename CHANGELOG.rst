@@ -1,9 +1,18 @@
 Changelog
 =========
 
+2018-11-21
+----------
+
+* daphne replaced uwsgi server
+* 1-click server deployment
+* FAQ
+* jQuery is no longer downloaded from internet
+
 2018-07-03
 ----------
-* Automatic VPN deployment using Ansible scriptsssss
+
+* Automatic VPN deployment using Ansible script
 
 2018-06-20
 ----------
@@ -22,9 +31,9 @@ Changelog
 2018-02-03
 ----------
 
- * added VPN carrier protocol option
+* added VPN carrier protocol option
 
 2018-01-07
 ----------
 
- * initial release
+* initial release
