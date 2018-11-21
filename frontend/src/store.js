@@ -99,21 +99,24 @@ const actions = {
     getUser ({ commit }) {
         api.getUser(
             (user) => commit('setUser', user),
-            (_) => {}
+            (_) => {
+            }
         );
     },
 
     getServers ({ commit }) {
         api.getServers(
             (servers) => commit('setServers', servers),
-            (_) => {}
+            (_) => {
+            }
         );
     },
 
     getClients ({ commit }) {
         api.getClients(
             (servers) => commit('setClients', servers),
-            (_) => {}
+            (_) => {
+            }
         );
     },
 
@@ -121,7 +124,8 @@ const actions = {
         api.addServer(
             server,
             (server) => commit('addServer', server),
-            (_) => {}
+            (_) => {
+            }
         );
     },
 
@@ -129,7 +133,8 @@ const actions = {
         api.addClient(
             client,
             (client) => commit('addClient', client),
-            (_) => {}
+            (_) => {
+            }
         );
     },
 
@@ -146,14 +151,16 @@ const actions = {
         api.setSettings(
             settings,
             (setting) => commit('setSettings', settings),
-            (_) => {}
+            (_) => {
+            }
         );
     },
 
     getSettings ({ commit }) {
         api.getSettings(
             (settings) => commit('setSettings', settings),
-            () => {}
+            () => {
+            }
         );
     }
 };

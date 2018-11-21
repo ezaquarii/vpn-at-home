@@ -2,6 +2,7 @@
     <div class="settings">
         <div class="ui container text" style="margin: 16px">
             <form class="ui form" @submit.prevent="handleSubmit">
+                <!-- E-mail settings -->
                 <div class="ui fluid card">
                     <div class="content">
                         <div class="field">
@@ -49,6 +50,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Registration settings -->
                 <div class="ui fluid card">
                     <div class="content">
                         <div class="field">
@@ -59,6 +62,7 @@
                         </div>
                     </div>
                 </div>
+
                 <button type="submit" class="ui button" role="button" :disabled="!isValid" @submit="{}">Submit</button>
                 <span v-if="status === 'error'" class="ui red header"><i aria-hidden="true" class="times icon"></i> Update failed</span>
                 <span v-if="status === 'success'" class="ui green header"><i aria-hidden="true" class="check icon"></i> Settings updated</span>
@@ -130,3 +134,7 @@ export default class Settings extends Vue {
 }
 
 </script>
+
+<style scoped lang="scss">
+
+</style>

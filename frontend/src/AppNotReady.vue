@@ -218,12 +218,4 @@ export default {
         color: green;
     }
 
-    .shell {
-        background: $lightgray;
-        padding: 0.2em;
-        border-radius: 0.2em;
-        font-weight: bold;
-        font-family: monospace, monospace;
-    }
-
 </style>

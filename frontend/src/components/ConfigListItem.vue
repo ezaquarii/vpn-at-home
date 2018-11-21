@@ -16,16 +16,26 @@
                 <i aria-hidden="true" class="icon ban"></i>
             </span>
         </td>
+        <td v-if="deploymentEnabled" class="center">
+            <span v-if="canDeploy">
+                <span class="play-button" @click.prevent="deploy"><i aria-hidden="true" class="icon play"></i> </span>
+            </span>
+            <span v-else>
+                <i aria-hidden="true" class="icon ban"></i>
+            </span>
+        </td>
     </tr>
 </template>
 
 <script>
 import { Component, Vue } from 'vue-property-decorator';
 import moment from 'moment';
+import _ from 'lodash';
+import { EVENT_CLICKED_DEPLOY_SERVER } from '@/eventbus';
 
 @Component({
     name: 'ConfigListItem',
-    props: ['item', 'emailEnabled']
+    props: ['item', 'emailEnabled', 'deploymentEnabled']
 })
 export default class ConfigListItem extends Vue {
 
@@ -45,16 +55,31 @@ export default class ConfigListItem extends Vue {
         return this.$store.getters.canSendEmail(this.item.email);
     }
 
+    get canDeploy () {
+        return _.has(this.item, 'network');
+    }
+
     sendMail () {
         console.log('ConfigListItem.sendMail()', this.item);
         this.$store.dispatch('sendClientConfigEmail', this.item.id);
+    }
+
+    deploy () {
+        this.$root.$emit(EVENT_CLICKED_DEPLOY_SERVER, this.item);
     }
 
 }
 </script>
 
 <style scoped lang="scss">
+    @import '@/assets/main.scss';
+
     .center {
         text-align: center !important;
+    }
+
+    .play-button {
+        color: $green;
+        cursor: pointer;
     }
 </style>

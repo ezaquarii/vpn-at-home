@@ -20,6 +20,7 @@
     "moments": "0.0.2",
     "semantic-ui-css": "^2.3.1",
     "semantic-ui-vue": "^0.2.10",
+    "testdouble": "^3.8.1",
     "vue": "^2.5.16",
     "vue-property-decorator": "^6.1.0",
     "vue-router": "^3.0.1",

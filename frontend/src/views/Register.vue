@@ -33,41 +33,40 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { required, email, minLength } from 'vuelidate/lib/validators';
 
-    @Component({
-        components: {
-        },
-        validations: {
-            login: { required, email },
-            password: { required, minLength: minLength(8) }
-        }
-    })
+@Component({
+    components: {
+    },
+    validations: {
+        login: { required, email },
+        password: { required, minLength: minLength(8) }
+    }
+})
 export default class Login extends Vue {
 
-        login = '';
-        password = '';
-        error = false;
+    login = '';
+    password = '';
+    error = false;
 
-        handleSubmit () {
-            this.$api.register(
-                this.login,
-                this.password,
-                () => {
-                    this.$store.commit('login');
-                    this.$store.dispatch('hydrate');
-                    this.$router.push('/');
-                },
-                () => {
-                    this.error = true;
-                }
-            );
-        }
-
-        get invalid () {
-            return this.$v.$invalid;
-        }
-
+    handleSubmit () {
+        this.$api.register(
+            this.login,
+            this.password,
+            () => {
+                this.$store.commit('login');
+                this.$store.dispatch('hydrate');
+                this.$router.push('/');
+            },
+            () => {
+                this.error = true;
+            }
+        );
     }
 
+    get invalid () {
+        return this.$v.$invalid;
+    }
+
+}
 </script>
 
 <style lang="css">
