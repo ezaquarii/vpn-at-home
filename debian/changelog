@@ -1,3 +1,10 @@
+openvpnathome (1.6.0-1) unstable; urgency=medium
+
+  * Docker support
+  * Fixed 500 error when accessing app before bootstrapping
+
+ -- Chris Narkiewicz <hello@ezaquarii.com>  Sat, 08 Dec 2018 22:00:00 +0100
+
 openvpnathome (1.5.0-1) unstable; urgency=medium
 
   * daphne replaced uwsgi server

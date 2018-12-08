@@ -2,6 +2,7 @@ from os.path import abspath, dirname, join
 
 MAIN_PKG_DIR = dirname(__file__)
 ROOT_DIR = abspath(join(dirname(__file__), '../..'))
+DATA_DIR = join(ROOT_DIR, 'data')
 BASE_DIR = join(ROOT_DIR, 'backend')
 BACKEND_DIR = BASE_DIR
 BIN_DIR = join(ROOT_DIR, 'bin')
@@ -49,3 +50,21 @@ def get_frontend_path(file_path):
     :return: Absolute path to file or dir
     """
     return abspath(join(FRONTEND_DIR, file_path))
+
+
+def get_data_path(file_path, make_dirs=False):
+    """
+    Get path from project's data directory.
+
+    :param file_path: File path relative to project's data directory
+    :param make_dirs: Create required directories
+    :return: Absolute path to file or dir
+    """
+
+    return abspath(join(DATA_DIR, file_path))
+
+
+def ensure_path_dirs(file_path, mode=0o750):
+    import os
+    dir_path = dirname(file_path)
+    os.makedirs(dir_path, mode=mode, exist_ok=True)

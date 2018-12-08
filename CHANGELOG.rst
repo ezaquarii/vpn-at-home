@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2018-12-08
+----------
+
+* Docker support
+* Fixed 500 error when accessing app before bootstrapping
+
 2018-11-21
 ----------
 

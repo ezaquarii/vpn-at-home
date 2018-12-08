@@ -145,10 +145,26 @@ with a single command:
 
 Open ``http://localhost:8001/`` and you should be able to log-in.
 
-For production
-~~~~~~~~~~~~~~
+For production - Docker
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Production deployment is supported on *Ubuntu*. *Debian* should be supported, but I didn't test it there.
+Docker container can be created with ``make``:
+
+::
+    $ make docker
+
+Created image will be tagged with name ``openvpnathome``.
+You can launch a container with a helper script:
+
+    $ ./bin/docker_run.sh bootstrap
+    $ ./bin/docker_run.sh run
+
+Data will be stored in a volume ``data``.
+
+For production - debian package
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Package deployment is supported on *Ubuntu*. *Debian* should be supported, but I didn't test it there.
 
 ::
 
@@ -166,7 +182,7 @@ The package needs virtually zero configuration:
 - installs into ``/srv/openvpnathome`` (referred to as ``${ROOT}``)
 - Python3 virtual environment, static files, etc are all in the ``deb`` package
 - ``systemd`` service script ``openvpnathome.service`` is installed and starts by default
-- ``uwsgi`` runs on ``http://127.0.0.1:8000``
+- ``daphne`` runs on ``http://127.0.0.1:8000``
 - Contains bootstrapping script to automate app configuration (``${ROOT}/bin/bootstrap.sh``)
 
 Building a package will call ``sudo`` and ask you for a password. Root privileges are required
@@ -210,7 +226,7 @@ configuration:
 
 - Admin login is *admin@locahost*
 - Admin password is *admin1234*
-- Database is located in ``${PROJECT_ROOT}/db/db.sqlite3``
+- Database is located in ``${PROJECT_ROOT}/data/db/db.sqlite3``
 - Settings have ``development`` flag set to true ``true``
 
 App config

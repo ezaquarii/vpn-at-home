@@ -36,3 +36,4 @@ test:
 
 runserver:
 	$(PYTHON) manage.py runserver --insecure 8001
+

@@ -6,7 +6,7 @@ from django.db.utils import DatabaseError
 
 from . import ManagementCommand
 
-from openvpnathome import get_root_path
+from openvpnathome import get_data_path
 from openvpnathome.settings import UserSettings, DEFAULT_USER_SETTINGS
 from openvpnathome.apps.management.models import Settings
 from openvpnathome.utils import get_object_or_none
@@ -30,6 +30,7 @@ class Command(ManagementCommand):
         parser.add_argument('-p', '--preview', action='store_true', help="Dump generated config to stdout, do not write.")
         parser.add_argument('-f', '--force', action='store_true', help="Force overwriting config if it already exists")
         parser.add_argument('-a', '--accept', action='store_true', help="Accept configuration (sets 'configured' flag to true)")
+        parser.add_argument('--no-smtp', action='store_true', help='Disable e-mail')
         parser.add_argument('--admin-email', type=str, help='Admin e-mail (used as server From too)')
         parser.add_argument('--smtp-server', type=str, help='SMTP server address')
         parser.add_argument('--smtp-port', type=str, help='SMTP server TLS port')
@@ -61,6 +62,10 @@ class Command(ManagementCommand):
         return self.options.get('admin_email', None)
 
     @property
+    def option_no_smtp(self):
+        return self.options.get('no_smtp', False)
+
+    @property
     def option_smtp_server(self):
         return self.options.get('smtp_server', None)
 
@@ -85,11 +90,12 @@ class Command(ManagementCommand):
             new_settings = DEFAULT_USER_SETTINGS.copy()
             new_settings['secret_key'] = self.create_secret_key()
             new_settings['development'] = self.option_development
+            new_settings['email']['enabled'] = not self.option_no_smtp
             new_settings['email']['server_from'] = admin.email if admin is not None else ''
             new_settings['email']['admin_emails'] = [admin.email] if admin is not None else []
             new_settings['database'].update(**{
                 'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': get_root_path('db/db.sqlite3'),
+                'NAME': get_data_path('db/db.sqlite3'),
             })
 
             existing_email_settings = self._get_existing_email_settings()

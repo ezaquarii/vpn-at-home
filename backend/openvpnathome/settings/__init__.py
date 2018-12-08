@@ -13,10 +13,10 @@ import copy
 import json
 from os import access, R_OK
 from os.path import isfile
-from openvpnathome import get_root_path as _get_root_path
+from openvpnathome import get_data_path as _get_data_path
 from openvpnathome.utils import get_nested_item
 
-SETTINGS_FILE_PATH = _get_root_path("settings.json")
+SETTINGS_FILE_PATH = _get_data_path("settings.json")
 
 DEFAULT_USER_SETTINGS = {
     '__version__': 1,
@@ -61,7 +61,7 @@ class UserSettings(object):
             with open(self.settings_file_path) as settings_file:
                 self._settings = json.load(settings_file)
         else:
-            self._settings = DEFAULT_USER_SETTINGS.copy()
+            self._settings = copy.deepcopy(DEFAULT_USER_SETTINGS)
 
     def get(self, path):
         try:
@@ -82,7 +82,9 @@ class UserSettings(object):
 
     @property
     def has_settings_file(self):
-        return isfile(self.settings_file_path) and access(self.settings_file_path, R_OK)
+        return self.settings_file_path is not None\
+               and isfile(self.settings_file_path)\
+               and access(self.settings_file_path, R_OK)
 
     @property
     def email_enabled(self):
@@ -135,5 +137,13 @@ class UserSettings(object):
     @property
     def debug_toolbar_enabled(self):
         return self.get('debug_toolbar_enabled')
+
+    @property
+    def database_file_path(self):
+        if 'sqlite3' in self.database['ENGINE'] and ':memory:' not in self.database['NAME']:
+            return self.database['NAME']
+        else:
+            return None
+
 
 USER_SETTINGS = UserSettings()

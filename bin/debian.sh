@@ -13,18 +13,20 @@ check_is_root
 case "$1" in
     postinst)
         create_user
-        create_database_dir
-        create_logs_dir
-	    create_ssh_key
-	    set_ssh_permissions
+        create_data_dirs
+        set_data_permissions
         set_manage_py_interpreter
-        systemctl enable openvpnathome
-        systemctl start openvpnathome.service
+        if [[ -x "$(command -v systemctl)" ]]; then
+            systemctl enable openvpnathome
+            systemctl start openvpnathome.service
+        fi
     ;;
 
     prerm)
-        systemctl stop openvpnathome.service
-        systemctl disable openvpnathome
+        if [[ -x "$(command -v systemctl)" ]]; then
+            systemctl stop openvpnathome.service
+            systemctl disable openvpnathome
+        fi
         remove_user
     ;;
 

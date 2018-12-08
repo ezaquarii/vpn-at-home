@@ -7,6 +7,7 @@
 
 ADMIN=""
 PASSWORD=""
+NO_SMTP=""
 SMTP_SERVER=""
 SMTP_PORT="25"
 SMTP_LOGIN=""
@@ -55,6 +56,7 @@ bootstrap_default_config() {
 
     CONFIG_ARGS="--accept --admin-email \"${ADMIN}\""
 
+    [[ ! -z "${NO_SMTP}"       ]] && CONFIG_ARGS="${CONFIG_ARGS} --no-smtp"
     [[ ! -z "${SMTP_SERVER}"   ]] && CONFIG_ARGS="${CONFIG_ARGS} --smtp-server \"${SMTP_SERVER}\""
     [[ ! -z "${SMTP_PORT}"     ]] && CONFIG_ARGS="${CONFIG_ARGS} --smtp-port \"${SMTP_PORT}\""
     [[ ! -z "${SMTP_LOGIN}"    ]] && CONFIG_ARGS="${CONFIG_ARGS} --smtp-login \"${SMTP_LOGIN}\""
@@ -166,6 +168,7 @@ while true; do
 
         --no-smtp|-s)
             ASK_FOR_SMTP=""
+            NO_SMTP="yes"
             shift
         ;;
 
@@ -217,22 +220,21 @@ else
     fi
 fi
 
-create_database_dir
-create_logs_dir
+create_data_dirs
 bootstrap_default_config
 create_ssh_key
 
 if [[ "${USER}" == "root" ]]; then
-    set_database_permissions
-    set_config_permissions
-    set_ssh_permissions
+    set_data_permissions
 fi
 
 if [[ "${USER}" != "root" ]]; then
     echo "Restarting service skipped."
-else
+elif [[ -x "$(command -v systemctl)" ]]; then
     echo "Restarting server..."
     systemctl restart openvpnathome.service
+else
+    echo "You need to restart OpenVPN@Home service"
 fi
 
 echo

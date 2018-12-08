@@ -1,4 +1,7 @@
-from openvpnathome import get_root_path
+from openvpnathome import get_data_path, ensure_path_dirs
+
+__log_file = get_data_path('logs/django.log')
+ensure_path_dirs(__log_file)
 
 LOGGING = {
     'version': 1,
@@ -14,7 +17,7 @@ LOGGING = {
         'logfile': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': get_root_path('logs/django.log'),
+            'filename': __log_file,
             'maxBytes': 1024*1024*5, # 5 MB
             'backupCount': 5,
             'formatter':'standard',

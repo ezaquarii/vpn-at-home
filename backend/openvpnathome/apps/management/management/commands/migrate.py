@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.management.commands import migrate
 from openvpnathome.settings import USER_SETTINGS
 from openvpnathome.tests import is_running_under_test
+from openvpnathome import ensure_path_dirs
 
 
 class Command(migrate.Command):
@@ -12,6 +13,7 @@ class Command(migrate.Command):
 
     def handle(self, *args, **options):
         if self.check_configuration():
+            self.ensure_database_dir()
             super().handle(*args, **options)
 
     def check_configuration(self):
@@ -25,3 +27,9 @@ class Command(migrate.Command):
             return False
         else:
             return True
+
+    @staticmethod
+    def ensure_database_dir():
+        db = USER_SETTINGS.database
+        if 'sqlite3' in db['ENGINE'] and db['NAME'] != ':memory:':
+            ensure_path_dirs(db['NAME'])

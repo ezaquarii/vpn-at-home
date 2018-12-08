@@ -5,18 +5,24 @@ from channels.http import AsgiHandler
 from django.conf.urls import url
 
 from openvpnathome.consumers import ProcessRunnerConsumer
+from openvpnathome.utils import is_database_migrated
 
-application = ProtocolTypeRouter({
-    "websocket": AuthMiddlewareStack(
-        URLRouter([
-            url(r"^ws/$", ProcessRunnerConsumer),
-        ])
-    ),
-    "http": AuthMiddlewareStack(
-        URLRouter([
-            url(r"/static/", StaticFilesHandler),
-            url(r"", AsgiHandler)
-        ])
-    ),
-})
 
+__ws_router = URLRouter([
+    url(r"^ws/$", ProcessRunnerConsumer),
+])
+
+__http_router = URLRouter([
+    url(r"/static/", StaticFilesHandler),
+    url(r"", AsgiHandler)
+])
+
+if is_database_migrated():
+    application = ProtocolTypeRouter({
+        "websocket": AuthMiddlewareStack(__ws_router),
+        "http": AuthMiddlewareStack(__http_router),
+    })
+else:
+    application = ProtocolTypeRouter({
+        "http": __http_router
+    })

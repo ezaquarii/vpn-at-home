@@ -1,9 +1,9 @@
 DEVEL_VIRTUALENV_DIR=$(CURDIR)/env
-DATABASE_DIR=$(CURDIR)/db
-LOG_DIR=$(CURDIR)/logs
-CONFIG_FILE=$(CURDIR)/settings.json
+DATABASE_DIR=$(CURDIR)/data/db
+LOG_DIR=$(CURDIR)/data/logs
+CONFIG_FILE=$(CURDIR)/data/settings.json
 DJANGO_LOG_FILE=$(LOG_DIR)/django.log
-
+DOCKER_BUILD?=false
 INSTALL_ROOT=$(DESTDIR)/srv/openvpnathome
 INSTALL_VIRTUALENV=$(INSTALL_ROOT)/env
 DEPLOYMENT_ROOT=/srv/openvpnathome
@@ -13,7 +13,14 @@ DEPLOYMENT_VIRTUALENV=$(DEPLOYMENT_ROOT)/env/
 
 all:
 	@echo "Welcome to OpenVPN@Home make system"
-	@echo ""
+	@echo
+	@echo "Env:"
+	@echo " * DESTDIR:               (path) [$(DESTDIR)]"
+	@echo " * INSTALL_ROOT:          (path) [$(INSTALL_ROOT)]"
+	@echo " * DEPLOYMENT_ROOT:       (path) [$(DEPLOYMENT_ROOT)]"
+	@echo " * DEPLOYMENT_VIRTUALENV: (path) [$(DEPLOYMENT_VIRTUALENV)]"
+	@echo " * DOCKER_BUILD:          (bool) [$(DOCKER_BUILD)]"
+	@echo
 	@echo "Available top-level targets:"
 	@echo " * devel            - bootstrap both projects for development"
 	@echo "   * devel_backend  - bootstrap backend for development (dependency of devel)"
@@ -44,13 +51,7 @@ distclean:
 	@echo
 	@echo "Cleaning working directory"
 	@echo
-	$(MAKE) -C frontend distclean
-	rm -rf $(DEVEL_VIRTUALENV_DIR)
-	rm -rf $(DATABASE_DIR)
-	rm -rf $(CONFIG_FILE)
-	rm -rf $(LOG_DIR)
-	rm -rf static
-
+	git clean -fdx
 
 runserver:
 	$(MAKE) -C backend runserver VIRTUALENV=$(DEVEL_VIRTUALENV_DIR)
@@ -61,7 +62,10 @@ install:
 	@echo
 	mkdir -p $(INSTALL_VIRTUALENV)
 	sudo mkdir -p $(DEPLOYMENT_ROOT)
+ifneq ($(DOCKER_BUILD),true)
+	# virtualenv is not relocatable - must install in target dir
 	sudo mount -o bind $(INSTALL_ROOT) $(DEPLOYMENT_ROOT)
+endif
 	virtualenv -p python3 $(DEPLOYMENT_VIRTUALENV)
 	$(DEPLOYMENT_VIRTUALENV)/bin/pip install -r backend/requirements.txt
 	@echo
@@ -69,7 +73,13 @@ install:
 	@echo
 	mkdir -p $(INSTALL_ROOT)
 	mkdir -p $(LOG_DIR)
+ifneq ($(DOCKER_BUILD),true)
+	# umount installation directory once no longer needed
 	sudo umount -l $(DEPLOYMENT_ROOT)
+else
+	# under docker we don't need to be nice as the env is disposable
+	mv $(DEPLOYMENT_VIRTUALENV) $(INSTALL_ROOT)
+endif
 	cp -r backend $(INSTALL_ROOT)
 	cp -r bin $(INSTALL_ROOT)
 	cp README.rst $(INSTALL_ROOT)
@@ -79,10 +89,12 @@ install:
 	@echo "Backend installed in $(INSTALL_ROOT)"
 	@echo
 
+docker:
+	docker build -t openvpnathome .
+
 deb:
-	rm -rf debian/openvpnathome
-	rm -rf debian/source
-	debuild --no-lintian -i -uc -us -b
+	git clean -fdx
+	debuild -e DOCKER_BUILD=$(DOCKER_BUILD) --no-lintian -i -uc -us -b
 
 install_deb:
 	sudo dpkg -i ../openvpnathome*.deb
