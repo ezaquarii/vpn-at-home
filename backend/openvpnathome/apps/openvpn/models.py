@@ -199,8 +199,9 @@ class Client(models.Model):
             'ca': self.server.ca.certificate.strip(),
             'cert': self.cert.certificate.strip(),
             'key': self.cert.private_key.strip(),
-            'tls_auth': self.server.tls_auth_key,
+            'tls_auth': self.server.tls_auth_key.strip(),
             'server_hostname': self.server.hostname,
+            'server_port': self.server.port,
             'protocol': self.server.protocol_client_option
         }
         config = render_to_string('client.ovpn', context=context)

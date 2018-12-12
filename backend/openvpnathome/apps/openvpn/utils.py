@@ -4,14 +4,14 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 
 
-def generate_dhparams():
+def generate_dhparams(bits=2048):
     """
     Generate dhparams for OpenVPN. It calls openssl binary.
 
     :return: dhparams, 2048 bits
     """
 
-    cmd = ['openssl', 'dhparam', '2048']
+    cmd = ['openssl', 'dhparam', str(bits)]
     completed_process = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if completed_process.returncode == 0:
         return completed_process.stdout.decode('utf8')
