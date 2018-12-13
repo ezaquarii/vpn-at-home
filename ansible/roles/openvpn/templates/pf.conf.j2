@@ -1,0 +1,23 @@
+vpn="tun0"
+enabled_tcp_services = "{ 22 }"
+enabled_udp_services = "{ {{ vpn_port }} }"
+
+# Skip all loopback traffic
+set skip on lo
+
+# Perform NAT on external interface
+match out on egress from $vpn:network to any nat-to egress
+
+# Define default behavior
+block in
+pass out keep state
+
+# Allow inbound traffic on internal interface
+pass quick on $vpn
+
+# Protect against spoofing
+antispoof quick for { lo $vpn }
+
+# Allow other traffic
+pass in quick on egress proto tcp to any port $enabled_tcp_services flags S/SA keep state
+pass in quick on egress proto udp to any port $enabled_udp_services keep state

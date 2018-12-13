@@ -35,9 +35,7 @@ class Command(ManagementCommand):
         inventory = {
             'vpns': {
                 'hosts': [],
-                'vars': {
-                    'ansible_python_interpreter': '/usr/bin/python3'
-                },
+                'vars': {},
                 'children': []
             }
         }

@@ -1,0 +1,61 @@
+---
+- name: Set installurl
+  copy:
+    dest: /etc/installurl
+    content: "https://cloudflare.cdn.openbsd.org/pub/OpenBSD/"
+
+- name: Install packages
+  openbsd_pkg:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - openvpn--mbedtls
+
+- name: Create OpenVPN config directory
+  file:
+    path: /etc/openvpn
+    state: directory
+    owner: _openvpn
+    group: _openvpn
+    mode: 0750
+
+- name: Copy OpenVPN configuration file
+  copy:
+    content: "{{ vpn_config }}"
+    dest: /etc/openvpn/server.conf
+    mode: 0600
+    owner: root
+    group: wheel
+
+- name: Enable OpenVPN service
+  service:
+    name: openvpn
+    arguments: --config /etc/openvpn/server.conf
+    enabled: true
+    state: started
+
+- name: Configure packet filter (pf.conf)
+  template:
+    src: pf.conf.j2
+    dest: /etc/pf.conf
+    owner: root
+    group: wheel
+    mode: 0600
+  notify: enable_packet_filter
+
+- name: Enable IP forwarding
+  lineinfile:
+    path: /etc/sysctl.conf
+    state: present
+    line: 'net.inet.ip.forwarding=1'
+  notify: enable_ip_forwarding
+
+- name: Disable unnecessary services
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  loop:
+    - smtpd
+    - sndiod
+    - slaacd

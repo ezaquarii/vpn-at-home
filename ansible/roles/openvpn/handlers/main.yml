@@ -1,5 +1,13 @@
 ---
-- name: restart openvpn@server
+- name: restart_openvpn_server
   service:
     name: openvpn@server
     state: restarted
+
+- name: enable_packet_filter
+  shell: |
+    pfctl -e
+    pfctl -f /etc/pf.conf
+
+- name: enable_ip_forwarding
+  command: sysctl net.inet.ip.forwarding=1

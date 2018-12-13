@@ -2,5 +2,22 @@
 - hosts: all
   become: true
   become_user: root
+  gather_facts: no
+  pre_tasks:
+    - name: Find suitable Python interpreter
+      raw: |
+        for dir in $(echo ${PATH} | sed 's/\:/\ /g'); do
+          if [[ -x ${dir}/python3 ]]; then echo ${dir}/python3; break; fi
+          if [[ -x ${dir}/python  ]]; then echo ${dir}/python;  break; fi
+        done
+      changed_when: False
+      register: python_interpreter_result
+
+    - name: Use Python interpreter "{{ python_interpreter_result.stdout_lines[0] }}"
+      set_fact: ansible_python_interpreter="{{ python_interpreter_result.stdout_lines[0] }}"
+
+    - name: Gather facts
+      setup:
+
   roles:
     - openvpn
