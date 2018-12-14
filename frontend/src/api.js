@@ -72,7 +72,9 @@ export default class Api {
     }
 
     addClient (client, onSuccess, onFailure) {
-        this.client().post(CLIENTS_URL, client).then(
+        const url = `/api/openvpn/servers/${client.server}/clients/`;
+        console.log('addClient(action):', url, client);
+        this.client().post(url, client).then(
             (response) => onSuccess(response.data),
             (_) => onFailure()
         );

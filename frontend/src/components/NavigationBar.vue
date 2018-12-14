@@ -55,7 +55,7 @@ export default class NavigationBar extends Vue {
     }
 
     get canAddServer () {
-        return this.$route.name === ROUTE_HOME && !this.$store.getters.hasServer;
+        return this.$route.name === ROUTE_HOME;
     }
 
     get canAddClient () {

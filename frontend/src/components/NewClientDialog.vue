@@ -4,7 +4,7 @@
             <sui-modal-header>New OpenVPN Client</sui-modal-header>
             <sui-modal-content>
                 <sui-container>
-                    <NewClientForm v-if="open" ref="form" @formUpdated="onFormUpdated"/>
+                    <NewClientForm v-if="open" :servers="servers" ref="form" @formUpdated="onFormUpdated"/>
                 </sui-container>
             </sui-modal-content>
             <sui-modal-actions>
@@ -48,6 +48,10 @@ export default class NewClientDialog extends Vue {
 
     onReject () {
         this.open = false;
+    }
+
+    get servers () {
+        return this.$store.state.servers;
     }
 
 }

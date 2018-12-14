@@ -1,28 +1,29 @@
 <template>
     <tr>
-        <td>{{item.name}}</td>
+        <!-- Title -->
+        <td v-if="isServer">{{item.name}}</td>
+        <td v-else-if="isClient">
+            {{item.name}} @ {{item.server_name}}
+        </td>
+        <td v-else>id:{{item.id}}</td>
+        <!-- ----- -->
         <td>{{relativeCreated}}</td>
         <td>{{relativeValid}}</td>
         <td>{{item.email}}</td>
         <td class="center">
-            <span><a v-bind:href="item.download_url"><i aria-hidden="true" class="icon download"></i> </a></span>
-        </td>
-        <td v-if="emailEnabled" class="center">
-            <span v-if="canSendEmail">
-                <a v-if="!isSending" v-bind:href="item.download_url" @click.prevent="sendMail"><i aria-hidden="true" class="icon mail"></i> </a>
-                <div v-if="isSending" class="ui active inline tiny loader"></div>
-            </span>
-            <span v-else>
-                <i aria-hidden="true" class="icon ban"></i>
-            </span>
-        </td>
-        <td v-if="deploymentEnabled" class="center">
-            <span v-if="canDeploy">
-                <span class="play-button" @click.prevent="deploy"><i aria-hidden="true" class="icon play"></i> </span>
-            </span>
-            <span v-else>
-                <i aria-hidden="true" class="icon ban"></i>
-            </span>
+            <sui-dropdown class="icon" icon="ellipsis vertical">
+                <sui-dropdown-menu>
+                    <a class="item" v-bind:href="item.download_url">
+                        <sui-icon name="download"/>Download config
+                    </a>
+                    <sui-dropdown-item v-if="emailEnabled && canSendEmail" @click="sendMail">
+                        <sui-icon name="mail"/>Send via e-mail
+                    </sui-dropdown-item>
+                    <sui-dropdown-item v-if="deploymentEnabled && canDeploy" @click="deploy">
+                        <sui-icon name="play"/>Deploy to server
+                    </sui-dropdown-item>
+                </sui-dropdown-menu>
+            </sui-dropdown>
         </td>
     </tr>
 </template>
@@ -35,7 +36,7 @@ import { EVENT_CLICKED_DEPLOY_SERVER } from '@/eventbus';
 
 @Component({
     name: 'ConfigListItem',
-    props: ['item', 'emailEnabled', 'deploymentEnabled']
+    props: ['item', 'emailEnabled', 'deploymentEnabled', 'isClient', 'isServer']
 })
 export default class ConfigListItem extends Vue {
 

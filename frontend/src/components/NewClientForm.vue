@@ -1,6 +1,12 @@
 <template>
     <div class="ui form">
         <div class="field">
+            <label>Server</label>
+            <select v-model="form.server">
+                <option v-for="item in servers" :key="item.id" :value="item.id">{{ item.name }}</option>
+            </select>
+        </div>
+        <div class="field">
             <label>Client Name</label>
             <div class="ui left icon input">
                 <input v-model="form.name" placeholder="Ex. 'My Home Server'" type="text">
@@ -15,11 +21,15 @@ import { required } from 'vuelidate/lib/validators';
 
 export default {
     name: 'NewClientForm',
+    props: {
+        servers: Array
+    },
     data () {
         return {
             open: false,
             form: {
-                name: ''
+                name: '',
+                server: this.servers[0].id
             }
         };
     },

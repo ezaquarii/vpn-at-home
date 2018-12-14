@@ -64,6 +64,7 @@ const mutations = {
     },
 
     addServer (state, server) {
+        console.log('addServer(mutat)', server);
         state.servers.push(server);
     },
 
@@ -72,6 +73,7 @@ const mutations = {
     },
 
     addClient (state, client) {
+        console.log('addClient(mutat):', client);
         state.clients.push(client);
     },
 
@@ -121,6 +123,7 @@ const actions = {
     },
 
     addServer ({ commit }, server) {
+        console.log('addServer(action):', server);
         api.addServer(
             server,
             (server) => commit('addServer', server),
@@ -130,6 +133,7 @@ const actions = {
     },
 
     addClient ({ commit }, client) {
+        console.log('addClient(action):', client);
         api.addClient(
             client,
             (client) => commit('addClient', client),
