@@ -4,7 +4,9 @@ from .views import DownloadServerConfig, DownloadClientConfig
 
 api_urlpatterns = [
     path('servers/', ServerApi.as_view({'get': 'list', 'post': 'create'}), name='servers'),
-    path('clients/', ClientApi.as_view({'get': 'list', 'post': 'create'}), name='clients'),
+    path('servers/<int:server_id>/clients/', ClientApi.as_view({'get': 'list_server_clients',
+                                                                'post': 'create'}), name='server-clients'),
+    path('clients/', ClientApi.as_view({'get': 'list_all_clients'}), name='clients'),
     path('clients/<int:id>/send/', ClientApi.as_view({'post': 'send_email'}), name='send-client-config'),
 ]
 

@@ -101,10 +101,11 @@ class ClientSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
     validity_end = serializers.SerializerMethodField()
     download_url = serializers.SerializerMethodField()
+    server_name = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Client
-        fields = ['id', 'created', 'name', 'email', 'validity_end', 'download_url']
+        fields = ['id', 'created', 'name', 'email', 'validity_end', 'download_url', 'server_name']
 
     def get_email(self, instance):
         return instance.cert.email
@@ -115,6 +116,9 @@ class ClientSerializer(serializers.ModelSerializer):
     def get_download_url(self, instance):
         kwargs={'client_id': instance.id, 'filename': instance.filename}
         return reverse('openvpn:download-client-config', kwargs=kwargs)
+
+    def get_server_name(self, instance):
+        return instance.server.name
 
 
 class CreateClientSerializer(serializers.Serializer):

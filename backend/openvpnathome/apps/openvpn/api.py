@@ -45,8 +45,8 @@ class ClientApi(ViewSet):
 
     permission_classes = [permissions.IsAuthenticated]
 
-    def create(self, request):
-        server = Server.objects.first()
+    def create(self, request, server_id):
+        server = get_object_or_404(Server, pk=server_id)
         if server is None:
             return Response(data='Server not found', status=status.HTTP_404_NOT_FOUND)
         context = dict(owner=request.user, server=server)
@@ -57,11 +57,19 @@ class ClientApi(ViewSet):
         client_serializer = ClientSerializer(instance=client)
         return Response(data=client_serializer.data, status=status.HTTP_201_CREATED)
 
-    def list(self, request):
+    def list_all_clients(self, request):
         if request.user.is_superuser:
             clients = Client.objects.all()
         else:
             clients = Client.objects.filter(owner=request.user)
+        serializer = ClientSerializer(instance=clients, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def list_server_clients(self, request, server_id):
+        if request.user.is_superuser:
+            clients = Client.objects.filter(server_id=server_id)
+        else:
+            clients = Client.objects.filter(owner=request.user, server_id=server_id)
         serializer = ClientSerializer(instance=clients, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 

@@ -18,8 +18,14 @@ class Fixture(APITestWithBaseFixture):
 
     def setUp(self):
         super().setUp()
-        response = self.admin_client.post(self.servers_url, dict(name='Server', email='admin@email.com', hostname='hostname'))
-        self.assertStatus(response, status.HTTP_201_CREATED)
+        alpha_response = self.admin_client.post(self.servers_url, dict(name='Alpha Server', email='admin@email.com', hostname='alpha_hostname'))
+        self.assertStatus(alpha_response, status.HTTP_201_CREATED)
+        bravo_response = self.admin_client.post(self.servers_url, dict(name='Bravo Server', email='admin@email.com', hostname='bravo_hostname'))
+        self.assertStatus(bravo_response, status.HTTP_201_CREATED)
+        self.alpha_server = Server.objects.get(pk=alpha_response.data['id'])
+        self.bravo_server = Server.objects.get(pk=bravo_response.data['id'])
+        self.alpha_server_clients_url = reverse('openvpn-api:server-clients', kwargs={'server_id': self.alpha_server.pk})
+        self.bravo_server_clients_url = reverse('openvpn-api:server-clients', kwargs={'server_id': self.bravo_server.pk})
 
 
 class CreateClientPermissions(Fixture):
@@ -27,11 +33,11 @@ class CreateClientPermissions(Fixture):
     create_client_dto = dict(name='A Client')
 
     def test_create_client_requires_authentication(self):
-        response = self.client.post(self.clients_url, self.create_client_dto)
+        response = self.client.post(self.alpha_server_clients_url, self.create_client_dto)
         self.assertUnauthorized(response)
 
     def test_create_client(self):
-        response = self.alpha_client.post(self.clients_url, self.create_client_dto)
+        response = self.alpha_client.post(self.alpha_server_clients_url, self.create_client_dto)
         self.assertStatus(response, status.HTTP_201_CREATED)
 
 
@@ -42,11 +48,11 @@ class CreateClient(Fixture):
 
     def setUp(self):
         super().setUp()
-        response_1 = self.alpha_client.post(self.clients_url, self.create_client_dto_1)
+        response_1 = self.alpha_client.post(self.alpha_server_clients_url, self.create_client_dto_1)
         self.assertResponseOk(response_1)
         self.client_1 = Client.objects.get(id=response_1.data['id'])
 
-        response_2 = self.alpha_client.post(self.clients_url, self.create_client_dto_2)
+        response_2 = self.alpha_client.post(self.alpha_server_clients_url, self.create_client_dto_2)
         self.assertResponseOk(response_2)
         self.client_2 = Client.objects.get(id=response_2.data['id'])
 
@@ -61,7 +67,7 @@ class CreateClient(Fixture):
     def test_cannot_create_client_without_server(self):
         Server.objects.all().delete()
         self.assertEquals(0, Server.objects.count())
-        response = self.alpha_client.post(self.clients_url, self.create_client_dto_1)
+        response = self.alpha_client.post(self.alpha_server_clients_url, self.create_client_dto_1)
         self.assertEquals(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
@@ -73,13 +79,13 @@ class ListClients(Fixture):
         self.bravo_clients = []
         for index in range(1, 10):
             create_alpha_client_dto = dict(name='Alpha Client {index}'.format(index=index))
-            alpha_response = self.alpha_client.post(self.clients_url, create_alpha_client_dto)
+            alpha_response = self.alpha_client.post(self.alpha_server_clients_url, create_alpha_client_dto)
             self.assertResponseOk(alpha_response)
             alpha_client = Client.objects.get(id=alpha_response.data['id'])
             self.alpha_clients.append(alpha_client)
 
             create_bravo_client_dto = dict(name='Bravo Client {index}'.format(index=index))
-            bravo_response = self.bravo_client.post(self.clients_url, create_bravo_client_dto)
+            bravo_response = self.bravo_client.post(self.bravo_server_clients_url, create_bravo_client_dto)
             self.assertResponseOk(bravo_response)
             bravo_client = Client.objects.get(id=bravo_response.data['id'])
             self.bravo_clients.append(bravo_client)
@@ -109,7 +115,7 @@ class SendClientConfig(Fixture):
         settings = Settings.instance()
         settings.email_enabled = True
         settings.save()
-        response = self.alpha_client.post(self.clients_url, self.create_client_dto)
+        response = self.alpha_client.post(self.alpha_server_clients_url, self.create_client_dto)
         self.assertStatus(response, status.HTTP_201_CREATED)
         self.send_config_url = reverse('openvpn-api:send-client-config', kwargs={'id': response.data['id']})
 
