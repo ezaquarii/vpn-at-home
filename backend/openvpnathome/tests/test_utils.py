@@ -1,8 +1,8 @@
 from unittest import TestCase
-
+from openvpnathome.tests import APITestWithBaseFixture
 from openvpnathome import get_bin_path
 from openvpnathome.utils import get_nested_item
-from openvpnathome.utils import is_database_migrated, AsyncProcess, SubprocessThread
+from openvpnathome.utils import is_database_migrated, SubprocessThread
 
 import asyncio
 
@@ -30,8 +30,7 @@ class TestGetNestedItem(TestCase):
             pass
 
 
-class TestIsDatabaseMigrated(TestCase):
-
+class TestIsDatabaseMigrated(APITestWithBaseFixture):
 
     def test_is_migrated(self):
         self.assertTrue(is_database_migrated())
@@ -63,7 +62,8 @@ class TestSubprocessThread(TestCase):
         self.finished = True
 
     def setUp(self):
-        self.cmd = ["python3", get_bin_path("process.py"), '--stdout', '--stderr', '--iterations', str(self.ITERATIONS)]
+        from .helpers import PROCESS_PY_PATH
+        self.cmd = ["python3", PROCESS_PY_PATH, '--stdout', '--stderr', '--iterations', str(self.ITERATIONS)]
         self.stderr = []
         self.stdout = []
         self.finished = False

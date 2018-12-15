@@ -9,7 +9,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.template.loader import render_to_string
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
-
+from django import forms
 from openvpnathome import get_bin_path
 
 
@@ -108,7 +108,7 @@ class Server(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     ca = models.ForeignKey('x509.Ca', on_delete=models.CASCADE, related_name='+')
     cert = models.ForeignKey('x509.Cert', on_delete=models.CASCADE, related_name='+')
-    tls_auth_key = models.CharField(max_length=8192)
+    tls_auth_key = models.TextField(max_length=8192)
     dhparams = models.ForeignKey(DhParams, on_delete=models.CASCADE)
     protocol = models.CharField(choices=PROTOCOL_CHOICES, default=DEFAULT_PROTOCOL, max_length=10)
     network = NetworkAddressField(max_length=100, default=str(DEFAULT_NETWORK), null=True)

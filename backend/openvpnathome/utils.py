@@ -2,7 +2,6 @@
 This module provides generic utility functions, not related to any
 specific business functionality.
 """
-import asyncio
 from operator import attrgetter as _attrgetter
 import subprocess
 import threading

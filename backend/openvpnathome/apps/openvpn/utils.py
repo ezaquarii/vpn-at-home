@@ -42,11 +42,11 @@ def generate_tls_auth_key():
                                             stderr=completed_process.stderr)
 
 
-def send_client_config(config, from_email):
+def send_client_config(config):
     email = EmailMessage(
         subject='OpenVPN configuration file',
         body='Please find attached OpenVPN configuration file',
-        from_email=from_email,
+        from_email=settings.SERVER_EMAIL if settings.SERVER_EMAIL else "no-reply@set_server_email_in_settings.json",
         to=[config.owner.email]
     )
     email.attach(config.filename, config.render_to_string(), config.mimetype)

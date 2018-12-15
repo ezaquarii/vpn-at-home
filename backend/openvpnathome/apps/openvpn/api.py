@@ -83,5 +83,5 @@ class ClientApi(ViewSet):
         else:
             client = get_object_or_404(Client, id=id, owner=request.user)
 
-        send_client_config(config=client, from_email=settings.email_from)
+        send_client_config(config=client)
         return Response(status=status.HTTP_200_OK)

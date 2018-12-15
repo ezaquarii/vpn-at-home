@@ -32,13 +32,13 @@ DEFAULT_USER_SETTINGS = {
         '__doc__': 'Django e-mail backend configuration. '
                    'Make sure you set server_from and admin_emails to correct values.',
         'enabled': True,
-        'server_from': None,
+        'server_from': "no-reply@openvpnathome.localdomain",
         'admin_emails': [],
         'smtp': {
             '__doc__': 'Optional SMTP settings are used by tests. '
                        'You can configure SMTP via web panel at any time.',
             'server': None,
-            'port': 0,
+            'port': 587,
             'login': None,
             'password': None,
         },
