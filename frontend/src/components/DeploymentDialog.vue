@@ -21,8 +21,8 @@
 <script>
 import { Component, Vue } from 'vue-property-decorator';
 import {
-    RemoteProcess
-} from '@/remoteprocess';
+    DeploymentRemoteProcess
+} from '@/deployment';
 
 @Component({
     data () {
@@ -45,7 +45,7 @@ export default class DeploymentDialog extends Vue {
     }
 
     onDeploy () {
-        this.process = new RemoteProcess();
+        this.process = new DeploymentRemoteProcess(this.server.hostname);
         this.process.onStart = this.onStart;
         this.process.onFinish = this.onFinish;
         this.process.onOutput = this.onOutput;

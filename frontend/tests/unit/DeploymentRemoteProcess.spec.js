@@ -1,6 +1,6 @@
-import { expect, assert } from 'chai';
+import { assert } from 'chai';
 import td from 'testdouble';
-import { RemoteProcess } from '../../src/remoteprocess';
+import { DeploymentRemoteProcess } from '../../src/deployment';
 
 const containsJson = td.matchers.create({
     name: 'isJson',
@@ -28,7 +28,7 @@ describe('RemoteProcess', () => {
         td.when(createSocketMock(
             td.matchers.contains(url)
         )).thenReturn(socket);
-        process = new RemoteProcess(createSocketMock);
+        process = new DeploymentRemoteProcess('hostname', createSocketMock);
     });
 
     describe('Connection', () => {
@@ -54,7 +54,7 @@ describe('RemoteProcess', () => {
             socket.onopen();
             td.verify(
                 socket.send(
-                    containsJson({ cmd: 'start' })
+                    containsJson({ cmd: 'start', args: { hostname: 'hostname' } })
                 )
             );
         });

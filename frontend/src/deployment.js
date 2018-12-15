@@ -2,15 +2,16 @@ const createSocket = (url) => {
     return new WebSocket(url);
 };
 
-export class RemoteProcess {
+export class DeploymentRemoteProcess {
 
-    constructor (createSocketFunction = createSocket) {
+    constructor (hostname, createSocketFunction = createSocket) {
         this.output = [];
         this.createSocket = createSocketFunction;
         this.socket = null;
         this.onStart = null;
         this.onOutput = null;
         this.onFinish = null;
+        this.hostname = hostname;
     }
 
     connect (url) {
@@ -32,7 +33,8 @@ export class RemoteProcess {
     }
 
     _onOpen () {
-        this._sendJson({ cmd: 'start' });
+        const cmd = { cmd: 'start', args: { hostname: this.hostname } };
+        this._sendJson(cmd);
     }
 
     _onMessage (message) {
