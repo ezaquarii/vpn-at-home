@@ -2,6 +2,8 @@ import sys
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from openvpnathome.utils import is_database_migrated
+
 
 class ManagementCommand(BaseCommand):
     """
@@ -13,6 +15,7 @@ class ManagementCommand(BaseCommand):
     """
 
     uses_db = True
+    migrations_required = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -24,7 +27,12 @@ class ManagementCommand(BaseCommand):
         parser.add_argument('--no-warnings', action='store_true', help="Suppress warnings")
 
     def handle(self, *args, **options):
+
+        if self.migrations_required and not is_database_migrated():
+            raise RuntimeError("Database is not migrated. Backup your database and run ./manage.py migrate first.")
+
         self.options = options
+
         if self.uses_db:
             with transaction.atomic():
                 return self.run(*args, **options)

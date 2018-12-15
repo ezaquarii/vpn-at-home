@@ -23,6 +23,7 @@ class Command(ManagementCommand):
     # important, as db is not available before generating config;
     # don't run command under db transaction
     uses_db = False
+    migrations_required = False
 
     def add_arguments(self, parser):
         super().add_arguments(parser)
