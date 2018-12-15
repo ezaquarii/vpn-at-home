@@ -16,11 +16,14 @@
                     <a class="item" v-bind:href="item.download_url">
                         <sui-icon name="download"/>Download config
                     </a>
-                    <sui-dropdown-item v-if="emailEnabled && canSendEmail && isClient" @click="sendMail">
+                    <sui-dropdown-item v-if="emailEnabled && canSendEmail && isClient" @click="onSendMailClicked">
                         <sui-icon name="mail"/>Send via e-mail
                     </sui-dropdown-item>
-                    <sui-dropdown-item v-if="deploymentEnabled && canDeploy" @click="deploy">
+                    <sui-dropdown-item v-if="deploymentEnabled && canDeploy" @click="onDeployClicked">
                         <sui-icon name="play"/>Deploy to server
+                    </sui-dropdown-item>
+                    <sui-dropdown-item v-if="isServer" @click="onDeleteClicked">
+                        <sui-icon name="trash"/>Delete
                     </sui-dropdown-item>
                 </sui-dropdown-menu>
             </sui-dropdown>
@@ -32,7 +35,10 @@
 import { Component, Vue } from 'vue-property-decorator';
 import moment from 'moment';
 import _ from 'lodash';
-import { EVENT_CLICKED_DEPLOY_SERVER } from '@/eventbus';
+import {
+    EVENT_CLICKED_DEPLOY_SERVER,
+    EVENT_CLICKED_DELETE_SERVER
+} from '@/eventbus';
 
 @Component({
     name: 'ConfigListItem',
@@ -60,13 +66,16 @@ export default class ConfigListItem extends Vue {
         return _.has(this.item, 'network');
     }
 
-    sendMail () {
-        console.log('ConfigListItem.sendMail()', this.item);
+    onSendMailClicked () {
         this.$store.dispatch('sendClientConfigEmail', this.item.id);
     }
 
-    deploy () {
+    onDeployClicked () {
         this.$root.$emit(EVENT_CLICKED_DEPLOY_SERVER, this.item);
+    }
+
+    onDeleteClicked () {
+        this.$root.$emit(EVENT_CLICKED_DELETE_SERVER, this.item);
     }
 
 }

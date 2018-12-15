@@ -67,6 +67,10 @@ const mutations = {
         state.servers.push(server);
     },
 
+    deleteServer (state, server) {
+        state.servers = _.filter(state.servers, (item) => item.id !== server.id);
+    },
+
     setClients (state, clients) {
         state.clients = clients;
     },
@@ -99,24 +103,21 @@ const actions = {
     getUser ({ commit }) {
         api.getUser(
             (user) => commit('setUser', user),
-            (_) => {
-            }
+            (_) => {}
         );
     },
 
     getServers ({ commit }) {
         api.getServers(
             (servers) => commit('setServers', servers),
-            (_) => {
-            }
+            (_) => {}
         );
     },
 
     getClients ({ commit }) {
         api.getClients(
             (servers) => commit('setClients', servers),
-            (_) => {
-            }
+            (_) => {}
         );
     },
 
@@ -124,8 +125,18 @@ const actions = {
         api.addServer(
             server,
             (server) => commit('addServer', server),
+            (_) => {}
+        );
+    },
+
+    deleteServer ({ dispatch }, server) {
+        api.deleteServer(
+            server,
             (_) => {
-            }
+                dispatch('getServers');
+                dispatch('getClients');
+            },
+            (_) => {}
         );
     },
 
@@ -133,8 +144,7 @@ const actions = {
         api.addClient(
             client,
             (client) => commit('addClient', client),
-            (_) => {
-            }
+            (_) => {}
         );
     },
 
@@ -151,16 +161,14 @@ const actions = {
         api.setSettings(
             settings,
             (setting) => commit('setSettings', settings),
-            (_) => {
-            }
+            (_) => {}
         );
     },
 
     getSettings ({ commit }) {
         api.getSettings(
             (settings) => commit('setSettings', settings),
-            () => {
-            }
+            (_) => {}
         );
     }
 };

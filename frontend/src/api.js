@@ -64,6 +64,13 @@ export default class Api {
         );
     }
 
+    deleteServer (server, onSuccess, onFailure) {
+        this.client().delete(`/api/openvpn/servers/${server.id}/`).then(
+            (response) => onSuccess(response.data),
+            (_) => onFailure()
+        );
+    }
+
     getClients (onSuccess, onFailure) {
         this.client().get(CLIENTS_URL).then(
             (response) => { onSuccess(response.data); },
@@ -73,7 +80,6 @@ export default class Api {
 
     addClient (client, onSuccess, onFailure) {
         const url = `/api/openvpn/servers/${client.server}/clients/`;
-        console.log('addClient(action):', url, client);
         this.client().post(url, client).then(
             (response) => onSuccess(response.data),
             (_) => onFailure()

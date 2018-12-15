@@ -21,6 +21,7 @@
             <NewServerDialog ref="newServerDialog"/>
             <NewClientDialog ref="newClientDialog"/>
             <DeploymentDialog ref="deploymentDialog"/>
+            <DeleteServerDialog ref="deleteServerDialog"/>
         </div>
     </div>
 </template>
@@ -32,11 +33,13 @@ import ConfigList from '@/components/ConfigList.vue';
 import NewServerDialog from '@/components/NewServerDialog.vue';
 import NewClientDialog from '@/components/NewClientDialog.vue';
 import DeploymentDialog from '@/components/DeploymentDialog.vue';
+import DeleteServerDialog from '@/components/DeleteServerDialog.vue';
 
 import {
     EVENT_CLICKED_ADD_CLIENT,
     EVENT_CLICKED_ADD_SERVER,
-    EVENT_CLICKED_DEPLOY_SERVER
+    EVENT_CLICKED_DEPLOY_SERVER,
+    EVENT_CLICKED_DELETE_SERVER
 } from '@/eventbus';
 
 @Component({
@@ -46,7 +49,8 @@ import {
         ConfigList,
         NewServerDialog,
         NewClientDialog,
-        DeploymentDialog
+        DeploymentDialog,
+        DeleteServerDialog
     }
 })
 export default class Home extends Vue {
@@ -86,16 +90,22 @@ export default class Home extends Vue {
         this.$refs.deploymentDialog.show(server);
     }
 
+    onClickedDeleteServer (server) {
+        this.$refs.deleteServerDialog.show(server);
+    }
+
     mounted () {
         this.$root.$on(EVENT_CLICKED_ADD_CLIENT, this.onClickedAddClient);
         this.$root.$on(EVENT_CLICKED_ADD_SERVER, this.onClickedAddServer);
         this.$root.$on(EVENT_CLICKED_DEPLOY_SERVER, this.onClickedDeployServer);
+        this.$root.$on(EVENT_CLICKED_DELETE_SERVER, this.onClickedDeleteServer);
     }
 
     beforeDestroy () {
         this.$root.$off(EVENT_CLICKED_ADD_CLIENT, this.onClickedAddClient);
         this.$root.$off(EVENT_CLICKED_ADD_SERVER, this.onClickedAddServer);
         this.$root.$off(EVENT_CLICKED_DEPLOY_SERVER, this.onClickedDeployServer);
+        this.$root.$off(EVENT_CLICKED_DELETE_SERVER, this.onClickedDeleteServer);
     }
 
 }
