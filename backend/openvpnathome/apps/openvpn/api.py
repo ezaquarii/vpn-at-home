@@ -13,6 +13,12 @@ from .utils import send_client_config
 
 class ServerApi(ViewSet):
 
+    def get_permissions(self):
+        if self.action in ['create', 'delete']:
+            return [permissions.IsAdminUser()]
+        else:
+            return [permissions.IsAuthenticated()]
+
     def create(self, request):
         dhparams = DhParams.objects.first()
         context = dict(owner=self.request.user, dhparams=dhparams)
@@ -24,9 +30,7 @@ class ServerApi(ViewSet):
         return Response(data=server_serializer.data, status=status.HTTP_201_CREATED)
 
     def list(self, request):
-        servers = Server.objects.all()
-
-        # TODO: refactor it using dynamic serializer fields
+        servers = Server.objects.filter(deleted=False)
         if request.user.is_superuser:
             serializer = AdminServerSerializer(instance=servers, many=True)
         else:
@@ -34,19 +38,26 @@ class ServerApi(ViewSet):
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    def get_permissions(self):
-        if self.action == 'create':
-            return [permissions.IsAdminUser()]
-        else:
-            return [permissions.IsAuthenticated()]
+    def delete(self, request, server_id):
+        server = get_object_or_404(Server, id=server_id, owner=request.user, deleted=False)
+        server.deleted = True
+        server.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ClientApi(ViewSet):
 
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_clients(self, **kwargs):
+        return Client.objects.filter(server__deleted=False, **kwargs)
+
+    def get_client_or_404(self, **kwargs):
+        return get_object_or_404(Client, server__deleted=False, **kwargs)
+
+
     def create(self, request, server_id):
-        server = get_object_or_404(Server, pk=server_id)
+        server = get_object_or_404(Server, pk=server_id, deleted=False)
         if server is None:
             return Response(data='Server not found', status=status.HTTP_404_NOT_FOUND)
         context = dict(owner=request.user, server=server)
@@ -59,17 +70,17 @@ class ClientApi(ViewSet):
 
     def list_all_clients(self, request):
         if request.user.is_superuser:
-            clients = Client.objects.all()
+            clients = self.get_clients()
         else:
-            clients = Client.objects.filter(owner=request.user)
+            clients = self.get_clients(owner=request.user)
         serializer = ClientSerializer(instance=clients, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def list_server_clients(self, request, server_id):
         if request.user.is_superuser:
-            clients = Client.objects.filter(server_id=server_id)
+            clients = self.get_clients(server_id=server_id)
         else:
-            clients = Client.objects.filter(owner=request.user, server_id=server_id)
+            clients = self.get_clients(owner=request.user, server_id=server_id)
         serializer = ClientSerializer(instance=clients, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -79,9 +90,9 @@ class ClientApi(ViewSet):
             return Response(status=status.HTTP_200_OK)
 
         if request.user.is_superuser:
-            client = get_object_or_404(Client, id=id)
+            client = self.get_client_or_404(id=id)
         else:
-            client = get_object_or_404(Client, id=id, owner=request.user)
+            client = self.get_client_or_404(id=id, owner=request.user)
 
         send_client_config(config=client)
         return Response(status=status.HTTP_200_OK)

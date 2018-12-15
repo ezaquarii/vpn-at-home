@@ -112,9 +112,13 @@ class Server(models.Model):
     dhparams = models.ForeignKey(DhParams, on_delete=models.CASCADE)
     protocol = models.CharField(choices=PROTOCOL_CHOICES, default=DEFAULT_PROTOCOL, max_length=10)
     network = NetworkAddressField(max_length=100, default=str(DEFAULT_NETWORK), null=True)
+    deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return 'Server {name}, {hostname}, {owner}'.format(name=self.name, hostname=self.hostname, owner=self.email)
+        if self.deleted:
+            return 'Server {name}, {hostname}, {owner}, deleted'.format(name=self.name, hostname=self.hostname, owner=self.email)
+        else:
+            return 'Server {name}, {hostname}, {owner}'.format(name=self.name, hostname=self.hostname, owner=self.email)
 
     @property
     def email(self):

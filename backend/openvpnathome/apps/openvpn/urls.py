@@ -3,7 +3,9 @@ from .api import ServerApi, ClientApi
 from .views import DownloadServerConfig, DownloadClientConfig
 
 api_urlpatterns = [
-    path('servers/', ServerApi.as_view({'get': 'list', 'post': 'create'}), name='servers'),
+    path('servers/', ServerApi.as_view({'get': 'list',
+                                        'post': 'create'}), name='servers'),
+    path('servers/<int:server_id>/', ServerApi.as_view({'delete': 'delete'}), name='server'),
     path('servers/<int:server_id>/clients/', ClientApi.as_view({'get': 'list_server_clients',
                                                                 'post': 'create'}), name='server-clients'),
     path('clients/', ClientApi.as_view({'get': 'list_all_clients'}), name='clients'),
