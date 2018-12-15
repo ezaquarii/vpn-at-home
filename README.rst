@@ -2,19 +2,11 @@
 OpenVPN@Home
 ============
 
-Legal mumbo-jumbo
-=================
-
-© 2002-2018 OpenVPN Inc.
-OpenVPN is a registered trademark of OpenVPN  Inc.
-
-This project is not endorsed by, sponsored or affiliated with OpenVPN Inc.
-
 TL;DR
 =====
 
-OpenVPN PKI stuff with **Vue.js**, **Semantic UI** and **Django**.
-And with love, of course.
+1-click, self-hosted OpenVPN deployment to your favorite VPS instance and clients management app.
+Created with **Vue.js**, **Semantic UI** and **Django**. And with love, of course.
 
 .. image:: home.png
    :width: 512
@@ -25,6 +17,14 @@ And with love, of course.
    :align: center
 
 Feedback and pull requests are welcome.
+
+Legal mumbo-jumbo
+=================
+
+OpenVPN is a registered trademark of OpenVPN  Inc.
+© 2002-2019 OpenVPN Inc.
+
+This project is not endorsed by, sponsored or affiliated with OpenVPN Inc.
 
 Brief
 =====
@@ -70,8 +70,9 @@ No. Do not use it to do any stupid things.
 
 **Is the app secure?**
 
-Since the app manages OpenVPN server deployment, it must have root access to the VPN machine.
-It is not wise to keep it facing the open internet, I guess.
+Since the app manages OpenVPN server deployment, it must have root access to the VPN
+machine. There is no separate deployment agent (yet). It is not wise to keep it facing the
+open internet, I guess.
 
 **So how to host it?**
 
@@ -80,11 +81,6 @@ via SSH tunnel. This way you don't need to configure SSL certificate and a lot o
 headaches go away.
 
 I personally use it installed on my private laptop, the same way I use CUPS (printer stuff).
-
-**Why can I manage only 1 server?**
-
-I don't need more. It would be very easy to add more servers in the future, but the UI/UX is a rabbit hole.
-This is a problem I don't have, but I'm happy to work with somebody who has it. :o)
 
 **How to change server address after it is created?**
 
@@ -108,7 +104,7 @@ That division makes the build slightly more complicated, but provided *Makefiles
 **Ansible** is a set of scripts to deploy OpenVPN automatically either on localhost or remote machine.
 
 Scripts located in **bin** are created either to automate and facilitate various tasks or provide a glue.
-All scripts have internal documentation.
+All scripts have internal documentation (or should have).
 
 Installation
 ============
@@ -131,8 +127,7 @@ Deployment
 For development
 ~~~~~~~~~~~~~~~
 
-After cloning the repository, you can deploy the app for development
-with a single command:
+After cloning the repository, you can easily deploy the app for development:
 
 ::
 
@@ -146,20 +141,23 @@ with a single command:
 Open ``http://localhost:8001/`` and you should be able to log-in.
 
 For production - Docker
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Docker container can be created with ``make``:
 
 ::
+
     $ make docker
 
 Created image will be tagged with name ``openvpnathome``.
 You can launch a container with a helper script:
 
+::
+
     $ ./bin/docker_run.sh bootstrap
     $ ./bin/docker_run.sh run
 
-Data will be stored in a volume ``data``.
+...or roll out your own fancy scripts for this. Data will be stored in a volume ``data``.
 
 For production - debian package
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -186,10 +184,10 @@ The package needs virtually zero configuration:
 - Contains bootstrapping script to automate app configuration (``${ROOT}/bin/bootstrap.sh``)
 
 Building a package will call ``sudo`` and ask you for a password. Root privileges are required
-in Python's virtual environment installation step, as we must ``sudo mount -o bind ...`` and
-``sudo umount ...`` virtualenv destination directory. Unfortunately, Python 3 virtualenv
-relocation is not reliable (and discouraged), so we decided to hack during the build process
-rather than at runtime. Refer to ``Makefile`` ``install`` target.
+during Python virtual environment installation step, as we must ``sudo mount -o bind ...`` and
+``sudo umount ...`` virtualenv destination directory. Why? Unfortunately, Python 3 virtualenv
+relocation is not reliable (and discouraged), so we decided to hack a bit during the build process
+and bootstrap directly into destination directory before packaging.Refer to ``Makefile`` ``install`` target.
 
 .. note:: If ``make deb`` fails for whatever reason, make sure ``/srv/openvpnathome`` is left unmounted.
 
@@ -334,7 +332,6 @@ Known issues
 
 I left this as the last point, hoping not to scare anybody.
 
- * only one sever can be managed (I don't need more for now)
  * frontend has 0% test coverage -and many lint issues- :o)
  * security is not a major concern for this app, I'm not running a CA company
  * no real user management - I rely on Django Admin panel for it
