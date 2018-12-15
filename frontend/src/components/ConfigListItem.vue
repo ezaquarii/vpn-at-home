@@ -16,7 +16,7 @@
                     <a class="item" v-bind:href="item.download_url">
                         <sui-icon name="download"/>Download config
                     </a>
-                    <sui-dropdown-item v-if="emailEnabled && canSendEmail" @click="sendMail">
+                    <sui-dropdown-item v-if="emailEnabled && canSendEmail && isClient" @click="sendMail">
                         <sui-icon name="mail"/>Send via e-mail
                     </sui-dropdown-item>
                     <sui-dropdown-item v-if="deploymentEnabled && canDeploy" @click="deploy">

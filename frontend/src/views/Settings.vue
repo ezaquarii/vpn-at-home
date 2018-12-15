@@ -14,36 +14,36 @@
                         <div v-if="settings.email_enabled">
                             <div class="field">
                                 <label>From e-mail</label>
-                                <div class="ui left icon input">
-                                    <input v-model="settings.email_from" placeholder="From for automated e-mails sent by this system" type="text" key="email_from">
+                                <div class="ui left icon input disabled">
+                                    <input v-model="readOnly.email_from" placeholder="From for automated e-mails sent by this system" type="text" key="email_from">
                                     <i aria-hidden="true" class="user icon"></i>
                                 </div>
                             </div>
                             <div class="fields">
                                 <div class="twelve wide field">
                                     <label>SMTP server (only with TLS support)</label>
-                                    <div class="ui left icon input">
-                                        <input v-model="settings.email_smtp_server" placeholder="Outgoing SMTP server" type="text">
+                                    <div class="ui left icon input disabled">
+                                        <input v-model="readOnly.email_smtp_server" placeholder="Outgoing SMTP server" type="text">
                                         <i aria-hidden="true" class="server icon"></i>
                                     </div>
                                 </div>
                                 <div class="four wide field">
                                     <label>Port</label>
-                                    <div class="ui left icon input">
-                                        <input v-model="settings.email_smtp_port" placeholder="Outgoing SMTP server port" min="1" max="65535" type="number">
+                                    <div class="ui left icon input disabled">
+                                        <input v-model="readOnly.email_smtp_port" placeholder="Outgoing SMTP server port" min="1" max="65535" type="number">
                                         <i aria-hidden="true" class="lock icon"></i>
                                     </div>
                                 </div>
                             </div>
                             <div class="field"><label>SMTP login</label>
-                                <div class="ui left icon input">
-                                    <input v-model="settings.email_smtp_login" placeholder="Outgoing SMTP server login (e-mail address)" type="text">
+                                <div class="ui left icon input disabled">
+                                    <input v-model="readOnly.email_smtp_login" placeholder="Outgoing SMTP server login (e-mail address)" type="text">
                                     <i aria-hidden="true" class="user icon"></i>
                                 </div>
                             </div>
-                            <div class="field"><label>SMTP password</label>
-                                <div class="ui left icon input">
-                                    <input v-model="settings.email_smtp_password" placeholder="SMTP password is stored in database in plaintext" type="password">
+                            <div class="field"><label>SMTP password (hidden)</label>
+                                <div class="ui left icon input disabled">
+                                    <input value="See settings.json" type="text">
                                     <i aria-hidden="true" class="lock icon"></i>
                                 </div>
                             </div>
@@ -74,7 +74,7 @@
 <script>
 import { Component, Vue } from 'vue-property-decorator';
 import NavigationBar from '@/components/NavigationBar.vue';
-import { required, email } from 'vuelidate/lib/validators';
+import { required } from 'vuelidate/lib/validators';
 import _ from 'lodash';
 
 @Component({
@@ -86,15 +86,6 @@ import _ from 'lodash';
         const validators = {
             registration_enabled: { required }
         };
-        if (this.settings.email_enabled) {
-            Object.assign(validators, {
-                email_from: { required, email },
-                email_smtp_server: { required },
-                email_smtp_port: { required },
-                email_smtp_login: { required },
-                email_smtp_password: { required }
-            });
-        }
         return { settings: validators };
     }
 })
@@ -102,13 +93,17 @@ export default class Settings extends Vue {
 
         settings = {
             email_enabled: false,
-            email_from: '',
-            email_smtp_server: '',
-            email_smtp_port: 465,
-            email_smtp_login: '',
-            email_smtp_password: '',
             registration_enabled: false
-        }
+        };
+
+        readOnly = {
+            email_from: 'some@email.com',
+            email_smtp_server: 'some.server.com',
+            email_smtp_port: 465,
+            email_smtp_login: 'some@login.com',
+            email_smtp_password: 'not visibles'
+        };
+
         status = null;
 
         get isValid () {
@@ -129,6 +124,7 @@ export default class Settings extends Vue {
 
         mounted () {
             this.settings = _.cloneDeep(this.$store.state.settings);
+            this.readOnly = _.cloneDeep(this.$store.state.settings);
         }
 
 }
