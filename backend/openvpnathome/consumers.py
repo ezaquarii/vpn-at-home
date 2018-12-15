@@ -49,7 +49,7 @@ class ProcessRunnerConsumer(AsyncJsonWebsocketConsumer):
     async def receive_json(self, content, **kwargs):
         cmd = content['cmd']
         if cmd == 'start':
-            await self.cmd_start()
+            await self.cmd_start(**content['args'])
         elif cmd == 'stop':
             await self.cmd_stop()
 
@@ -57,11 +57,13 @@ class ProcessRunnerConsumer(AsyncJsonWebsocketConsumer):
         await self.cmd_stop()
         await super().disconnect(code)
 
-    async def cmd_start(self):
+    async def cmd_start(self, hostname=None, **kwargs):
         if self.process:
             await self.send(({'message': 'already running'}))
+        elif hostname is None:
+            await self.send(({'message': 'invalid hostname'}))
         else:
-            cmd = [get_bin_path("deploy_vpn.sh"), "remote"]
+            cmd = [get_bin_path("deploy_vpn.sh"), "--host", hostname]
             self.process = SubprocessThread(
                 cmd=cmd,
                 on_stdout=lambda line: self.post(self.on_stdout, line),

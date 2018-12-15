@@ -32,10 +32,10 @@ class ServerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Server
-        fields = ['id', 'created', 'name', 'email', 'validity_end', 'network']
+        fields = ['id', 'created', 'name', 'email', 'validity_end', 'network', 'hostname']
 
     def get_email(self, instance):
-        return instance.ca.email
+        return instance.owner.email
 
     def get_validity_end(self, instance):
         return instance.cert.validity_end
@@ -108,7 +108,7 @@ class ClientSerializer(serializers.ModelSerializer):
         fields = ['id', 'created', 'name', 'email', 'validity_end', 'download_url', 'server_name']
 
     def get_email(self, instance):
-        return instance.cert.email
+        return instance.owner.email
 
     def get_validity_end(self, instance):
         return instance.cert.validity_end

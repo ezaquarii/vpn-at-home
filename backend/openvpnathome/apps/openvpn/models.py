@@ -179,7 +179,7 @@ class Client(models.Model):
 
     @property
     def email(self):
-        return self.cert.email
+        return self.owner.email
 
     @property
     def filename(self):
