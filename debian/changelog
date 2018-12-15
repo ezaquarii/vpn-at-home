@@ -1,3 +1,12 @@
+openvpnathome (1.7.0-1) unstable; urgency=medium
+
+  * Removed broken configurable mail backend
+  * Support deployment on OpenBSD
+  * Support multiple servers
+  * Support server deletion
+
+ -- Chris Narkiewicz <hello@ezaquarii.com>  Sat, 15 Dec 2018 21:53:00 +0100
+
 openvpnathome (1.6.0-1) unstable; urgency=medium
 
   * Docker support

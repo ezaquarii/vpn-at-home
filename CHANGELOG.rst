@@ -1,6 +1,14 @@
 Changelog
 =========
 
+2018-12-15
+----------
+
+* Removed broken configurable mail backend
+* Support deployment on OpenBSD
+* Support multiple servers
+* Support server deletion
+
 2018-12-08
 ----------
 
