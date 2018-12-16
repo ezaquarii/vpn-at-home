@@ -1,7 +1,7 @@
 <template>
     <div class="ui grid center aligned">
         <div class="row center aligned">
-            <h1>Welcome to OpenVPN@Home</h1>
+            <h1>Welcome to VPN@Home</h1>
         </div>
         <div class="row center aligned">
             <h3>The app requires some configuration</h3>

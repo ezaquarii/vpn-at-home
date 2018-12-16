@@ -1,6 +1,6 @@
-============
-OpenVPN@Home
-============
+========
+VPN@Home
+========
 
 TL;DR
 =====
@@ -131,8 +131,8 @@ After cloning the repository, you can easily deploy the app for development:
 
 ::
 
-    $ git clone https://github.com/ezaquarii/openvpn-at-home
-    $ cd openvpnathome
+    $ git clone https://github.com/ezaquarii/vpn-at-home
+    $ cd vpnathome
     $ make devel
     ... backend is bootstrapped ...
     ... frontend is bootstrapped ...
@@ -149,7 +149,7 @@ Docker container can be created with ``make``:
 
     $ make docker
 
-Created image will be tagged with name ``openvpnathome``.
+Created image will be tagged with name ``vpnathome``.
 You can launch a container with a helper script:
 
 ::
@@ -177,9 +177,9 @@ Open ``http://localhost:8000`` and follow on-boarding tutorial.
 The package needs virtually zero configuration:
 
 - ``deb`` is self-deployable
-- installs into ``/srv/openvpnathome`` (referred to as ``${ROOT}``)
+- installs into ``/srv/vpnathome`` (referred to as ``${ROOT}``)
 - Python3 virtual environment, static files, etc are all in the ``deb`` package
-- ``systemd`` service script ``openvpnathome.service`` is installed and starts by default
+- ``systemd`` service script ``vpnathome.service`` is installed and starts by default
 - ``daphne`` runs on ``http://127.0.0.1:8000``
 - Contains bootstrapping script to automate app configuration (``${ROOT}/bin/bootstrap.sh``)
 
@@ -189,7 +189,7 @@ during Python virtual environment installation step, as we must ``sudo mount -o 
 relocation is not reliable (and discouraged), so we decided to hack a bit during the build process
 and bootstrap directly into destination directory before packaging.Refer to ``Makefile`` ``install`` target.
 
-.. note:: If ``make deb`` fails for whatever reason, make sure ``/srv/openvpnathome`` is left unmounted.
+.. note:: If ``make deb`` fails for whatever reason, make sure ``/srv/vpnathome`` is left unmounted.
 
 OpenVPN server deployment
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -248,7 +248,7 @@ You can also access **Django Admin** app, which is left enabled.
 OpenVPN config
 ~~~~~~~~~~~~~~
 
-OpenVPN configuration is generated from templates in ``openvpnathome.apps.openvpn.templates``. If the default
+OpenVPN configuration is generated from templates in ``vpnathome.apps.openvpn.templates``. If the default
 configuration doesn't suit your needs, you can alter templates directly there.
 
 There is no frontend config editor, although I was thinking about it.
@@ -279,7 +279,7 @@ Provided ``Makefile``'s default target displays help:
 ::
 
     $ make
-    Welcome to OpenVPN@Home make system
+    Welcome to VPN@Home make system
 
     Available targets:
      * devel      - boostrap project for development (your first choice)
@@ -290,7 +290,7 @@ Provided ``Makefile``'s default target displays help:
 In development mode, frontend files are stored outside of this project, in ``frontend`` subproject. **Django** app
 will pick static and templates from frontend build directory.
 
-When development mode is off, frontend resources are taken from ``openvpnathome.apps.frontend`` app.
+When development mode is off, frontend resources are taken from ``vpnathome.apps.frontend`` app.
 
 **Django Debug Toolbar** is provided by default, should you need to check which templates are picked up.
 
@@ -305,7 +305,7 @@ Provided ``Makefile``'s default target displays help:
 
     $ cd frontend
     $ make
-    Welcome to OpenVPN@Home make system - frontend sub-project
+    Welcome to VPN@Home make system - frontend sub-project
     You need running node.js and npm.
 
     Available targets:
@@ -319,7 +319,7 @@ and ``make build-devel``.
 
 **Django** will pick frontend code from ``frontend/dist`` directory.
 
-**Django** injects some initial state via ``<script>...</script>`` tag. See ``index.html`` and ``openvpnathome.apps.frontent.views`` for
+**Django** injects some initial state via ``<script>...</script>`` tag. See ``index.html`` and ``vpnathome.apps.frontent.views`` for
 details.
 
 Licence

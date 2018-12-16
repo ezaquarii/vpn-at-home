@@ -2,7 +2,7 @@
     <div class="login top-space">
         <div class="ui grid center aligned">
             <div class="row center aligned">
-                <h1 class="ui header green center aligned">Register<br>OpenVPN@Home</h1>
+                <h1 class="ui header green center aligned">Register<br>VPN@Home</h1>
             </div>
             <div class="row">
                 <div class="six wide column left aligned">

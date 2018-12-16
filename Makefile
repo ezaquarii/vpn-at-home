@@ -4,15 +4,15 @@ LOG_DIR=$(CURDIR)/data/logs
 CONFIG_FILE=$(CURDIR)/data/settings.json
 DJANGO_LOG_FILE=$(LOG_DIR)/django.log
 DOCKER_BUILD?=false
-INSTALL_ROOT=$(DESTDIR)/srv/openvpnathome
+INSTALL_ROOT=$(DESTDIR)/srv/vpnathome
 INSTALL_VIRTUALENV=$(INSTALL_ROOT)/env
-DEPLOYMENT_ROOT=/srv/openvpnathome
+DEPLOYMENT_ROOT=/srv/vpnathome
 DEPLOYMENT_VIRTUALENV=$(DEPLOYMENT_ROOT)/env/
 
 .PHONY: devel distclean runserver install install_backend install_virtualenv install_etc deb install_deb uninstall_deb
 
 all:
-	@echo "Welcome to OpenVPN@Home make system"
+	@echo "Welcome to VPN@Home make system"
 	@echo
 	@echo "Env:"
 	@echo " * DESTDIR:               (path) [$(DESTDIR)]"
@@ -90,17 +90,17 @@ endif
 	@echo
 
 docker:
-	docker build -t openvpnathome .
+	docker build -t vpnathome .
 
 deb:
 	git clean -fdx
 	debuild -e DOCKER_BUILD=$(DOCKER_BUILD) --no-lintian -i -uc -us -b
 
 install_deb:
-	sudo dpkg -i ../openvpnathome*.deb
+	sudo dpkg -i ../vpnathome*.deb
 
 remove_deb:
-	sudo dpkg --remove openvpnathome
+	sudo dpkg --remove vpnathome
 
 purge_deb:
-	sudo dpkg --purge openvpnathome
+	sudo dpkg --purge vpnathome

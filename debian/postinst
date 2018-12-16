@@ -1,5 +1,5 @@
 #!/bin/sh
-# postinst script for openvpnathome
+# postinst script for vpnathome
 #
 # see: dh_installdeb(1)
 
@@ -17,7 +17,7 @@ set -e
 # for details, see https://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-DEPLOYMENT_ROOT="/srv/openvpnathome"
+DEPLOYMENT_ROOT="/srv/vpnathome"
 DEPLOYMENT_BIN="${DEPLOYMENT_ROOT}/bin"
 PATH=${PATH}:${DEPLOYMENT_BIN}
 

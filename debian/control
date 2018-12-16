@@ -1,13 +1,13 @@
-Source: openvpnathome
+Source: vpnathome
 Section: admin
 Priority: optional
 Maintainer: Chris Narkiewicz <hello@ezaquarii.com>
 Build-Depends: debhelper (>= 10), make (>= 4), python3 (>= 3.6), python3-dev (>= 3.6), devscripts (>= 2.17), debhelper (>= 11), sudo, python3-virtualenv (>= 15), virtualenv (>= 15), build-essential (>= 12)
 Standards-Version: 4.1.2
-Homepage: https://github.com/ezaquarii/openvpn-at-home/
-Vcs-Git: https://github.com/ezaquarii/openvpn-at-home.git
+Homepage: https://github.com/ezaquarii/vpn-at-home/
+Vcs-Git: https://github.com/ezaquarii/vpn-at-home.git
 
-Package: openvpnathome
+Package: vpnathome
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, openssl (>= 1.1.0), openvpn (>= 2.4.4), ansible (>=2.5.0), openssh-client (>=7.0)
 Description: Web OpenVPN Management UI

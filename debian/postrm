@@ -1,5 +1,5 @@
 #!/bin/sh
-# postrm script for openvpnathome
+# postrm script for vpnathome
 #
 # see: dh_installdeb(1)
 
@@ -18,9 +18,9 @@ set -e
 # for details, see https://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-DEPLOYMENT_DIR=/srv/openvpnathome
+DEPLOYMENT_DIR=/srv/vpnathome
 DEPLOYMENT_DB_DIR="${DEPLOYMENT_DIR}/db/"
-APP_USER="openvpnathome"
+APP_USER="vpnathome"
 
 remove_user() {
     if [ $(getent passwd ${APP_USER}) ]; then

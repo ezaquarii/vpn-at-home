@@ -26,7 +26,7 @@ RUN apt-get install --yes \
 	openssl \
 	openvpn \
 	python3-distutils
-COPY --from=builder /openvpnathome*.deb /
-RUN dpkg -i /openvpnathome*.deb
+COPY --from=builder /vpnathome*.deb /
+RUN dpkg -i /vpnathome*.deb
 EXPOSE 8000
-VOLUME "/srv/openvpnathome/data"
+VOLUME "/srv/vpnathome/data"

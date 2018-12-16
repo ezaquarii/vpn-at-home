@@ -1,5 +1,5 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: openvpnathome
+Upstream-Name: vpnathome
 Source: <url://example.com>
 
 Files: *

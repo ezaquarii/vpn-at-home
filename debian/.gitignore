@@ -1,4 +1,4 @@
 .debhelper
 files
-openvpnathome.substvars
-openvpnathome
+vpnathome.substvars
+vpnathome

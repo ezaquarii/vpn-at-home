@@ -1,0 +1,15 @@
+[Unit]
+Description=VPN@Home app
+After=syslog.target
+
+[Service]
+ExecStart=/srv/vpnathome/bin/daphne.sh
+User=vpnathome
+Group=vpnathome
+Restart=on-failure
+StandardError=syslog
+WorkingDirectory=/srv/vpnathome/
+
+[Install]
+WantedBy=default.target
+

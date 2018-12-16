@@ -1,5 +1,5 @@
 all:
-	@echo "Welcome to OpenVPN@Home make system - frontend sub-project"
+	@echo "Welcome to VPN@Home make system - frontend sub-project"
 	@echo "You need running node.js and npm."
 	@echo ""
 	@echo "Available targets:"

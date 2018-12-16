@@ -16,7 +16,7 @@ export LOGS_DIR="${DATA_DIR}/logs"
 export BIN_DIR="${ROOT_DIR}/bin"
 export ANSIBLE_DIR="${ROOT_DIR}/ansible"
 export SSH_KEY_DIR="${DATA_DIR}/ssh"
-export SSH_DEPLOYMENT_KEY="${SSH_KEY_DIR}/openvpnathome_server_deployment_key"
+export SSH_DEPLOYMENT_KEY="${SSH_KEY_DIR}/vpnathome_server_deployment_key"
 export APP_HOME="${DATA_DIR}/home/"
 
 export PYTHON="${VIRTUALENV_DIR}/bin/python3"
@@ -24,7 +24,7 @@ export MANAGE=${APP_DIR}/manage.py
 export USER=$(whoami)
 
 if [[ "${USER}" = "root" ]]; then
-    APP_USER=openvpnathome
+    APP_USER=vpnathome
 else
     APP_USER=${USER}
 fi
@@ -81,14 +81,14 @@ remove_user() {
 
 set_manage_py_interpreter() {
     echo "Setting virtual environment interpreter in ${ROOT_DIR}/backend"
-    sed -i 's/\/usr\/bin\/env.*/\/srv\/openvpnathome\/env\/bin\/python3/' "${ROOT_DIR}/backend/manage.py"
+    sed -i 's/\/usr\/bin\/env.*/\/srv\/vpnathome\/env\/bin\/python3/' "${ROOT_DIR}/backend/manage.py"
 }
 
 create_ssh_key() {
     mkdir -p "${SSH_KEY_DIR}"
     if [[ ! -f "${SSH_DEPLOYMENT_KEY}" ]]; then
         echo "Creating ssh key in ${SSH_KEY_DIR}"
-        ssh-keygen -N '' -C OpenVPN@Home -f "${SSH_DEPLOYMENT_KEY}"
+        ssh-keygen -N '' -C VPN@Home -f "${SSH_DEPLOYMENT_KEY}"
     else
         echo "SSH deployment key already created. Skipping."
     fi

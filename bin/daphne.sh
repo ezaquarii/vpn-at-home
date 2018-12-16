@@ -51,4 +51,4 @@ cd "${APP_DIR}"
 exec daphne --port ${PORT} \
             --bind ${BIND_ADDRESS} \
             --access-log "${LOGS_DIR}/daphne.log" \
-            openvpnathome.asgi:application
+            vpnathome.asgi:application

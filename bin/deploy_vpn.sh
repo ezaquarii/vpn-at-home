@@ -57,7 +57,7 @@ if [[ "${LOCALHOST}" = "yes" ]]; then
     exit $?
 else
     ansible-playbook --inventory "${BIN_DIR}/inventory.sh" \
-                     --private-key "${SSH_KEY_DIR}/openvpnathome_server_deployment_key" \
+                     --private-key "${SSH_KEY_DIR}/vpnathome_server_deployment_key" \
                      --ssh-common-args "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
                      ${LIMIT_OPT} \
                      "${ANSIBLE_DIR}/remote.yml"

@@ -17,15 +17,15 @@ case "$1" in
         set_data_permissions
         set_manage_py_interpreter
         if [[ -x "$(command -v systemctl)" ]]; then
-            systemctl enable openvpnathome
-            systemctl start openvpnathome.service
+            systemctl enable vpnathome
+            systemctl start vpnathome.service
         fi
     ;;
 
     prerm)
         if [[ -x "$(command -v systemctl)" ]]; then
-            systemctl stop openvpnathome.service
-            systemctl disable openvpnathome
+            systemctl stop vpnathome.service
+            systemctl disable vpnathome
         fi
         remove_user
     ;;

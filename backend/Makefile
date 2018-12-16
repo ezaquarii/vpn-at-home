@@ -5,7 +5,7 @@ PIP := $(VIRTUALENV)/bin/pip3
 .PHONY: install configure virtualenv
 
 all:
-	@echo "Welcome to OpenVPN@Home make system"
+	@echo "Welcome to VPN@Home make system"
 	@echo ""
 	@echo "Available targets:"
 	@echo " * devel      - boostrap project for development (your first choice)"

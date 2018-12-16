@@ -26,7 +26,7 @@ ARGS=$(getopt -n "$0" -o fhs --longoptions force,no-smtp,smtp-server:,smtp-port:
 eval set -- "${ARGS}"
 
 print_usage() {
-    echo "OpenVPN@Home bootstrapping utility."
+    echo "VPN@Home bootstrapping utility."
     echo
     echo "Usage:"
     echo "  $0 [options] [admin@email [admin_password]]"
@@ -232,11 +232,11 @@ if [[ "${USER}" != "root" ]]; then
     echo "Restarting service skipped."
 elif [[ -x "$(command -v systemctl)" ]]; then
     echo "Restarting server..."
-    systemctl restart openvpnathome.service
+    systemctl restart vpnathome.service
 else
-    echo "You need to restart OpenVPN@Home service"
+    echo "You need to restart VPN@Home service"
 fi
 
 echo
-echo "OpenVPN@Home is ready. Enjoy!"
+echo "VPN@Home is ready. Enjoy!"
 echo
