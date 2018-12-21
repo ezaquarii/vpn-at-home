@@ -58,10 +58,12 @@ class Command(ManagementCommand):
         vars = {}
         if server:
             vars['vpn_network'] = str(server.network)
+            vars['vpn_gateway'] = str(server.gateway)
             vars['vpn_name'] = server.name
             vars['vpn_port'] = server.port
             vars['vpn_config'] = server.render_to_string()
             vars['ansible_ssh_user'] = 'root'
+            vars['deploy_dns'] = server.deploy_dns
         vars_json = json.dumps(vars, indent=4)
         print(vars_json)
 

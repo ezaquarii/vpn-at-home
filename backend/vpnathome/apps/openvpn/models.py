@@ -113,6 +113,7 @@ class Server(models.Model):
     protocol = models.CharField(choices=PROTOCOL_CHOICES, default=DEFAULT_PROTOCOL, max_length=10)
     network = NetworkAddressField(max_length=100, default=str(DEFAULT_NETWORK), null=True)
     deleted = models.BooleanField(default=False)
+    deploy_dns = models.BooleanField(default=False)
 
     def __str__(self):
         if self.deleted:
@@ -144,6 +145,10 @@ class Server(models.Model):
     def client_connect_script(self):
         return get_bin_path('connect.sh')
 
+    @property
+    def gateway(self):
+        return str(next(self.network.hosts()))
+
     def render_to_string(self):
         """
         Render server's configuration to string, using OpenVPN configuration template.
@@ -162,7 +167,9 @@ class Server(models.Model):
             'client_connect_script': self.client_connect_script,
             'network': self.network.network_address,
             'netmask': self.network.netmask,
-            'port': self.port
+            'port': self.port,
+            'deploy_dns': self.deploy_dns,
+            'gateway': self.gateway
         }
         config = render_to_string('server.ovpn', context=context)
         return filter_empty_config_lines(config)
@@ -187,7 +194,7 @@ class Client(models.Model):
 
     @property
     def filename(self):
-        return slugify(self.name) + '.conf'
+        return "{client}--at--{server}.conf".format(client=slugify(self.name), server=slugify(self.server.name))
 
     @property
     def mimetype(self):

@@ -61,6 +61,7 @@ class CreateServerSerializer(serializers.Serializer):
     email = serializers.EmailField(required=False)
     protocol = serializers.RegexField(regex="tcp|udp", required=False, default="udp")
     network = NetworkAddressSerializerField(required=False, default=models.Server.DEFAULT_NETWORK)
+    deploy_dns = serializers.BooleanField(required=False, default=False)
 
     def create(self, validated_data):
         owner = self.context['owner']
@@ -91,7 +92,8 @@ class CreateServerSerializer(serializers.Serializer):
                                               tls_auth_key=tls_auth_key,
                                               dhparams=dhparams,
                                               protocol=validated_data['protocol'],
-                                              network=validated_data['network'])
+                                              network=validated_data['network'],
+                                              deploy_dns=validated_data['deploy_dns'])
 
         return server
 
