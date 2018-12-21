@@ -34,6 +34,12 @@
                 <i aria-hidden="true" class="server icon"></i>
             </div>
         </div>
+        <div class="field">
+            <div class="ui checked checkbox">
+                <input v-model="form.deploy_dns" type="checkbox">
+                <label>Enable DNS server</label>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -50,7 +56,8 @@ export default {
                 hostname: '',
                 port: 1194,
                 protocol: 'udp',
-                network: '172.30.0.0/16'
+                network: '172.30.0.0/16',
+                deploy_dns: false
             }
         };
     },
@@ -60,7 +67,8 @@ export default {
             hostname: { required },
             port: { required },
             protocol: { required },
-            network: { required }
+            network: { required },
+            deploy_dns: {required}
         }
     },
     computed: {
