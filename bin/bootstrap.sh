@@ -22,7 +22,7 @@ DATABASE_DIR=""
 
 . $(dirname $0)/common.sh
 
-ARGS=$(getopt -n "$0" -o fhs --longoptions force,no-smtp,smtp-server:,smtp-port:,smtp-login:,smtp-password: -- "$@")
+ARGS=$(getopt -n "$0" -o fhs --longoptions help,force,no-smtp,smtp-server:,smtp-port:,smtp-login:,smtp-password: -- "$@")
 eval set -- "${ARGS}"
 
 print_usage() {
