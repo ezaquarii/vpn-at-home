@@ -1,6 +1,7 @@
 VIRTUALENV ?= "$(CURDIR)/../env"
 PYTHON := $(VIRTUALENV)/bin/python3
 PIP := $(VIRTUALENV)/bin/pip3
+BINDIR ?= "$(CURDIR)/../bin/"
 
 .PHONY: install configure virtualenv
 
@@ -16,9 +17,7 @@ all:
 	@echo "Python virtualenv installed in VIRTUALENV = $(VIRTUALENV)"
 
 devel: virtualenv
-	$(PYTHON) manage.py configure --devel
-	$(PYTHON) manage.py migrate
-	$(PYTHON) manage.py set_admin admin@localhost admin1234
+	$(BINDIR)/bootstrap.sh --no-smtp --devel admin@localhost admin1234
 
 virtualenv: $(VIRTUALENV)
 
@@ -36,4 +35,3 @@ test:
 
 runserver:
 	$(PYTHON) manage.py runserver --insecure 8001
-
