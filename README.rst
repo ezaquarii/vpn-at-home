@@ -47,7 +47,8 @@ Features:
 #. profiles can be sent by e-mail or downloaded as files
 #. Ansible scripts to automatically deploy configured VPN server
 #. 1-click server deployment
-#. tested on Ubuntu 18.04 (Vultr VPS)
+#. DNS cache using Unbound
+#. tested on Ubuntu 18.04 and OpenBSD 6.4 (Vultr VPS)
 
 That's all folks. No fancy stuff. It's not a toolbox, it's a screwdriver to manage 3-5 home machines (and phones).
 
@@ -252,6 +253,33 @@ OpenVPN configuration is generated from templates in ``vpnathome.apps.openvpn.te
 configuration doesn't suit your needs, you can alter templates directly there.
 
 There is no frontend config editor, although I was thinking about it.
+
+Client connection
+-----------------
+
+Obtaining client config
+~~~~~~~~~~~~~~~~~~~~~~~
+
+VPN config files can be send to e-mail account of a user that created a config or downloaded.
+Once downloaded, the config file (OVPN) can be used directly with OpenVPN client.
+
+DNS check
+~~~~~~~~~
+
+If server was deployed with DNS cache enabled, DNS is forwarded to connecting client.
+Depending on your network this might be slower or faster than popular DNS servers or DNS of your ISP.
+
+To verify if your queries are forwarded to VPN DNS:
+
+::
+
+    ping gateway.vpnathome
+    PING gateway.vpnathome (172.30.0.1) 56(84) bytes of data.
+    64 bytes from _gateway (172.30.0.1): icmp_seq=1 ttl=255 time=46.5 ms
+    64 bytes from _gateway (172.30.0.1): icmp_seq=2 ttl=255 time=48.7 ms
+
+where ``172.30.0.1`` will be your choosen VPN gateway IP. Check ``systemd-resolve --status`` if DNS servers are
+properly pushed.
 
 Development
 ===========
