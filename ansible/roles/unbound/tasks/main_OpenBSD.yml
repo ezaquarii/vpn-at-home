@@ -1,0 +1,41 @@
+---
+- name: Enable Unbound DNS server
+  service:
+    name: unbound
+    state: started
+    enabled: yes
+
+- name: Create unbound config dir
+  file:
+    path: /var/unbound/etc/unbound.conf.d/
+    state: directory
+    owner: root
+    group: wheel
+    mode: 0755
+
+- name: Upload Unbound config
+  template:
+    src: openbsd/unbound.conf.j2
+    dest: /var/unbound/etc/unbound.conf
+    owner: root
+    group: wheel
+    mode: 0644
+  notify: restart_unbound
+
+- name: Upload Unbound forward zone config
+  template:
+    src: 01-forward.conf.j2
+    dest: /var/unbound/etc/unbound.conf.d/01-forward.conf
+    owner: root
+    group: wheel
+    mode: 0644
+  notify: restart_unbound
+
+- name: Upload Unbound ad blocking local zone config
+  template:
+    src: 02-ad-block-zone.conf.j2
+    dest: /var/unbound/etc/unbound.conf.d/02-ad-block-zone.conf
+    owner: root
+    group: wheel
+    mode: 0644
+  notify: restart_unbound

@@ -1,0 +1,16 @@
+server:
+    interface: 127.0.0.1
+    interface: {{ vpn_gateway }}
+    do-ip6: no
+    access-control: 0.0.0.0/0 refuse
+    access-control: 127.0.0.0/8 allow
+    access-control: {{ vpn_network }} allow
+    hide-identity: yes
+    hide-version: yes
+    qname-minimisation: yes
+
+    # Use this address for tests
+    local-zone: "gateway.vpnathome" redirect
+    local-data: "gateway.vpnathome A {{ vpn_gateway }}"
+
+include: "/var/unbound/etc/unbound.conf.d/*.conf"

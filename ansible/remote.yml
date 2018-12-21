@@ -19,5 +19,10 @@
     - name: Gather facts
       setup:
 
-  roles:
-    - openvpn
+  tasks:
+    - name: Deploy OpenVPN server
+      include_role: name=openvpn
+
+    - name: Deploy Unbound DNS server
+      include_role: name=unbound
+      when: deploy_dns == True

@@ -26,6 +26,7 @@
     mode: 0600
     owner: root
     group: wheel
+  notify: openbsd_restart_openvpn
 
 - name: Enable OpenVPN service
   service:

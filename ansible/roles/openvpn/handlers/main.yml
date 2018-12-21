@@ -1,8 +1,11 @@
 ---
-- name: restart_openvpn_server
+- name: ubuntu_restart_openvpn
   service:
     name: openvpn@server
     state: restarted
+
+- name: openbsd_restart_openvpn
+  command: rcctl restart openvpn
 
 - name: enable_packet_filter
   shell: |

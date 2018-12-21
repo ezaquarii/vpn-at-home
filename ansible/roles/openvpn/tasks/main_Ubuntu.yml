@@ -56,8 +56,7 @@
     mode: 0600
     owner: root
     group: root
-  notify:
-    - restart_openvpn_server
+  notify: ubuntu_restart_openvpn
 
 - name:
   service:

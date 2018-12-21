@@ -1,0 +1,38 @@
+---
+- name: Install Unbound
+  package: name=unbound
+
+- name: Upload Unbound config
+  template:
+    src: ubuntu/unbound.conf.j2
+    dest: /etc/unbound/unbound.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart_unbound
+
+- name: Upload Unbound forward zone config
+  template:
+    src: 01-forward.conf.j2
+    dest: /etc/unbound/unbound.conf.d/01-forward.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart_unbound
+
+- name: Upload Unbound ad blocking local zone config
+  template:
+    src: 02-ad-block-zone.conf.j2
+    dest: /etc/unbound/unbound.conf.d/02-ad-block-zone.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart_unbound
+
+- name: UFW - allow DNS connection
+  ufw:
+    rule: allow
+    direction: in
+    interface: tun0
+    src: "{{ vpn_network }}"
+    port: 53
