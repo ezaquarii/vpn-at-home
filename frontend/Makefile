@@ -20,6 +20,9 @@ install:
 lint:
 	npm run-script lint
 
+test:
+	npm run-script test:unit
+
 distclean:
 	rm -rf node_modules
 	rm -rf dist

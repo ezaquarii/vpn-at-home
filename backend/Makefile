@@ -31,7 +31,7 @@ $(VIRTUALENV):
 	$(PIP) install -r requirements.txt
 
 test:
-	$(PYTHON) manage.py test
+	$(PYTHON) manage.py test vpnathome
 
 runserver:
 	$(PYTHON) manage.py runserver --insecure 8001

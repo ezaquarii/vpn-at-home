@@ -46,6 +46,11 @@ devel_backend:
 devel_frontend:
 	$(MAKE) -C frontend build-devel
 
+test_backend:
+	$(MAKE) -C backend test
+
+test_frontend:
+	$(MAKE) -C frontend test
 
 distclean:
 	@echo

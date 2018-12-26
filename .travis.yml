@@ -1,0 +1,11 @@
+language: python
+dist: xenial
+python: 
+  - "3.6" 
+before_install:
+  - sudo apt-get install -y openvpn openssl openssh-client
+script:
+  - make devel
+  - make test_backend
+  - make test_frontend
+
