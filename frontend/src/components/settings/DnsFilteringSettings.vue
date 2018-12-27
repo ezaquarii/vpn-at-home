@@ -1,5 +1,12 @@
 <template>
     <form class="ui form" @submit.prevent="handleSubmit">
+        <div class="field">
+            <sui-message info>
+                Here you can select hosts lists for
+                <a href="https://en.wikipedia.org/wiki/Ad_blocking#DNS_filtering" target="_blank"><u><b>DNS ad blocking</b></u>&nbsp;<i class="icon external alternate"> </i></a>.
+                Those lists are uploaded to VPN server when DNS deployment is enabled.
+            </sui-message>
+        </div>
         <div class="field" v-for="item in settings">
             <div class="ui checkbox">
                 <input v-model="item.enabled" type="checkbox">

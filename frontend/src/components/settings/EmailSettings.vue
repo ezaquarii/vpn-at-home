@@ -2,6 +2,12 @@
     <form class="ui form" @submit.prevent="handleSubmit">
         <div class="content">
             <div class="field">
+                <sui-message info>
+                    E-Mail settings are configured in <span class="shell">${DATA_DIR}/data/settings.json</span> and are used
+                    to send logs, config files, etc. SMTP settings cannot be set here, but you can toggle e-mail sender.
+                </sui-message>
+            </div>
+            <div class="field">
                 <div class="ui checked checkbox">
                     <input v-model="settings.email_enabled" type="checkbox">
                     <label>Enable e-mail</label>

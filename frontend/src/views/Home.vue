@@ -3,8 +3,7 @@
         <div>
             <div class="info">
                 <sui-message info>
-                    Your SSH deployment key is located in <span class="shell">${DATA_DIR}/ssh/vpnathome_server_deployment_key.pub</span>.<br>
-                    Make sure you upload the public key to your target deployment server.
+                    Check your SSH deployment key in <span><i class="icon cog"></i> <b>Settings</b><i class="icon arrow right"></i><b>SSH keys</b></span>.
                 </sui-message>
             </div>
             <ConfigList v-if="isSuperuser"
