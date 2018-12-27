@@ -15,7 +15,7 @@ VPN@Home
 TL;DR
 =====
 
-1-click, self-hosted OpenVPN deployment to your favorite VPS instance and clients management app.
+1-click deployment of OpenVPN with DNS ad blocking sinkhole. Deploys to your favorite VPS machine.
 Created with **Vue.js**, **Semantic UI** and **Django**. And with love, of course.
 
 .. image:: home.png
@@ -25,6 +25,11 @@ Created with **Vue.js**, **Semantic UI** and **Django**. And with love, of cours
 .. image:: deployment.png
    :width: 512
    :align: center
+
+.. image:: settings.png
+   :width: 512
+   :align: center
+
 
 Feedback and pull requests are welcome.
 
@@ -50,17 +55,14 @@ And that works for me better than "no VPN at all".
 
 Features:
 
-#. users with admin/casual privilege separation
-#. simple user registration
-#. automatic generation of OpenVPN profiles
-#. all crypto stuff is inlined into OpenVPN profiles (single file deployment)
-#. profiles can be sent by e-mail or downloaded as files
-#. Ansible scripts to automatically deploy configured VPN server
-#. 1-click server deployment
-#. DNS cache using Unbound
+#. 1-click deployment of OpenVPN server to your favorite VPS provider
+#. DNS cache and ad blocking for VPN connected clients
+#. OpenVPN clients management
+#. generation of self-contained ovpn profiles for servers and clients
+#. profiles can be sent by e-mail to owner or downloaded as files
 #. tested on Ubuntu 18.04 and OpenBSD 6.4 (Vultr VPS)
 
-That's all folks. No fancy stuff. It's not a toolbox, it's a screwdriver to manage 3-5 home machines (and phones).
+That's all folks.
 
 .. note:: This is a work-in-progress app, hacked together during x-mas break to solve a specific need of mine.
           Feel free to submit PRs with improvements.
@@ -82,8 +84,8 @@ No. Do not use it to do any stupid things.
 **Is the app secure?**
 
 Since the app manages OpenVPN server deployment, it must have root access to the VPN
-machine. There is no separate deployment agent (yet). It is not wise to keep it facing the
-open internet, I guess.
+machine. There is no separate deployment agent (yet), as it would over-complicate things.
+It is not wise to keep it facing the open internet, I guess, so please don't do it.
 
 **So how to host it?**
 
@@ -91,18 +93,24 @@ Preferably on your internal network. Keep the server bound to *localhost* and co
 via SSH tunnel. This way you don't need to configure SSL certificate and a lot of security
 headaches go away.
 
-I personally use it installed on my private laptop, the same way I use CUPS (printer stuff).
+I use it installed on my private laptop, the same way I use CUPS (printer stuff, aka localhost-colon-six-three-one).
 
 **How to change server address after it is created?**
 
 Use Django Admin panel to modify host field and re-deploy. All client configs must be re-deployed too.
+You can try playing with DynDNS to work around it.
 
 **Why Ansible? It's slow and weights 30MB.**
 
 #. It does the job like a champ lifting tons of system complexity
 #. Zero-effort deployment (no master nodes, etc)
 #. Very easy to extend
-#. I'd like to have more complex setup in the future and simply bash won't cut it
+#. I'd like to have more complex setup in the future and bash won't cut it
+
+**Why not language X**?
+
+I believe Python is optimal solution considering platform maturity, libraries quality and
+skills proliferation. There is not much choice for the frontend.
 
 Project structure
 =================
@@ -123,7 +131,7 @@ Installation
 Prerequisites
 -------------
 
-#. Working Node.js installation (tested with 9.2.1 & 9.3.0)
+#. Working Node.js installation (tested with 9.3.0)
 #. Python 3 with virtualenv
 #. GNU Make (or compatible)
 #. Ansible (tested with 2.5.0, but no fancy functionality is used)
@@ -170,7 +178,7 @@ You can launch a container with a helper script:
 
 ...or roll out your own fancy scripts for this. Data will be stored in a volume ``data``.
 
-For production - debian package
+For production - Debian package
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Package deployment is supported on *Ubuntu*. *Debian* should be supported, but I didn't test it there.
@@ -187,18 +195,18 @@ Open ``http://localhost:8000`` and follow on-boarding tutorial.
 
 The package needs virtually zero configuration:
 
-- ``deb`` is self-deployable
+- ``deb`` is self-deployable, as it contains entire virtualenv
 - installs into ``/srv/vpnathome`` (referred to as ``${ROOT}``)
-- Python3 virtual environment, static files, etc are all in the ``deb`` package
 - ``systemd`` service script ``vpnathome.service`` is installed and starts by default
-- ``daphne`` runs on ``http://127.0.0.1:8000``
+- ``daphne`` runs on ``http://127.0.0.1:8000`` - bound to **localhost** only
 - Contains bootstrapping script to automate app configuration (``${ROOT}/bin/bootstrap.sh``)
 
 Building a package will call ``sudo`` and ask you for a password. Root privileges are required
 during Python virtual environment installation step, as we must ``sudo mount -o bind ...`` and
 ``sudo umount ...`` virtualenv destination directory. Why? Unfortunately, Python 3 virtualenv
-relocation is not reliable (and discouraged), so we decided to hack a bit during the build process
-and bootstrap directly into destination directory before packaging.Refer to ``Makefile`` ``install`` target.
+relocation is not reliable (and discouraged), so I decided to hack a bit during the build process
+and bootstrap directly into destination directory before packaging. Refer to ``Makefile`` ``install``
+target for details.
 
 .. note:: If ``make deb`` fails for whatever reason, make sure ``/srv/vpnathome`` is left unmounted.
 
@@ -212,20 +220,23 @@ After a server is configured, you can deploy it using provided **Ansible** scrip
 the target system!
 
 #. required packages will be installed
-#. iptables rules will be altered (using Uncomplicated FireWall - ``UFW``)
-#. IPv4 forwarding will be enabled (using ``sysctl.conf``)
+#. firewall rules will be altered
+#. IPv4 forwarding will be enabled
 
 It is advised to deploy the server on a remote machine, but you can do it on localhost too. I personally test it
-on DigitalOcean's droplet.
+on Vultr VPS.
 
 ::
 
-    # ${ROOT}/bin/deploy_vpn.sh [local|remote]
+    $ ./bin/deploy_vpn.sh --help
+    Usage:
+    ./bin/deploy_vpn.sh [--help|--local|--host HOST]
+    
+    --help  - usage
+    --local - deploy OpenVPN server on the current machine (localhost)
+    --host  - deploy selected OpenVPN server only
 
-Supplying ``local`` will deploy the server on localhost. ``remote`` will try to deploy on a remote machine
-using the address provided during configuration.
-
-.. note:: This feature is work-in-progress.
+If you deploy to a ``HOST``, it must be one of the defined VPN servers.
 
 Configuration
 -------------
@@ -237,6 +248,8 @@ configuration:
 - Admin password is *admin1234*
 - Database is located in ``${PROJECT_ROOT}/data/db/db.sqlite3``
 - Settings have ``development`` flag set to true ``true``
+
+To set new superuser, use ``./bin/manage set_admin <email> <pass>`` command.
 
 App config
 ~~~~~~~~~~
@@ -335,7 +348,8 @@ When development mode is off, frontend resources are taken from ``vpnathome.apps
 Frontend subproject
 -------------------
 
-Frontend sub-project contains **Vue.js** SPA served by **Django**.
+Frontend sub-project contains **Vue.js** SPA served by **Django**. By default **Django** app will serve
+stable, production version of the frontend app directly.
 
 Provided ``Makefile``'s default target displays help:
 
@@ -352,10 +366,20 @@ Provided ``Makefile``'s default target displays help:
      * install     - install packages from package.json
      * distclean   - clean project, delete all data (start from 'git clone' state)
 
-This is pretty self-explanatory too. When developing front-end code, you run **Django** app in development mode,
-and ``make build-devel``.
+To start development of frontend code, you must first switch backend into development mode, by modifying ``data/settings.json``:
 
-**Django** will pick frontend code from ``frontend/dist`` directory.
+::
+
+    {
+        ...
+        "configured": true,
+        "development": true,
+        "debug_toolbar_enabled": true,
+        ...
+
+Don't forget to restart the app. Once development mode is enabled, **Django** will load frontend from ``frontend/dist``
+instead of ``vpnathome.apps.frontend``. You can verify this by inspecting site title - it should say
+*VPN@Home <version> - development*. You can also use **Django Debug Toolbar** to troubleshoot the configuration.
 
 **Django** injects some initial state via ``<script>...</script>`` tag. See ``index.html`` and ``vpnathome.apps.frontent.views`` for
 details.
@@ -370,7 +394,7 @@ Known issues
 
 I left this as the last point, hoping not to scare anybody.
 
- * frontend has 0% test coverage -and many lint issues- :o)
+ * frontend has 0% test coverage :o)
  * security is not a major concern for this app, I'm not running a CA company
  * no real user management - I rely on Django Admin panel for it
  * not tested on Windows, as I don't touch it even with a 10-foot stick, in rubber gloves - patches are welcome, however
