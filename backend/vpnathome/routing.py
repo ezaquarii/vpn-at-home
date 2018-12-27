@@ -4,12 +4,13 @@ from channels.staticfiles import StaticFilesHandler
 from channels.http import AsgiHandler
 from django.conf.urls import url
 
-from vpnathome.consumers import DeploymentConsumer
+from vpnathome.consumers import DeploymentConsumer, UpdateBlockLists
 from vpnathome.utils import is_database_migrated
 
 
 __ws_router = URLRouter([
-    url(r"^ws/$", DeploymentConsumer),
+    url(r"^ws/deployment/$", DeploymentConsumer),
+    url(r"^ws/update_block_lists/$", UpdateBlockLists),
 ])
 
 __http_router = URLRouter([

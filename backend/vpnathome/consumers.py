@@ -115,3 +115,10 @@ class DeploymentConsumer(GenericProcessRunnerConsumer):
         if not hostname:
             raise CommandError('invalid hostname')
         return [get_bin_path("deploy_vpn.sh"), "--host", hostname]
+
+
+class UpdateBlockLists(GenericProcessRunnerConsumer):
+
+    def get_process_command(self, **kwargs):
+        return [get_bin_path("manage"), "update_bad_domains"]
+
