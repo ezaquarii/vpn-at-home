@@ -22,6 +22,7 @@ class BlockListUrl(models.Model):
     url = models.URLField(unique=True)
     enabled = models.BooleanField(default=False)
     count = models.IntegerField(null=True, default=None)
+    last_updated = models.DateTimeField(null=True, default=None)
 
     def __str__(self):
         return f"BlockListUrl: {self.id}, {self.url}"

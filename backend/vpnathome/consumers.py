@@ -2,6 +2,7 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
 from vpnathome import get_bin_path
 from vpnathome.utils import SubprocessThread
+from vpnathome.apps.management.serializers import BlockListUrlUpdateSerializer
 
 import asyncio
 
@@ -30,9 +31,11 @@ class GenericProcessRunnerConsumer(AsyncJsonWebsocketConsumer):
         asyncio.run_coroutine_threadsafe(func(*args, **kwargs), self.loop)
 
     async def on_stdout(self, line):
+        print(f"stdout: {line}")
         self.output.append(line)
 
     async def on_stderr(self, line):
+        print(f"stderr: {line}")
         self.output.append(line)
 
     async def on_finished(self):
@@ -60,7 +63,9 @@ class GenericProcessRunnerConsumer(AsyncJsonWebsocketConsumer):
     async def receive_json(self, content, **kwargs):
         cmd = content.get('cmd', None)
         args = content.get('args', {})
-        if cmd == 'start':
+        if type(cmd) is not str or type(args) is not dict:
+            await self.close()
+        elif cmd == 'start':
             await self.cmd_start(**args)
         elif cmd == 'stop':
             await self.cmd_stop()
@@ -73,6 +78,9 @@ class GenericProcessRunnerConsumer(AsyncJsonWebsocketConsumer):
 
     def get_process_command(self, **kwargs):
         raise NotImplementedError()
+
+    def pre_process_start(self, **kwargs):
+        pass
 
     async def cmd_start(self, **kwargs):
         if self.process:
@@ -120,5 +128,12 @@ class DeploymentConsumer(GenericProcessRunnerConsumer):
 class UpdateBlockLists(GenericProcessRunnerConsumer):
 
     def get_process_command(self, **kwargs):
-        return [get_bin_path("manage"), "update_bad_domains"]
-
+        print(f"UpdateBlockLists: {kwargs}")
+        serializer = BlockListUrlUpdateSerializer(data=kwargs.get('sources', None), many=True, require_id=True)
+        if not serializer.is_valid():
+            raise CommandError("Invalid argument")
+        is_enabled = lambda item: item['enabled']
+        to_id_str = lambda item: str(item['id'])
+        enabled_sources_ids = map(to_id_str, filter(is_enabled, serializer.validated_data))
+        cmd = [get_bin_path("manage"), "update_block_list", *enabled_sources_ids]
+        return cmd
