@@ -22,6 +22,7 @@ const INITIAL_STATE = {
     servers: [],
     clients: [],
     blockLists: [],
+    sshPublicKey: '',
     status: {
         sendingClientConfigEmail: [],
         sendingServerConfigEmail: [],
@@ -100,6 +101,10 @@ const mutations = {
 
     setBlockListSources (state, blockLists) {
         state.blockLists = blockLists;
+    },
+
+    setSshPublicKey (state, key) {
+        state.sshPublicKey = key;
     }
 };
 
@@ -195,6 +200,13 @@ const actions = {
         api.setBlockListSources(
             blockLists,
             (_) => commit('setBlockListSources', blockLists),
+            (_) => {}
+        );
+    },
+
+    getSshPublicKey ({ commit }) {
+        api.getSshPublicKey(
+            (key) => commit('setSshPublicKey', key),
             (_) => {}
         );
     }

@@ -139,6 +139,14 @@ export default class Api {
         );
     }
 
+    getSshPublicKey (onSuccess, onFailure) {
+        const url = '/api/management/ssh/public/';
+        this.client().get(url).then(
+            (response) => onSuccess(response.data),
+            (_) => onFailure()
+        );
+    }
+
 }
 
 export function ApiPlugin (Vue) {
