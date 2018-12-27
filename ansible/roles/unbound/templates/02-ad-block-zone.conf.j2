@@ -1,2 +1,5 @@
-# Nothing here for now
-
+server:
+{% for domain in blocked_domains %}
+    local-zone: "{{ domain }}" redirect
+    local-data: "{{ domain }} A 127.0.0.1"
+{% endfor %}
