@@ -31,6 +31,11 @@ class BlockListUrl(models.Model):
 class BlockedDomain(models.Model):
     domain = models.CharField(max_length=256)
 
+    @property
+    def tld(self):
+        last_dot = self.domain.rindex('.')
+        return self.domain[last_dot+1:] or None
+
     def __str__(self):
         return f"BlockedDomain: {self.id}, {self.domain}"
 

@@ -32,6 +32,12 @@ class Command(ManagementCommand):
     def option_local(self):
         return self.options.get('local')
 
+    def run(self, *args, **options):
+        if self.option_list:
+            self.run_list(local=self.option_local)
+        elif self.option_host:
+            self.run_host(hostname=self.option_host)
+
     def run_list(self, local=False):
         inventory = {
             'vpns': {
@@ -65,15 +71,22 @@ class Command(ManagementCommand):
             vars['vpn_port'] = server.port
             vars['vpn_config'] = server.render_to_string()
             vars['deploy_dns'] = server.deploy_dns
-            vars['blocked_domains'] = self.get_blocked_domains() if server.deploy_dns else []
+            vars['blocked_domains'] = self.get_blocked_domains() if server.deploy_dns else {}
         vars_json = json.dumps(vars, indent=4)
         print(vars_json)
 
     def get_blocked_domains(self):
-        return list(BlockedDomain.objects.values_list('domain', flat=True))
+        """
+        Get dictionary with blocked domains sorted by TLD:
+        { tld: [domains... ] }
 
-    def run(self, *args, **options):
-        if self.option_list:
-            self.run_list(local=self.option_local)
-        elif self.option_host:
-            self.run_host(hostname=self.option_host)
+        :return: Dictionary mapping TLDs to blocked domains
+        """
+        blocked_domains_by_tld = {}
+        for domain_entry in list(BlockedDomain.objects.all()):
+            tld = domain_entry.tld
+            if tld not in blocked_domains_by_tld:
+                blocked_domains_by_tld[tld] = []
+            blocked_domains_by_tld[tld].append(domain_entry.domain)
+        return blocked_domains_by_tld
+

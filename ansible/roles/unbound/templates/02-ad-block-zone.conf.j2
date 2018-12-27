@@ -1,5 +1,7 @@
 server:
-{% for domain in blocked_domains %}
-    local-zone: "{{ domain }}" redirect
+{% for tld, domains in blocked_domains.iteritems() %}
+    local-zone: "{{ tld }}" transparent
+{% for domain in domains %}
     local-data: "{{ domain }} A 127.0.0.1"
+{% endfor %}
 {% endfor %}
