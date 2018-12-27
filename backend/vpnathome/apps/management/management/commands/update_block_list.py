@@ -22,14 +22,14 @@ class Command(ManagementCommand):
     def run(self, *args, **options):
 
         if options.get('list', False):
-            self._run_list()
+            return self._run_list()
         else:
             self._run_update(**options)
 
     @staticmethod
     def _run_list():
-        for item in BlockListUrl.objects.all():
-            print(f"id: {item.id}, enabled: {item.enabled}, url: {item.url}")
+        lines = [f"id: {item.id}, enabled: {item.enabled}, url: {item.url}" for item in BlockListUrl.objects.all()]
+        return "\n".join(lines)
 
     def _run_update(self, **options):
         sources = options['sources']
@@ -42,7 +42,7 @@ class Command(ManagementCommand):
         for item in BlockListUrl.objects.filter(enabled=True):
             url = item.url
             try:
-                domains = get_domains_from_bad_hosts_file(url)
+                domains = self._download_bad_hosts(url)
                 unique_domains.update(domains)
                 item.enabled = True
                 item.count = len(domains)
@@ -57,3 +57,6 @@ class Command(ManagementCommand):
         BlockedDomain.objects.all().delete()
         blocked = [BlockedDomain(domain=domain) for domain in unique_domains]
         BlockedDomain.objects.bulk_create(objs=blocked)
+
+    def _download_bad_hosts(self, url):
+        return get_domains_from_bad_hosts_file(url)

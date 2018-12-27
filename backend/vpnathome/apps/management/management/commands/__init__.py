@@ -50,7 +50,7 @@ class ManagementCommand(BaseCommand):
         """
         Prints formatted message to stdout. It can be suppressed with -q option.
         """
-        if not self.options.get('quiet', False):
+        if self.options is not None and not self.options.get('quiet', False):
             lines = message.format(**kwargs).split('\n')
             print(lines[0], file=sys.stderr)
             for l in lines[1:]:
