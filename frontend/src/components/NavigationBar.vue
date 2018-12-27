@@ -4,6 +4,7 @@
             <router-link active-class="active" class="item" to="/" exact><i class="icon home"></i> Home</router-link>
             <router-link v-if="isSuperuser" active-class="active" class="item" to="/settings" exact><i class="icon cog"></i> Settings</router-link>
             <a v-if="isSuperuser" class="item" href="/admin/"><i class="icon cogs"></i> Admin</a>
+            <a class="item" href="https://www.vultr.com/?ref=7515725" target="_blank"><i class="icon server"></i> Vultr</a>
             <div class="right menu">
                 <div v-if="canAddClient" class="ui item">
                     <div class="ui primary button compact add-button" @click="onClickedAddClient">Add client</div>
