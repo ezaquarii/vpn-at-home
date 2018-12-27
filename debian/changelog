@@ -1,3 +1,10 @@
+vpnathome (2.0.0-1) unstable; urgency=medium
+
+  * Added DNS sinkhole functionality
+  * Reworked settings page
+
+ -- Chris Narkiewicz <hello@ezaquarii.com>  Sat, 25 Dec 2018 23:13:00 +0100
+
 vpnathome (1.8.0-1) unstable; urgency=medium
 
   * Renamed app
