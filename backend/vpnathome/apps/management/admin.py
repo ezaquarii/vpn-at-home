@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Settings
+from .models import Settings, BlockedDomain, BlockListUrl
 
 
 class ManagementAdmin(admin.ModelAdmin):
@@ -7,3 +7,5 @@ class ManagementAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Settings, ManagementAdmin)
+admin.site.register(BlockedDomain, ManagementAdmin)
+admin.site.register(BlockListUrl, ManagementAdmin)

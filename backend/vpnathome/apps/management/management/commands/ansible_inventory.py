@@ -1,5 +1,6 @@
 import json
 from django.contrib.auth import get_user_model
+from vpnathome.apps.management.models import BlockedDomain
 from vpnathome.apps.openvpn.models import Server
 from vpnathome.utils import get_object_or_none
 from . import ManagementCommand
@@ -57,15 +58,19 @@ class Command(ManagementCommand):
             server = get_object_or_none(Server, hostname=hostname)
         vars = {}
         if server:
+            vars['ansible_user'] = 'root'
             vars['vpn_network'] = str(server.network)
             vars['vpn_gateway'] = str(server.gateway)
             vars['vpn_name'] = server.name
             vars['vpn_port'] = server.port
             vars['vpn_config'] = server.render_to_string()
-            vars['ansible_ssh_user'] = 'root'
             vars['deploy_dns'] = server.deploy_dns
+            vars['blocked_domains'] = self.get_blocked_domains() if server.deploy_dns else []
         vars_json = json.dumps(vars, indent=4)
         print(vars_json)
+
+    def get_blocked_domains(self):
+        return list(BlockedDomain.objects.values_list('domain', flat=True))
 
     def run(self, *args, **options):
         if self.option_list:

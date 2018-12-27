@@ -52,7 +52,7 @@ class ManagementCommand(BaseCommand):
         """
         if not self.options.get('quiet', False):
             lines = message.format(**kwargs).split('\n')
-            print(' * ' + lines[0], file=sys.stderr)
+            print(lines[0], file=sys.stderr)
             for l in lines[1:]:
                 print('  ' + l, file=sys.stderr)
 

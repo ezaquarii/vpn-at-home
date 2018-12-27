@@ -93,3 +93,7 @@ create_ssh_key() {
         echo "SSH deployment key already created. Skipping."
     fi
 }
+
+update_bad_domains() {
+    $(MANAGE) update_bad_domains
+}
