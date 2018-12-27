@@ -68,7 +68,7 @@ export default {
             port: { required },
             protocol: { required },
             network: { required },
-            deploy_dns: {required}
+            deploy_dns: { required }
         }
     },
     computed: {
