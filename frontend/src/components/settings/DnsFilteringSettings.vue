@@ -15,7 +15,7 @@
                 </p>
             </sui-message>
         </div>
-        <div class="field" v-for="item in list">
+        <div class="field" v-for="item in list" :key="item.id">
             <div class="ui checkbox">
                 <input v-model="item.enabled" :disabled="isRunning" type="checkbox">
                 <label v-if="item.count">{{ item.url }} ({{ item.count }} domains, {{ formatTime(item) }})</label>

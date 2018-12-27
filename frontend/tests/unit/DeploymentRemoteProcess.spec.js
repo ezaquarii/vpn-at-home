@@ -107,7 +107,7 @@ describe('RemoteProcess', () => {
         it('Incoming status trigges onFinish() callback', () => {
             const json = JSON.stringify(
                 {
-                    status: 'finish'
+                    status: 'finished'
                 }
             );
             process.onFinish = td.function();

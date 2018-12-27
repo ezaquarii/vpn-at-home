@@ -18,16 +18,6 @@ export default {
         if (this.$store.getters.isAuthenticated) {
             this.$store.dispatch('hydrate');
         }
-    },
-    methods: {
-        onClickedAddClient () {
-            console.log('onClickedAddClient()', this);
-            window.x = this;
-        },
-
-        onClickedAddServer () {
-
-        }
     }
 };
 </script>

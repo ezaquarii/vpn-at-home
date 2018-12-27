@@ -38,8 +38,6 @@ import DeploymentDialog from '@/components/DeploymentDialog.vue';
 import DeleteServerDialog from '@/components/DeleteServerDialog.vue';
 
 import {
-    EVENT_CLICKED_ADD_CLIENT,
-    EVENT_CLICKED_ADD_SERVER,
     EVENT_CLICKED_DEPLOY_SERVER,
     EVENT_CLICKED_DELETE_SERVER
 } from '@/eventbus';

@@ -6,9 +6,9 @@ import _ from 'lodash';
 Vue.use(Vuex);
 
 const STATUS_NONE = undefined;
-const STATUS_OK = 'ok';
-const STATUS_ERROR = 'error';
-const STATUS_PROGRESS = 'progress';
+// const STATUS_OK = 'ok';
+// const STATUS_ERROR = 'error';
+// const STATUS_PROGRESS = 'progress';
 
 const api = new Api();
 

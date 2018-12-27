@@ -30,7 +30,7 @@ import _ from 'lodash';
 export default class RegistrationSettings extends Vue {
 
     settings = {
-        registration_enabled: undefined,
+        registration_enabled: undefined
         // admin_activation_required: undefined
     };
 

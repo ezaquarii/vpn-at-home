@@ -45,8 +45,6 @@ export class DeploymentRemoteProcess {
             this.onStart();
         } else if (json.status === 'finished' && this.onFinish) {
             this.onFinish();
-        } else {
-            console.log('_onMessage(): unknown message', json);
         }
     }
 
@@ -55,7 +53,6 @@ export class DeploymentRemoteProcess {
     }
 
     _onError () {
-        // console.log('_onError()');
     }
 
     _sendJson (obj) {
@@ -112,8 +109,6 @@ export class WebSocketProcess {
             this.onFinish();
         } else if (json.status === 'error' && this.onError) {
             this.onError();
-        } else {
-            console.log('_onMessage(): unknown message', json);
         }
     }
 

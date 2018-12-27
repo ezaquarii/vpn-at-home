@@ -41,10 +41,6 @@ import ConfigListItem from '@/components/ConfigListItem';
 })
 export default class ConfigList extends Vue {
 
-    onAddClicked2 () {
-        console.log('ConfigList.onAddClicked()');
-    }
-
 }
 </script>
 
