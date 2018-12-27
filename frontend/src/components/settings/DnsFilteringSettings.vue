@@ -4,11 +4,14 @@
             <sui-message info>
                 <p>
                     Here you can select hosts lists for
-                    <a href="https://en.wikipedia.org/wiki/Ad_blocking#DNS_filtering" target="_blank"><u><b>DNS ad blocking</b></u>&nbsp;<i class="icon external alternate"> </i></a>.
-                    Those lists are uploaded to VPN server when DNS deployment is enabled.
+                    <a href="https://en.wikipedia.org/wiki/Ad_blocking#DNS_filtering" target="_blank"><u><b>DNS ad blocking</b></u>&nbsp;<i class="icon external alternate"> </i></a>
+                    (aka <i>DNS sinkhole</i>). Those lists are uploaded to VPN server when DNS deployment is enabled.
                 </p>
                 <p>
-                    Servers are not automatically updated - only the internal database. You must re-deploy servers to use updated lists.
+                    Servers are not automatically updated - only the internal database is. You must re-deploy servers to use updated lists.
+                </p>
+                <p>
+                    Ping <b>gateway.vpnathome</b> to see if your VPN DNS server is used. It should resolve to your deployed VPN gateway.
                 </p>
             </sui-message>
         </div>
