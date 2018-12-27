@@ -49,7 +49,7 @@ export default class DeploymentDialog extends Vue {
         this.process.onStart = this.onStart;
         this.process.onFinish = this.onFinish;
         this.process.onOutput = this.onOutput;
-        this.process.connect(`ws://${window.location.host}/ws/`);
+        this.process.connect(`ws://${window.location.host}/ws/deployment/`);
         this.isRunning = true;
         this.finished = false;
     }
@@ -62,12 +62,10 @@ export default class DeploymentDialog extends Vue {
     }
 
     onStart () {
-        console.log('onStart()');
         this.output.push('Deployment started', "Ignore first '[ERROR]:' line - this is harmless Ansible bug. :o)");
     }
 
     onFinish () {
-        console.log('onStop()');
         this.output.push('Deployment finished.');
         this.isRunning = false;
         this.finished = true;
