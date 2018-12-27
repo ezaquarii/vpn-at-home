@@ -65,7 +65,7 @@ export class DeploymentRemoteProcess {
 
 }
 
-export class BlockListUpdateProcess {
+export class WebSocketProcess {
 
     constructor (args = {}, createSocketFunction = createSocket) {
         this.output = [];
@@ -74,6 +74,7 @@ export class BlockListUpdateProcess {
         this.onStart = null;
         this.onOutput = null;
         this.onFinish = null;
+        this.onClose = null;
         this.onError = null;
         this.args = args;
     }
@@ -105,7 +106,7 @@ export class BlockListUpdateProcess {
         const json = JSON.parse(message.data);
         if (json.status === 'running' && json.output && this.onOutput) {
             this.onOutput(json.output);
-        } else if (json.status === 'start' && this.onStart) {
+        } else if (json.status === 'started' && this.onStart) {
             this.onStart();
         } else if (json.status === 'finished' && this.onFinish) {
             this.onFinish();
@@ -116,9 +117,17 @@ export class BlockListUpdateProcess {
         }
     }
 
-    _onClose () {}
+    _onClose () {
+        if (this.onClose) {
+            this.onClose();
+        }
+    }
 
-    _onError () {}
+    _onError () {
+        if (this.onError) {
+            this.onError();
+        }
+    }
 
     _sendJson (obj) {
         const jsonString = JSON.stringify(obj);

@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div class="field">
-                <button type="submit" class="ui button" role="button" @submit="{}">Save</button>
+                <button type="submit" class="ui button settings-button" role="button" @submit="{}">Save</button>
             </div>
         </div>
     </form>
