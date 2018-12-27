@@ -9,7 +9,7 @@ BIN_DIR = join(ROOT_DIR, 'bin')
 FRONTEND_DIR = join(ROOT_DIR, 'frontend')
 CONFIG_PATH = join(MAIN_PKG_DIR, 'config.py')
 CONFIG_TEMPLATE_PATH = join(MAIN_PKG_DIR, 'config.py.example')
-VERSION = "1.8.0"
+VERSION = "2.0.0"
 
 
 def get_root_path(file_path):
