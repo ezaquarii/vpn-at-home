@@ -6,7 +6,18 @@ from vpnathome.utils import SubprocessThread
 import asyncio
 
 
-class ProcessRunnerConsumer(AsyncJsonWebsocketConsumer):
+class CommandError(Exception):
+
+    def __init__(self, message):
+        super().__init__(message)
+
+
+class GenericProcessRunnerConsumer(AsyncJsonWebsocketConsumer):
+
+    STATUS_STARTED = 'started'
+    STATUS_FINISHED = 'finished'
+    STATUS_RUNNING = 'running'
+    STATUS_ERROR = 'error'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -15,7 +26,7 @@ class ProcessRunnerConsumer(AsyncJsonWebsocketConsumer):
         self.output = []
         self.flush_task = None
 
-    def post(self, func, *args, **kwargs):
+    def _post(self, func, *args, **kwargs):
         asyncio.run_coroutine_threadsafe(func(*args, **kwargs), self.loop)
 
     async def on_stdout(self, line):
@@ -28,7 +39,7 @@ class ProcessRunnerConsumer(AsyncJsonWebsocketConsumer):
         self.flush_task.cancel()
         await self.send_output()
         await self.send_json({
-            'status': 'finish'
+            'status': self.STATUS_FINISHED
         })
 
     async def flush(self):
@@ -38,7 +49,7 @@ class ProcessRunnerConsumer(AsyncJsonWebsocketConsumer):
 
     async def send_output(self):
         if len(self.output) > 0:
-            message = {'status': 'running', 'output': self.output}
+            message = {'status': self.STATUS_RUNNING, 'output': self.output}
             self.output = []
             await self.send_json(message)
 
@@ -47,32 +58,39 @@ class ProcessRunnerConsumer(AsyncJsonWebsocketConsumer):
         await self.accept()
 
     async def receive_json(self, content, **kwargs):
-        cmd = content['cmd']
+        cmd = content.get('cmd', None)
+        args = content.get('args', {})
         if cmd == 'start':
-            await self.cmd_start(**content['args'])
+            await self.cmd_start(**args)
         elif cmd == 'stop':
             await self.cmd_stop()
+        else:
+            print(f"Unknown command {cmd}, content: {content}, kwargs: {kwargs}")
 
     async def disconnect(self, code):
         await self.cmd_stop()
         await super().disconnect(code)
 
-    async def cmd_start(self, hostname=None, **kwargs):
+    def get_process_command(self, **kwargs):
+        raise NotImplementedError()
+
+    async def cmd_start(self, **kwargs):
         if self.process:
-            await self.send(({'message': 'already running'}))
-        elif hostname is None:
-            await self.send(({'message': 'invalid hostname'}))
-        else:
-            cmd = [get_bin_path("deploy_vpn.sh"), "--host", hostname]
+            await self.send_json({'status': self.STATUS_ERROR, 'message': 'already running'})
+
+        try:
+            cmd = self.get_process_command(**kwargs)
             self.process = SubprocessThread(
                 cmd=cmd,
-                on_stdout=lambda line: self.post(self.on_stdout, line),
-                on_stderr=lambda line: self.post(self.on_stderr, line),
-                on_finished=lambda: self.post(self.on_finished),
+                on_stdout=lambda line: self._post(self.on_stdout, line),
+                on_stderr=lambda line: self._post(self.on_stderr, line),
+                on_finished=lambda: self._post(self.on_finished),
             )
             self.process.start()
             self.flush_task = asyncio.ensure_future(self.flush())
-            await self.send_json({'status': 'start'})
+            await self.send_json({'status': self.STATUS_STARTED})
+        except CommandError as e:
+            await self.send_json({'status': self.STATUS_ERROR, 'message': str(e)})
 
     async def cmd_stop(self):
         if self.flush_task:
@@ -81,3 +99,19 @@ class ProcessRunnerConsumer(AsyncJsonWebsocketConsumer):
         if self.process:
             self.process.stop()
             self.process = None
+
+
+class DeploymentConsumer(GenericProcessRunnerConsumer):
+
+    async def on_stderr(self, line):
+        # This [ERROR]: is harmless ansible bug
+        if len(self.output) == 0 and line == '[ERROR]:':
+            pass
+        else:
+            await super().on_stderr(line)
+
+    def get_process_command(self, **kwargs):
+        hostname = kwargs.get('hostname', None)
+        if not hostname:
+            raise CommandError('invalid hostname')
+        return [get_bin_path("deploy_vpn.sh"), "--host", hostname]
