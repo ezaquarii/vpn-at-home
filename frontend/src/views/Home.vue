@@ -11,12 +11,15 @@
                         :items="servers"
                         :emailEnabled="emailEnabled"
                         :deploymentEnabled="true"
-                        :isServer="true"/>
+                        :isServer="true"
+                        :onClickedAdd="onClickedAddServer"/>
             <ConfigList title="OpenVPN Clients"
                         :items="clients"
                         :emailEnabled="emailEnabled"
                         :deploymentEnabled="true"
-                        :isClient="true"/>
+                        :isClient="true"
+                        :addDisabled="!$store.getters.hasServer"
+                        :onClickedAdd="onClickedAddClient"/>
             <NewServerDialog ref="newServerDialog"/>
             <NewClientDialog ref="newClientDialog"/>
             <DeploymentDialog ref="deploymentDialog"/>
@@ -94,15 +97,11 @@ export default class Home extends Vue {
     }
 
     mounted () {
-        this.$root.$on(EVENT_CLICKED_ADD_CLIENT, this.onClickedAddClient);
-        this.$root.$on(EVENT_CLICKED_ADD_SERVER, this.onClickedAddServer);
         this.$root.$on(EVENT_CLICKED_DEPLOY_SERVER, this.onClickedDeployServer);
         this.$root.$on(EVENT_CLICKED_DELETE_SERVER, this.onClickedDeleteServer);
     }
 
     beforeDestroy () {
-        this.$root.$off(EVENT_CLICKED_ADD_CLIENT, this.onClickedAddClient);
-        this.$root.$off(EVENT_CLICKED_ADD_SERVER, this.onClickedAddServer);
         this.$root.$off(EVENT_CLICKED_DEPLOY_SERVER, this.onClickedDeployServer);
         this.$root.$off(EVENT_CLICKED_DELETE_SERVER, this.onClickedDeleteServer);
     }

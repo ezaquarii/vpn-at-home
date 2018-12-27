@@ -7,12 +7,6 @@
             <a class="item" href="https://www.vultr.com/?ref=7515725" target="_blank"><i class="icon server"></i> Vultr</a>
             <a class="item" href="https://www.patreon.com/ezaquarii" target="_blank"><i class="icon patreon"></i> Support Us</a>
             <div class="right menu">
-                <div v-if="canAddClient" class="ui item">
-                    <div class="ui primary button compact add-button" @click="onClickedAddClient"><i class="icon plus"></i> Client</div>
-                </div>
-                <div v-if="canAddServer" class="ui item">
-                    <div class="ui primary button compact" @click="onClickedAddServer"><i class="icon plus"></i> Server</div>
-                </div>
                 <div class="ui item">
                     <span :class="{'superuser': isSuperuser}"><b>{{email}}</b></span>
                 </div>
@@ -26,11 +20,6 @@
 
 <script>
 import { Component, Vue } from 'vue-property-decorator';
-import { ROUTE_HOME } from '@/router';
-import {
-    EVENT_CLICKED_ADD_CLIENT,
-    EVENT_CLICKED_ADD_SERVER
-} from '@/eventbus';
 
 @Component({
     name: 'NavigationBar',
@@ -43,25 +32,9 @@ export default class NavigationBar extends Vue {
         this.$api.logout(this.onLogoutCompleted.bind(this));
     }
 
-    onClickedAddClient () {
-        this.$root.$emit(EVENT_CLICKED_ADD_CLIENT);
-    }
-
-    onClickedAddServer () {
-        this.$root.$emit(EVENT_CLICKED_ADD_SERVER);
-    }
-
     onLogoutCompleted () {
         this.$store.commit('logout');
         this.$router.push({ path: '/login' });
-    }
-
-    get canAddServer () {
-        return this.$route.name === ROUTE_HOME;
-    }
-
-    get canAddClient () {
-        return this.$route.name === ROUTE_HOME && this.$store.getters.hasServer;
     }
 
     get isSuperuser () {

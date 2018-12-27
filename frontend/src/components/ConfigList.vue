@@ -12,7 +12,9 @@
                     <th>Created</th>
                     <th>Expires</th>
                     <th>E-Mail</th>
-                    <th></th>
+                    <th>
+                        <sui-button circular size="mini" color="green" v-bind:class="{ disabled: addDisabled }" icon="plus" @click="onClickedAdd"/>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -34,10 +36,16 @@ import ConfigListItem from '@/components/ConfigListItem';
 
 @Component({
     name: 'ConfigList',
-    props: ['items', 'title', 'emailEnabled', 'deploymentEnabled', 'isClient', 'isServer'],
+    props: ['items', 'title', 'emailEnabled', 'deploymentEnabled', 'isClient', 'isServer', 'addDisabled', 'onClickedAdd'],
     components: { ConfigListItem }
 })
-export default class ConfigList extends Vue {}
+export default class ConfigList extends Vue {
+
+    onAddClicked2 () {
+        console.log('ConfigList.onAddClicked()');
+    }
+
+}
 </script>
 
 <style scoped lang="scss">

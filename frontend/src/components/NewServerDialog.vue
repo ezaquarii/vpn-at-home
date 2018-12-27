@@ -38,7 +38,6 @@ export default class NewServerDialog extends Vue {
     }
 
     onFormUpdated (valid) {
-        console.log('NewServerDialog.onFormReadyChanged()', valid);
         this.isValid = valid;
     }
 
@@ -48,7 +47,6 @@ export default class NewServerDialog extends Vue {
     }
 
     onReject () {
-        console.log('onReject()');
         this.open = false;
     }
 
