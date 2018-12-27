@@ -43,7 +43,7 @@ export class DeploymentRemoteProcess {
             this.onOutput(json.output);
         } else if (json.status === 'start' && this.onStart) {
             this.onStart();
-        } else if (json.status === 'finish' && this.onFinish) {
+        } else if (json.status === 'finished' && this.onFinish) {
             this.onFinish();
         } else {
             console.log('_onMessage(): unknown message', json);
