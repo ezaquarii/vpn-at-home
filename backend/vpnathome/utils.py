@@ -62,6 +62,17 @@ def get_object_or_none(klass, *args, **kwargs):
         return None
 
 
+def filter_objects_to_map_by_pk(klass, **kwargs):
+    """
+    Use filter() on a given model manager, but return a map of items by pk
+
+    :param klass:
+    :param kwargs:
+    :return: map of items by pk
+    """
+    return {item.pk: item for item in klass.objects.filter(**kwargs)}
+
+
 def user_input(msg, default=None, validator=None):
     """
     Displays prompt and allows user to enter some data.

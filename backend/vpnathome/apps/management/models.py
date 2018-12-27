@@ -23,10 +23,13 @@ class BlockListUrl(models.Model):
     enabled = models.BooleanField(default=False)
     count = models.IntegerField(null=True, default=None)
 
+    def __str__(self):
+        return f"BlockListUrl: {self.id}, {self.url}"
+
 
 class BlockedDomain(models.Model):
     domain = models.CharField(max_length=256)
 
     def __str__(self):
-        return f"{self.id} - {self.domain}"
+        return f"BlockedDomain: {self.id}, {self.domain}"
 

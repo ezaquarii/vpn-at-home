@@ -64,15 +64,15 @@ class APITestWithBaseFixture(APITestCase, BaseFixtureMixin):
                         msg='HTTP code not 2xx. Actual code: {code}, errors: {errors}'.format(code=response.status_code,
                                                                                               errors=response.data))
 
-    def assertUnauthorized(self, response):
+    def assertUnauthorized(self, response, message=None):
         from rest_framework import status
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def assertForbidden(self, response):
+    def assertForbidden(self, response, message=None):
         from rest_framework import status
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def assertNotFound(self, response):
+    def assertNotFound(self, response, message=None):
         from rest_framework import status
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
