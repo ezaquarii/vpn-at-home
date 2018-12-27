@@ -31,11 +31,9 @@ class GenericProcessRunnerConsumer(AsyncJsonWebsocketConsumer):
         asyncio.run_coroutine_threadsafe(func(*args, **kwargs), self.loop)
 
     async def on_stdout(self, line):
-        print(f"stdout: {line}")
         self.output.append(line)
 
     async def on_stderr(self, line):
-        print(f"stderr: {line}")
         self.output.append(line)
 
     async def on_finished(self):
@@ -128,12 +126,14 @@ class DeploymentConsumer(GenericProcessRunnerConsumer):
 class UpdateBlockLists(GenericProcessRunnerConsumer):
 
     def get_process_command(self, **kwargs):
-        print(f"UpdateBlockLists: {kwargs}")
         serializer = BlockListUrlUpdateSerializer(data=kwargs.get('sources', None), many=True, require_id=True)
         if not serializer.is_valid():
             raise CommandError("Invalid argument")
-        is_enabled = lambda item: item['enabled']
-        to_id_str = lambda item: str(item['id'])
+
+        def is_enabled(item): return item['enabled']
+
+        def to_id_str(item): return str(item['id'])
+
         enabled_sources_ids = map(to_id_str, filter(is_enabled, serializer.validated_data))
         cmd = [get_bin_path("manage"), "update_block_list", *enabled_sources_ids]
         return cmd

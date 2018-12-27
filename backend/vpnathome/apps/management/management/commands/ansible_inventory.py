@@ -34,9 +34,9 @@ class Command(ManagementCommand):
 
     def run(self, *args, **options):
         if self.option_list:
-            self.run_list(local=self.option_local)
+            return self.run_list(local=self.option_local)
         elif self.option_host:
-            self.run_host(hostname=self.option_host)
+            return self.run_host(hostname=self.option_host)
 
     def run_list(self, local=False):
         inventory = {
@@ -54,8 +54,7 @@ class Command(ManagementCommand):
             for server in servers:
                 inventory['vpns']['hosts'].append(server.hostname)
 
-        json_inventory = json.dumps(inventory, indent=4)
-        print(json_inventory)
+        return json.dumps(inventory, indent=4)
 
     def run_host(self, hostname):
         if hostname in ['127.0.0.1', 'localhost', 'localhost.localdomain']:
@@ -72,10 +71,10 @@ class Command(ManagementCommand):
             vars['vpn_config'] = server.render_to_string()
             vars['deploy_dns'] = server.deploy_dns
             vars['blocked_domains'] = self.get_blocked_domains() if server.deploy_dns else {}
-        vars_json = json.dumps(vars, indent=4)
-        print(vars_json)
+        return json.dumps(vars, indent=4)
 
-    def get_blocked_domains(self):
+    @staticmethod
+    def get_blocked_domains():
         """
         Get dictionary with blocked domains sorted by TLD:
         { tld: [domains... ] }
@@ -89,4 +88,3 @@ class Command(ManagementCommand):
                 blocked_domains_by_tld[tld] = []
             blocked_domains_by_tld[tld].append(domain_entry.domain)
         return blocked_domains_by_tld
-

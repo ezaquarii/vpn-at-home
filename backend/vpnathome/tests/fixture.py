@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient, APITestCase
 
+from vpnathome.apps.management.models import BlockedDomain
 from vpnathome.apps.openvpn.models import DhParams
 from vpnathome.apps.openvpn.serializers import CreateServerSerializer, CreateClientSerializer
 from vpnathome.utils import get_object_or_none
@@ -39,6 +40,7 @@ class FixtureBuilder(object):
             self.users = []
             self.clients = []
             self.dhparams = None
+            self.dns_blocked_domains = []
 
     def __init__(self):
         self._fixture = FixtureBuilder.Fixture()
@@ -71,11 +73,16 @@ class FixtureBuilder(object):
         for user in User.objects.all():
             Token.objects.create(user=user)
 
-    def server(self, name='Server', hostname='hostname'):
+    def server(self, name='Server', hostname='hostname', deploy_dns=False):
         assert self._fixture.admin, 'Admin user is required'
         assert self._fixture.dhparams, 'DH params are required'
         context = dict(owner=self._fixture.admin, dhparams=self._fixture.dhparams)
-        server_dto = dict(name=name, hostname=hostname, email=self._fixture.admin.email)
+        server_dto = dict(
+            name=name,
+            hostname=hostname,
+            email=self._fixture.admin.email,
+            deploy_dns=deploy_dns
+        )
         create_serializer = CreateServerSerializer(data=server_dto, context=context)
         create_serializer.is_valid(raise_exception=True)
         self._fixture.server = create_serializer.save()
@@ -94,6 +101,10 @@ class FixtureBuilder(object):
         client = create_serializer.save()
         self._fixture.clients.append(client)
         return self
+
+    def dns_blocked_domain(self, domain):
+        domain_object = BlockedDomain.objects.create(domain=domain)
+        self._fixture.dns_blocked_domains.append(domain_object)
 
 
 class BaseFixtureMixin(object):
