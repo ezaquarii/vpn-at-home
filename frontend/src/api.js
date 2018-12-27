@@ -13,6 +13,13 @@ const SETTINGS_URL = '/api/management/settings/';
 
 export default class Api {
 
+    client () {
+        const token = Cookies.get('csrftoken');
+        return axios.create({
+            headers: { 'X-CSRFToken': token }
+        });
+    }
+
     login (email, password, onSuccess, onError) {
         this.client().post(LOGIN_URL, { email, password }).then(
             (response) => {
@@ -116,11 +123,20 @@ export default class Api {
         );
     }
 
-    client () {
-        const token = Cookies.get('csrftoken');
-        return axios.create({
-            headers: { 'X-CSRFToken': token }
-        });
+    getBlockListSources (onSuccess, onFailure) {
+        const url = '/api/management/block_lists/';
+        this.client().get(url).then(
+            (response) => onSuccess(response.data),
+            (_) => onFailure()
+        );
+    }
+
+    setBlockListSources (data, onSuccess, onFailure) {
+        const url = '/api/management/block_lists/';
+        this.client().put(url, data).then(
+            (response) => onSuccess(),
+            (_) => onFailure()
+        );
     }
 
 }

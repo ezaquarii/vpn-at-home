@@ -1,136 +1,42 @@
 <template>
     <div class="settings">
-        <div class="ui container text" style="margin: 16px">
-            <form class="ui form" @submit.prevent="handleSubmit">
-                <!-- E-mail settings -->
-                <div class="ui fluid card">
-                    <div class="content">
-                        <div class="field">
-                            <div class="ui checked checkbox">
-                                <input v-model="settings.email_enabled" type="checkbox">
-                                <label>Enable e-mail</label>
-                            </div>
-                        </div>
-                        <div v-if="settings.email_enabled">
-                            <div class="field">
-                                <label>From e-mail</label>
-                                <div class="ui left icon input disabled">
-                                    <input v-model="readOnly.email_from" placeholder="From for automated e-mails sent by this system" type="text" key="email_from">
-                                    <i aria-hidden="true" class="user icon"></i>
-                                </div>
-                            </div>
-                            <div class="fields">
-                                <div class="twelve wide field">
-                                    <label>SMTP server (only with TLS support)</label>
-                                    <div class="ui left icon input disabled">
-                                        <input v-model="readOnly.email_smtp_server" placeholder="Outgoing SMTP server" type="text">
-                                        <i aria-hidden="true" class="server icon"></i>
-                                    </div>
-                                </div>
-                                <div class="four wide field">
-                                    <label>Port</label>
-                                    <div class="ui left icon input disabled">
-                                        <input v-model="readOnly.email_smtp_port" placeholder="Outgoing SMTP server port" min="1" max="65535" type="number">
-                                        <i aria-hidden="true" class="lock icon"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="field"><label>SMTP login</label>
-                                <div class="ui left icon input disabled">
-                                    <input v-model="readOnly.email_smtp_login" placeholder="Outgoing SMTP server login (e-mail address)" type="text">
-                                    <i aria-hidden="true" class="user icon"></i>
-                                </div>
-                            </div>
-                            <div class="field"><label>SMTP password (hidden)</label>
-                                <div class="ui left icon input disabled">
-                                    <input value="See settings.json" type="text">
-                                    <i aria-hidden="true" class="lock icon"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <sui-tab :menu="{ vertical: true, fluid: true, tabular: true }">
+            <sui-tab-pane icon="mail" title="E-Mail">
+                <EmailSettings/>
+            </sui-tab-pane>
 
-                <!-- Registration settings -->
-                <div class="ui fluid card">
-                    <div class="content">
-                        <div class="field">
-                            <div class="ui checkbox">
-                                <input v-model="settings.registration_enabled" type="checkbox">
-                                <label>New users registration</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <sui-tab-pane icon="user" title="Registration">
+                <RegistrationSettings/>
+            </sui-tab-pane>
 
-                <button type="submit" class="ui button" role="button" :disabled="!isValid" @submit="{}">Submit</button>
-                <span v-if="status === 'error'" class="ui red header"><i aria-hidden="true" class="times icon"></i> Update failed</span>
-                <span v-if="status === 'success'" class="ui green header"><i aria-hidden="true" class="check icon"></i> Settings updated</span>
-            </form>
-        </div>
+            <sui-tab-pane icon="filter" title="DNS filtering">
+                <DnsFilteringSettings/>
+            </sui-tab-pane>
+        </sui-tab>
     </div>
 </template>
 
 <script>
 import { Component, Vue } from 'vue-property-decorator';
-import NavigationBar from '@/components/NavigationBar.vue';
-import { required } from 'vuelidate/lib/validators';
-import _ from 'lodash';
+import EmailSettings from '@/components/settings/EmailSettings';
+import RegistrationSettings from '@/components/settings/RegistrationSettings';
+import DnsFilteringSettings from '@/components/settings/DnsFilteringSettings';
 
 @Component({
     name: 'Settings',
-    components: {
-        NavigationBar
-    },
-    validations () {
-        const validators = {
-            registration_enabled: { required }
-        };
-        return { settings: validators };
+    components: { DnsFilteringSettings, RegistrationSettings, EmailSettings },
+    comments: {
+        EmailSettings,
+        RegistrationSettings
     }
 })
 export default class Settings extends Vue {
-
-        settings = {
-            email_enabled: false,
-            registration_enabled: false
-        };
-
-        readOnly = {
-            email_from: 'some@email.com',
-            email_smtp_server: 'some.server.com',
-            email_smtp_port: 465,
-            email_smtp_login: 'some@login.com',
-            email_smtp_password: 'not visibles'
-        };
-
-        status = null;
-
-        get isValid () {
-            return !this.$v.$invalid;
-        }
-
-        handleSubmit () {
-            this.$store.dispatch('setSettings', this.settings);
-        }
-
-        onSuccess () {
-            this.status = 'success';
-        }
-
-        onError () {
-            this.status = 'error';
-        }
-
-        mounted () {
-            this.settings = _.cloneDeep(this.$store.state.settings);
-            this.readOnly = _.cloneDeep(this.$store.state.settings);
-        }
-
 }
 
 </script>
 
 <style scoped lang="scss">
-
+    .settings {
+        padding-top: 16px;
+    }
 </style>

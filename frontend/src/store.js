@@ -5,6 +5,11 @@ import _ from 'lodash';
 
 Vue.use(Vuex);
 
+const STATUS_NONE = undefined;
+const STATUS_OK = 'ok';
+const STATUS_ERROR = 'error';
+const STATUS_PROGRESS = 'progress';
+
 const api = new Api();
 
 const INITIAL_STATE = {
@@ -16,10 +21,12 @@ const INITIAL_STATE = {
     },
     servers: [],
     clients: [],
+    blockLists: [],
     status: {
         sendingClientConfigEmail: [],
         sendingServerConfigEmail: [],
-        appNotReady: window.django.app_not_ready
+        appNotReady: window.django.app_not_ready,
+        blockLists: STATUS_NONE
     },
     settings: {
         email_enabled: window.django.email_enabled,
@@ -89,6 +96,10 @@ const mutations = {
 
     setSettings (state, settings) {
         state.settings = settings;
+    },
+
+    setBlockListSources (state, blockLists) {
+        state.blockLists = blockLists;
     }
 };
 
@@ -98,6 +109,7 @@ const actions = {
         dispatch('getUser');
         dispatch('getServers');
         dispatch('getClients');
+        dispatch('getBlockListSources');
     },
 
     getUser ({ commit }) {
@@ -168,6 +180,21 @@ const actions = {
     getSettings ({ commit }) {
         api.getSettings(
             (settings) => commit('setSettings', settings),
+            (_) => {}
+        );
+    },
+
+    getBlockListSources ({ commit }) {
+        api.getBlockListSources(
+            (blockLists) => commit('setBlockListSources', blockLists),
+            (_) => {}
+        );
+    },
+
+    setBlockListSources ({ commit }, blockLists) {
+        api.setBlockListSources(
+            blockLists,
+            (_) => commit('setBlockListSources', blockLists),
             (_) => {}
         );
     }
