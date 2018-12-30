@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <NavigationBar v-if="!$route.meta.noNavbar" @addClient="onClickedAddClient" @addServer="onClickedAddServer"/>
+        <NavigationBar v-if="!$route.meta.noNavbar"/>
         <div class="ui container">
             <router-view/>
         </div>
