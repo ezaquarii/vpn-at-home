@@ -11,6 +11,9 @@ VPN@Home
         <a href="https://www.patreon.com/ezaquarii"><img src="https://img.shields.io/badge/donate-patreon-brightgreen.svg"></a>
         <a href="https://travis-ci.org/ezaquarii/vpn-at-home.svg?branch=master"><img src="https://travis-ci.org/ezaquarii/vpn-at-home.svg?branch=master"></a>
     </center>
+    <center>
+        <a href="https://vimeo.com/308879491"><img src="vimeo.png" width="512"></a>
+    </center>
 
 TL;DR
 =====
