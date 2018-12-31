@@ -162,6 +162,20 @@ After cloning the repository, you can easily deploy the app for development:
 
 Open ``http://localhost:8001/`` and you should be able to log-in.
 
+For development - Docker
+~~~~~~~~~~~~~~~
+
+Works out of the box, no prerequisites besides docker needed
+
+#. Clone the repo and go to the vpnathome directory.
+#. Run ``docker-compose up``. Docker will `install and start a development server`_ for you.
+#. Now you can go to ``http://localhost:8001/`` and you will be able to login.
+#. Make some changes. The container will automatically pick them up `via a volume`_.
+#. After you saved the changes, you can refresh ``http://localhost:8001/`` and will see them immediately.
+
+.. _`install and start a development server`: DockerfileDev
+.. _`via a volume`: docker-compose.yml#L11
+
 For production - Docker
 ~~~~~~~~~~~~~~~~~~~~~~~
 
