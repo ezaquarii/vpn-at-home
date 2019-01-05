@@ -1,0 +1,10 @@
+[Unit]
+Description=VPN@Home app
+
+[Service]
+ExecStart=/usr/lib/vpnathome/venv/bin/run_daphne.sh
+User=vpnathome
+Group=vpnathome
+Restart=on-failure
+StandardError=syslog
+WorkingDirectory=/var/lib/vpnathome/

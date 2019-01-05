@@ -6,4 +6,6 @@ db.sqlite3
 .coverage
 htmlcov
 .pytest_cache
+build
+
 

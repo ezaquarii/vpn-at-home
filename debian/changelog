@@ -2,8 +2,9 @@ vpnathome (2.0.0-1) unstable; urgency=medium
 
   * Added DNS sinkhole functionality
   * Reworked settings page
+  * Offline deb build
 
- -- Chris Narkiewicz <hello@ezaquarii.com>  Sat, 25 Dec 2018 23:13:00 +0100
+ -- Chris Narkiewicz <hello@ezaquarii.com>  Tue, 14 Mar 2019 05:41:00 +0100
 
 vpnathome (1.8.0-1) unstable; urgency=medium
 

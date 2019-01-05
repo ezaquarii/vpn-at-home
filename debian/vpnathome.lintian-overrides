@@ -1,0 +1,9 @@
+vpnathome: hardening-no-relro
+vpnathome: embedded-library
+vpnathome: wrong-path-for-interpreter
+vpnathome: embedded-javascript-library
+vpnathome: package-installs-python-pycache-dir
+vpnathome: python-script-but-no-python-dep
+vpnathome: executable-not-elf-or-script
+vpnathome: duplicate-font-file
+vpnathome: init.d-script-not-included-in-package

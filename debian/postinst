@@ -5,25 +5,24 @@
 
 set -e
 
-# summary of how this script can be called:
-#        * <postinst> `configure' <most-recently-configured-version>
-#        * <old-postinst> `abort-upgrade' <new version>
-#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
-#          <new-version>
-#        * <postinst> `abort-remove'
-#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
-#          <failed-install-package> <version> `removing'
-#          <conflicting-package> <version>
-# for details, see https://www.debian.org/doc/debian-policy/ or
-# the debian-policy package
+export APP_HOME="/var/lib/vpnathome/"
+export APP_USER=vpnathome
+export OWNERSHIP=${APP_USER}:${APP_USER}
 
-DEPLOYMENT_ROOT="/srv/vpnathome"
-DEPLOYMENT_BIN="${DEPLOYMENT_ROOT}/bin"
-PATH=${PATH}:${DEPLOYMENT_BIN}
+create_user() {
+    if [ -z $(getent passwd ${APP_USER}) ]; then
+        echo "Creating user ${APP_USER}"
+        useradd --system --home-dir "${APP_HOME}" "${APP_USER}"
+        mkdir -p "${APP_HOME}"
+        chmod 0700 "${APP_HOME}"
+        chown ${OWNERSHIP} "${APP_HOME}"
+    fi
+}
 
 case "$1" in
     configure)
-        debian.sh postinst
+        create_user
+		chown ${OWNERSHIP} ${APP_HOME}
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

@@ -24,7 +24,6 @@ from .development import *
 from .installed_apps import *
 from .middleware import *
 from .templates import *
-from .constance import *
 from .restframework import *
 from .auth import *
 from .locale import *

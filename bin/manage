@@ -1,9 +1,0 @@
-#!/bin/bash
-#
-# Wrapper around Django's manage.py. It calls manage.py
-# using correct python interpreter from virtualenv.
-#
-
-. $(dirname $0)/common.sh
-
-"${PYTHON}" "${MANAGE}" $@

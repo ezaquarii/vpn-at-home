@@ -5,12 +5,13 @@ RUN apt-get install --yes \
 	build-essential \
 	debhelper \
 	devscripts \
+	dh-virtualenv \
 	make \
 	python3 \
 	python3-dev \
-	python3-virtualenv \
-	sudo \
-	virtualenv
+	python3-wheel \
+	python3-venv \
+	sudo
 COPY . /build
 WORKDIR /build
 RUN make deb DOCKER_BUILD=true

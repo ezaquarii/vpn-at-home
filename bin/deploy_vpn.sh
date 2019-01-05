@@ -5,8 +5,6 @@
 # from server config)
 #
 
-. $(dirname $0)/common.sh
-
 function print_usage() {
     echo "Usage:"
     echo "$0 [--help|--local|--host HOST]"
@@ -49,9 +47,11 @@ while true; do
 
 done
 
+export BIN_DIR=$(dirname $0)
+export ANSIBLE_DIR="${BIN_DIR}/../../ansible"
+export SSH_KEY_DIR="${PWD}/data/ssh"
 
-
-if [[ "${LOCALHOST}" = "yes" ]]; then
+if [ "${LOCALHOST}" = "yes" ]; then
     echo "Deploying on localhost"
     ansible-playbook -i "${BIN_DIR}/local_inventory.sh" -K "${ANSIBLE_DIR}/local.yml"
     exit $?

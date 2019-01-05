@@ -1,0 +1,3 @@
+debian/bin/init.sh /var/lib/vpnathome/
+debian/bin/manage.sh /var/lib/vpnathome/
+ansible /usr/lib/vpnathome/

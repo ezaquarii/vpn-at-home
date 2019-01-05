@@ -1,4 +1,5 @@
 import json
+import os
 from random import SystemRandom
 
 from django.contrib.auth import get_user_model
@@ -27,8 +28,10 @@ class Command(ManagementCommand):
 
     def add_arguments(self, parser):
         super().add_arguments(parser)
+        group = parser.add_mutually_exclusive_group(required=True)
+        group.add_argument('-o', '--output', type=str, help='Output settings file path')
+        group.add_argument('-p', '--preview', action='store_true', help="Dump generated config to stdout, do not write.")
         parser.add_argument('-d', '--development', action='store_true', help="Configure for development")
-        parser.add_argument('-p', '--preview', action='store_true', help="Dump generated config to stdout, do not write.")
         parser.add_argument('-f', '--force', action='store_true', help="Force overwriting config if it already exists")
         parser.add_argument('-a', '--accept', action='store_true', help="Accept configuration (sets 'configured' flag to true)")
         parser.add_argument('--no-smtp', action='store_true', help='Disable e-mail')
@@ -37,6 +40,10 @@ class Command(ManagementCommand):
         parser.add_argument('--smtp-port', type=str, help='SMTP server TLS port')
         parser.add_argument('--smtp-login', type=str, help='SMTP login')
         parser.add_argument('--smtp-password', type=str, help='SMTP password')
+
+    @property
+    def option_output(self):
+        return self.options.get('output', None)
 
     @property
     def option_development(self):
@@ -83,7 +90,7 @@ class Command(ManagementCommand):
         return self.options.get('smtp_password', None)
 
     def run(self, *args, **options):
-        user_settings = UserSettings()
+        user_settings = UserSettings(settings_file_path=self.option_output)
         if user_settings.has_settings_file and not self.option_preview and not self.option_force:
             self.warn('Config file already exist. Skipping.')
         else:
@@ -96,11 +103,8 @@ class Command(ManagementCommand):
             new_settings['email']['admin_emails'] = [admin.email] if admin is not None else []
             new_settings['database'].update(**{
                 'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': get_data_path('db/db.sqlite3'),
+                'NAME': 'data/db/db.sqlite3',
             })
-
-            existing_email_settings = self._get_existing_email_settings()
-            new_settings['email'].update(existing_email_settings)
 
             options_email_settings = self._get_options_email_settings()
             new_settings['email'].update(options_email_settings)
@@ -117,7 +121,7 @@ class Command(ManagementCommand):
                 settings_json =json.dumps(new_settings, indent=4)
                 print(settings_json)
             else:
-                user_settings = UserSettings(settings=new_settings)
+                user_settings = UserSettings(settings=new_settings, settings_file_path=self.option_output)
                 user_settings.write()
 
             if self.option_development:
@@ -130,25 +134,6 @@ class Command(ManagementCommand):
         import string
         available_chars = string.ascii_letters + string.digits + string.punctuation
         return ''.join([SystemRandom().choice(available_chars) for i in range(50)])
-
-    def _get_existing_email_settings(self):
-        try:
-            db_settings = Settings.instance()
-            from django.conf import settings as django_settings
-            email = {
-                'enabled': db_settings.email_enabled,
-                'server_email': django_settings.SERVER_EMAIL,
-                'admin_emails': django_settings.ADMINS,
-                'smtp': {
-                    'server': db_settings.email_smtp_server,
-                    'port': db_settings.email_smtp_port,
-                    'login': db_settings.email_smtp_login,
-                    'password': db_settings.email_smtp_password
-                }
-            }
-            return email
-        except DatabaseError:
-            return {}
 
     def _get_options_email_settings(self):
         smtp = {}

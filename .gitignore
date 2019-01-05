@@ -10,4 +10,9 @@ README.html
 home
 ssh
 data
+ansible/*.retry
+debian/debhelper-build-stamp
+debian/*.debhelper
+build
+.pydistutils.cfg
 

@@ -1,16 +1,12 @@
+from os import getcwd, environ
 from os.path import abspath, dirname, join
 
 MAIN_PKG_DIR = dirname(__file__)
 ROOT_DIR = abspath(join(dirname(__file__), '../..'))
-DATA_DIR = join(ROOT_DIR, 'data')
-BASE_DIR = join(ROOT_DIR, 'backend')
-BACKEND_DIR = BASE_DIR
-BIN_DIR = join(ROOT_DIR, 'bin')
+VIRTUAL_ENV_DIR = environ.get('VIRTUAL_ENV') or ''
+DATA_DIR = join(getcwd(), 'data')
 FRONTEND_DIR = join(ROOT_DIR, 'frontend')
-CONFIG_PATH = join(MAIN_PKG_DIR, 'config.py')
-CONFIG_TEMPLATE_PATH = join(MAIN_PKG_DIR, 'config.py.example')
 VERSION = "2.0.0"
-
 
 def get_root_path(file_path):
     """
@@ -30,17 +26,8 @@ def get_bin_path(file_path):
     :param file_path: File path relative to project's bin directory
     :return: Absolute path to file or dir
     """
-    return abspath(join(BIN_DIR, file_path))
-
-
-def get_backend_path(file_path):
-    """
-    Get path from backend directory.
-
-    :param file_path: File path relative to backend directory
-    :return: Absolute path to file or dir
-    """
-    return abspath(join(BACKEND_DIR, file_path))
+    venv = environ.get('VIRTUAL_ENV') or ''
+    return abspath(join(venv, 'bin', file_path))
 
 
 def get_frontend_path(file_path):

@@ -8,7 +8,6 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework.test import APITestCase
 
-from vpnathome import CONFIG_PATH
 from vpnathome.tests import fixture
 from .fixture import FixtureBuilder, BaseFixtureMixin
 
@@ -34,8 +33,7 @@ def configRequired(precondition, reason):
     :param reason: Skip reason.
     :return: skipIf instance
     """
-    message = "{reason}\nPlease run './manage.py configure' and inspect configuration in '{config_path}'.".format(reason=reason,
-                                                                                                                  config_path=CONFIG_PATH)
+    message = "{reason}\nPlease run './manage.py configure' and inspect configuration.".format(reason=reason)
     return skipIf(not precondition, message)
 
 

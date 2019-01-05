@@ -1,5 +1,4 @@
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-
 from vpnathome import get_bin_path
 from vpnathome.utils import SubprocessThread
 from vpnathome.apps.management.serializers import BlockListUrlUpdateSerializer
@@ -95,7 +94,7 @@ class GenericProcessRunnerConsumer(AsyncJsonWebsocketConsumer):
             self.process.start()
             self.flush_task = asyncio.ensure_future(self.flush())
             await self.send_json({'status': self.STATUS_STARTED})
-        except CommandError as e:
+        except Exception as e:
             await self.send_json({'status': self.STATUS_ERROR, 'message': str(e)})
 
     async def cmd_stop(self):
@@ -135,5 +134,5 @@ class UpdateBlockLists(GenericProcessRunnerConsumer):
         def to_id_str(item): return str(item['id'])
 
         enabled_sources_ids = map(to_id_str, filter(is_enabled, serializer.validated_data))
-        cmd = [get_bin_path("manage"), "update_block_list", *enabled_sources_ids]
+        cmd = ["manage.py", "update_block_list", *enabled_sources_ids]
         return cmd

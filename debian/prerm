@@ -16,16 +16,12 @@ set -e
 # for details, see https://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-DEPLOYMENT_ROOT="/srv/vpnathome"
-DEPLOYMENT_BIN="${DEPLOYMENT_ROOT}/bin"
-PATH=${PATH}:${DEPLOYMENT_BIN}
-
 case "$1" in
-    remove|upgrade|deconfigure)
-        debian.sh prerm
+    remove|deconfigure)
+        deb-systemd-invoke stop vpnathome
     ;;
 
-    failed-upgrade)
+    upgrade|failed-upgrade)
     ;;
 
     *)

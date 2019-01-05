@@ -1,12 +1,19 @@
+import os
+from os.path import join, abspath
+import username
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import OperationalError
 from vpnathome.settings import USER_SETTINGS
-from vpnathome import get_backend_path, get_root_path
 
 from . import is_database_migrated
 
 User = get_user_model()
+
+
+def get_init_sh_path():
+    d = os.environ.get('VIRTUAL_ENV', '')
+    return abspath(join(d, 'bin/init.sh')) if d else '${VIRTUAL_ENV}/bin/init.sh'
 
 
 class CheckIsAppReadyMiddleware:
@@ -22,9 +29,10 @@ class CheckIsAppReadyMiddleware:
                 'has_active_admin': self.has_active_admin,
                 'is_email_configured': self.is_email_configured,
                 'is_email_enabled': settings.EMAIL_ENABLED,
-                'manage_py': get_backend_path('manage.py'),
-                'bootstrap_sh': get_root_path('bin/bootstrap.sh'),
-                'deployment_dir': get_root_path('')
+                'init_sh': get_init_sh_path(),
+                'working_dir': os.getcwd(),
+                'virtual_env': os.environ.get('VIRTUAL_ENV'),
+                'user': username.user
             }
             setattr(request, 'app_not_ready', context)
         return self.get_response(request)
@@ -47,7 +55,6 @@ class CheckIsAppReadyMiddleware:
                         settings.EMAIL_HOST_PASSWORD,
                         settings.SERVER_EMAIL,
                         settings.ADMINS])
-
 
     @property
     def is_configured(self):

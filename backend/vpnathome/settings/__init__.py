@@ -11,7 +11,7 @@ configuration, check private ``settings.json`` file first.
 
 import copy
 import json
-from os import access, R_OK
+from os import access, R_OK, getcwd
 from os.path import isfile
 from vpnathome import get_data_path as _get_data_path
 from vpnathome.utils import get_nested_item
@@ -23,7 +23,7 @@ DEFAULT_USER_SETTINGS = {
     '__doc__': 'This is the application settings file. Do not modify Python files. '
                'Review it and change configured to True.',
     'configured': False,
-    'development': False,
+    'development': True,
     'debug_toolbar_enabled': False,
     'secret_key': 'secret-key-not-set',
     'allowed_hosts': ['*'],
@@ -35,8 +35,6 @@ DEFAULT_USER_SETTINGS = {
         'server_from': "no-reply@vpnathome.localdomain",
         'admin_emails': [],
         'smtp': {
-            '__doc__': 'Optional SMTP settings are used by tests. '
-                       'You can configure SMTP via web panel at any time.',
             'server': None,
             'port': 587,
             'login': None,
@@ -146,4 +144,4 @@ class UserSettings(object):
             return None
 
 
-USER_SETTINGS = UserSettings()
+USER_SETTINGS = UserSettings(settings_file_path=SETTINGS_FILE_PATH)

@@ -143,17 +143,23 @@ class SubprocessThread(threading.Thread):
         self._stderr_reader_thread = None
 
     def run(self):
-        self._process = subprocess.Popen(self._cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        self._stdout_reader_thread = _StreamReaderThread(stream=self._process.stdout, callback=self._on_stdout)
-        self._stderr_reader_thread = _StreamReaderThread(stream=self._process.stderr, callback=self._on_stderr)
-        self._stdout_reader_thread.start()
-        self._stderr_reader_thread.start()
-        self._process.wait()
-        self._stdout_reader_thread.join()
-        self._stdout_reader_thread.join()
-        self._on_finished()
+        try:
+            self._process = subprocess.Popen(self._cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            self._stdout_reader_thread = _StreamReaderThread(stream=self._process.stdout, callback=self._on_stdout)
+            self._stderr_reader_thread = _StreamReaderThread(stream=self._process.stderr, callback=self._on_stderr)
+            self._stdout_reader_thread.start()
+            self._stderr_reader_thread.start()
+            self._process.wait()
+            self._stdout_reader_thread.join()
+            self._stdout_reader_thread.join()
+        except Exception as e:
+            self._on_stderr(str(e))
+        finally:
+            self._on_finished()
 
     def stop(self):
-        self._process.terminate()
-        self._process.wait()
+        # could be None of Popen fails
+        if self._process is not None:
+            self._process.terminate()
+            self._process.wait()
         self.join()

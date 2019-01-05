@@ -1,9 +1,9 @@
-from django.contrib.auth import get_user_model
+import os
 
 from django.core.management.commands import migrate
 from vpnathome.settings import USER_SETTINGS
 from vpnathome.tests import is_running_under_test
-from vpnathome import ensure_path_dirs
+from vpnathome import ensure_path_dirs, get_data_path
 
 
 class Command(migrate.Command):
@@ -21,7 +21,7 @@ class Command(migrate.Command):
             print("Running 'migrate' under test - skipping configuration check.")
             return True
         elif not USER_SETTINGS.is_configured:
-            print("Running 'migrate' without settings.json - aborting migration.")
+            print(f"Running 'migrate' without settings.json in {get_data_path('')} - aborting migration.")
             print("")
             print(self.not_configured_hint)
             return False

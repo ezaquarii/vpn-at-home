@@ -2,14 +2,26 @@ Source: vpnathome
 Section: admin
 Priority: optional
 Maintainer: Chris Narkiewicz <hello@ezaquarii.com>
-Build-Depends: debhelper (>= 10), make (>= 4), python3 (>= 3.6), python3-dev (>= 3.6), devscripts (>= 2.17), debhelper (>= 11), sudo, python3-virtualenv (>= 15), virtualenv (>= 15), build-essential (>= 12)
+Build-Depends: debhelper (>= 10),
+	make (>= 4),
+	python3 (>= 3.6),
+	python3-pip (>= 9.0.1),
+	python3-dev (>= 3.6),
+	python3-wheel (>= 0.30),
+	python3-venv (>= 3.6),
+	devscripts (>= 2.17),
+	debhelper (>= 11),
+	sudo,
+	dh-virtualenv (>= 1.0),
+	libffi-dev (>= 2.14),
+	libssl-dev
 Standards-Version: 4.1.2
 Homepage: https://github.com/ezaquarii/vpn-at-home/
 Vcs-Git: https://github.com/ezaquarii/vpn-at-home.git
 
 Package: vpnathome
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, openssl (>= 1.1.0), openvpn (>= 2.4.4), ansible (>=2.5.0), openssh-client (>=7.0)
+Depends: ${misc:Depends}, ${shlibs:Depends}, openssl (>= 1.1.0), openvpn (>= 2.4.4), ansible (>=2.5.0), openssh-client (>=7.0), python3
 Description: Web OpenVPN Management UI
  This app provides easy management console to keep OpenVPN
  configuration files in one place, provided in self-contained,
