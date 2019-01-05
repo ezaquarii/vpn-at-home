@@ -1,4 +1,4 @@
-vpnathome (2.0.0-1) unstable; urgency=medium
+vpnathome (2.0.0-1) bionic; urgency=medium
 
   * Added DNS sinkhole functionality
   * Reworked settings page
