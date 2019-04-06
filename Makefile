@@ -1,3 +1,7 @@
+SHELL := /bin/bash
+PATH := $(PWD)/bin:$(PATH)
+ENV := env
+PYTHON := $(ENV)/bin/python3
 
 .PHONY: devel devel_backend distclean runserver install install_backend install_virtualenv install_etc deb install_deb uninstall_deb
 
@@ -32,7 +36,7 @@ distclean:
 
 env:
 	python3 -m venv env
-	env/bin/pip install --no-cache --no-index --find-links=pypi -r requirements.txt
+	$(PYTHON) env/bin/pip install --no-cache --no-index --find-links=pypi -r requirements.txt
 	ln -s $(CURDIR)/backend/vpnathome "`find env -name site-packages`"
 	ln -sr bin/manage.py env/bin/
 	ln -sr bin/deploy_vpn.sh env/bin/
@@ -56,10 +60,10 @@ purge_deb:
 	sudo dpkg --purge vpnathome
 
 runserver:
-	bin/manage.py runserver --insecure 8001
+	$(PYTHON) env/bin/manage.py runserver --insecure 8001
 
 test_backend:
-	bin/manage.py test vpnathome
+	$(PYTHON) env/bin/manage.py test vpnathome
 
 test_frontend:
 	$(MAKE) -C frontend test
