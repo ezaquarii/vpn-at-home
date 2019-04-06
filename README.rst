@@ -5,11 +5,11 @@ VPN@Home
 .. raw:: html
 
     <center>
+        <a href="https://t.me/vpnathome"><img src="https://img.shields.io/badge/Telegram%20Chat-Online-success.svg"></a>
         <a href="https://discord.gg/h9EMSrh"><img src="https://img.shields.io/discord/526929259751800832.svg"></a>
         <a href="./LICENCE.txt"><img src="https://img.shields.io/badge/license-GPL3-blue.svg"></a>
         <a href="https://www.vultr.com/?ref=7515725"><img src="https://img.shields.io/badge/use-vultr-brightgreen.svg"></a>
         <a href="https://www.patreon.com/ezaquarii"><img src="https://img.shields.io/badge/donate-patreon-brightgreen.svg"></a>
-        <a href="https://travis-ci.org/ezaquarii/vpn-at-home.svg?branch=master"><img src="https://travis-ci.org/ezaquarii/vpn-at-home.svg?branch=master"></a>
     </center>
     <center>
         <a href="https://vimeo.com/308879491"><img src="vimeo.png" width="512"></a>

@@ -5,8 +5,9 @@ MAIN_PKG_DIR = dirname(__file__)
 ROOT_DIR = abspath(join(dirname(__file__), '../..'))
 VIRTUAL_ENV_DIR = environ.get('VIRTUAL_ENV') or ''
 DATA_DIR = join(getcwd(), 'data')
-FRONTEND_DIR = join(ROOT_DIR, 'frontend')
-VERSION = "2.0.0"
+FRONTEND_DIR = abspath(join(ROOT_DIR, '../../../', 'frontend')) # we need to get out of venv into root dirs
+VERSION = "2.0.1"
+
 
 def get_root_path(file_path):
     """

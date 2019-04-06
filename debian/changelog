@@ -1,3 +1,9 @@
+vpnathome (2.0.1-1) bionic; urgency=medium
+
+  * Fixed devel deployment
+
+ -- Chris Narkiewicz <hello@ezaquarii.com>  Tue, 06 Mar 2019 22:00:00 +0100
+
 vpnathome (2.0.0-1) bionic; urgency=medium
 
   * Added DNS sinkhole functionality
