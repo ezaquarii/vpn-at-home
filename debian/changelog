@@ -1,14 +1,17 @@
 vpnathome (2.0.2-1) unstable; urgency=medium
 
-  * Fixed deployment when running server via make runserver
+  * Fixed make runserver target
+  * Added install_dependencies Makefile target
+  * Updated hopelessly outdated README
+  * Removed unmaintained docker files (broken anyway)
 
- -- Chris Narkiewicz <hello@ezaquarii.com>  Sun, 08 Apr 2019 13:55:00 +0100
+ -- Chris Narkiewicz <hello@ezaquarii.com>  Sun, 07 Apr 2019 13:55:00 +0100
 
 vpnathome (2.0.1-1) unstable; urgency=medium
 
   * Fixed devel deployment
 
- -- Chris Narkiewicz <hello@ezaquarii.com>  Sun, 07 Apr 2019 01:51:09 +0100
+ -- Chris Narkiewicz <hello@ezaquarii.com>  Sun, 06 Apr 2019 01:51:09 +0100
 
 vpnathome (2.0.0-1) unstable; urgency=medium
 
