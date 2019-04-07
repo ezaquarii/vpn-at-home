@@ -1,6 +1,5 @@
-========
-VPN@Home
-========
+VPN​@​Home - 2.0.2
+==================
 
 .. raw:: html
 
@@ -17,8 +16,34 @@ VPN@Home
 TL;DR
 =====
 
+What?
+-----
+
 1-click deployment of OpenVPN with DNS ad blocking sinkhole. Deploys to your favorite VPS machine.
 Created with **Vue.js**, **Semantic UI** and **Django**. And with love, of course.
+
+Where I can find packages
+-------------------------
+
+Ubuntu 18.04 users can use pre-built packages:
+
+::
+
+    $ sudo add-apt-repository ppa:ezaquarii/packages
+    $ sudo apt-get update
+    $ sudo apt-get install vpnathome
+    $ firefox http://localhost:8000
+
+Ubuntu Disco Dingo 19.04 will follow soon.
+Other distro dwellers must follow manual instructions found below.
+
+What if I need halp!
+--------------------
+
+You can ask on `Telegram group chat <https://t.me/vpnathome>`_ or mail me (e-mail in git history).
+
+Show me the screenshots
+-----------------------
 
 .. image:: home.png
    :width: 512
@@ -96,6 +121,16 @@ via SSH tunnel. This way you don't need to configure SSL certificate and a lot o
 headaches go away.
 
 I use it installed on my private laptop, the same way I use CUPS (printer stuff, aka localhost-colon-six-three-one).
+
+**Why it contains those tar.gz files in pypi directory?**
+
+1. To enable offline builds;
+2. To ship entire app in form of a source code, which is required by Launchpad;
+3. To have reproducible builds, independent from external repositories;
+
+Please read about
+`npm package that broke the internet <https://duckduckgo.com/?q=npm+package+that+broke+the+internet>`_ to undestand
+the downside of pulling your dependencies from 3rd party sources during build time.
 
 **How to change server address after it is created?**
 
