@@ -12,7 +12,7 @@ setup(
     version='2.0.0',
     include_package_data=True,
     package_data={'': ['*/*', '*/*/*', '*/*/*/*', '*/*/*/*/*']},  # nasty hack
-    scripts=['bin/init.sh', 'bin/manage.py', 'bin/run_daphne.sh', 'bin/deploy_vpn.sh', 'bin/inventory.sh'],
+    scripts=['scripts/init.sh', 'scripts/manage.py', 'scripts/run_daphne.sh', 'scripts/deploy_vpn.sh', 'scripts/inventory.sh'],
     license='GPL-3',
     description='1-click, self-hosted deployment of OpenVPN with DNS ad blocking sinkhole',
     url='https://github.com/ezaquarii/vpn-at-home',
