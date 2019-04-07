@@ -9,15 +9,16 @@ all:
 	@echo "Welcome to VPN@Home make system"
 	@echo
 	@echo "Available top-level targets:"
-	@echo " * devel            - bootstrap both projects for development"
-	@echo "   * devel_backend  - bootstrap backend for development (dependency of devel)"
-	@echo "   * devel_frontend - bootstrap frontend for development (dependency of devel)"
-	@echo " * distclean        - clean projects, delete all data (start from 'git clone' state)"
-	@echo " * runserver        - run development server (manage.py runserver)"
-	@echo " * deb              - build debian package"
-	@echo "   * remove_deb     - remove installed Debian package"
-	@echo "   * purge_deb      - purge installed Debian package"
-	@echo "   * install_deb    - install previously built debian package"
+	@echo " * devel              - bootstrap both projects for development"
+	@echo "   * devel_backend    - bootstrap backend for development (dependency of devel)"
+	@echo "   * devel_frontend   - bootstrap frontend for development (dependency of devel)"
+	@echo " * distclean          - clean projects, delete all data (start from 'git clone' state)"
+	@echo " * runserver          - run development server (manage.py runserver)"
+	@echo " * deb                - build debian package"
+	@echo "   * remove_deb       - remove installed Debian package"
+	@echo "   * purge_deb        - purge installed Debian package"
+	@echo "   * install_deb      - install previously built debian package"
+	@echo " * install_build_deps - convenient shortcut to install deb build dependencies"
 
 devel: devel_backend devel_frontend
 	@echo "Development environment is ready"
@@ -45,6 +46,30 @@ env:
 
 docker:
 	docker build -t vpnathome .
+
+install_build_deps:
+	sudo apt install \
+		debhelper \
+		make \
+		python3 \
+		python3-pip \
+		python3-dev \
+		python3-wheel \
+		python3-venv \
+		devscripts \
+		debhelper \
+		sudo \
+		dh-virtualenv \
+		libffi-dev \
+		libssl-dev \
+		openvpn \
+		openssh-client \
+		ansible
+
+	@echo
+	@echo "You still need recent version of node.js. Use NVM to install it as the packaged version is too old."
+	@echo "Current recommended version is 10 (latest LTS)".
+	@echo
 
 deb:
 	git clean -fdx

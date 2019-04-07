@@ -155,6 +155,7 @@ After cloning the repository, you can easily deploy the app for development:
 
     $ git clone https://github.com/ezaquarii/vpn-at-home
     $ cd vpnathome
+    $ make install_build_deps  # apt-get only, other distros must do it manually
     $ make devel
     ... backend is bootstrapped ...
     ... frontend is bootstrapped ...
@@ -162,8 +163,8 @@ After cloning the repository, you can easily deploy the app for development:
 
 Open ``http://localhost:8001/`` and you should be able to log-in.
 
-For development - Docker
-~~~~~~~~~~~~~~~
+For development - Docker (unmaintained)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Works out of the box, no prerequisites besides docker needed
 
@@ -176,8 +177,8 @@ Works out of the box, no prerequisites besides docker needed
 .. _`install and start a development server`: DockerfileDev
 .. _`via a volume`: docker-compose.yml#L11
 
-For production - Docker
-~~~~~~~~~~~~~~~~~~~~~~~
+For production - Docker (unmaintained)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Docker container can be created with ``make``:
 
@@ -213,19 +214,10 @@ Open ``http://localhost:8000`` and follow on-boarding tutorial.
 The package needs virtually zero configuration:
 
 - ``deb`` is self-deployable, as it contains entire virtualenv
-- installs into ``/srv/vpnathome`` (referred to as ``${ROOT}``)
+- installs into ``/usr/lib/vpnathome`` (referred to as ``${ROOT}``)
 - ``systemd`` service script ``vpnathome.service`` is installed and starts by default
 - ``daphne`` runs on ``http://127.0.0.1:8000`` - bound to **localhost** only
-- Contains bootstrapping script to automate app configuration (``${ROOT}/bin/bootstrap.sh``)
-
-Building a package will call ``sudo`` and ask you for a password. Root privileges are required
-during Python virtual environment installation step, as we must ``sudo mount -o bind ...`` and
-``sudo umount ...`` virtualenv destination directory. Why? Unfortunately, Python 3 virtualenv
-relocation is not reliable (and discouraged), so I decided to hack a bit during the build process
-and bootstrap directly into destination directory before packaging. Refer to ``Makefile`` ``install``
-target for details.
-
-.. note:: If ``make deb`` fails for whatever reason, make sure ``/srv/vpnathome`` is left unmounted.
+- Contains bootstrapping script to automate app configuration (``${ROOT}/bin/init.sh``)
 
 OpenVPN server deployment
 ~~~~~~~~~~~~~~~~~~~~~~~~~
