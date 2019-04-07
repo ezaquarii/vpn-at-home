@@ -1,8 +1,17 @@
+vpnathome (2.0.2-1) bionic; urgency=medium
+
+  * Fixed make runserver target
+  * Added install_dependencies Makefile target
+  * Updated hopelessly outdated README
+  * Removed unmaintained docker files (broken anyway)
+
+ -- Chris Narkiewicz <hello@ezaquarii.com>  Sun, 07 Apr 2019 13:55:00 +0100
+
 vpnathome (2.0.1-1) bionic; urgency=medium
 
   * Fixed devel deployment
 
- -- Chris Narkiewicz <hello@ezaquarii.com>  Tue, 06 Mar 2019 22:00:00 +0100
+ -- Chris Narkiewicz <hello@ezaquarii.com>  Sun, 06 Apr 2019 01:51:09 +0100
 
 vpnathome (2.0.0-1) bionic; urgency=medium
 

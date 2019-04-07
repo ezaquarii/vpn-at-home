@@ -6,7 +6,6 @@ VPN@Home
 
     <center>
         <a href="https://t.me/vpnathome"><img src="https://img.shields.io/badge/Telegram%20Chat-Online-success.svg"></a>
-        <a href="https://discord.gg/h9EMSrh"><img src="https://img.shields.io/discord/526929259751800832.svg"></a>
         <a href="./LICENCE.txt"><img src="https://img.shields.io/badge/license-GPL3-blue.svg"></a>
         <a href="https://www.vultr.com/?ref=7515725"><img src="https://img.shields.io/badge/use-vultr-brightgreen.svg"></a>
         <a href="https://www.patreon.com/ezaquarii"><img src="https://img.shields.io/badge/donate-patreon-brightgreen.svg"></a>
@@ -154,46 +153,20 @@ After cloning the repository, you can easily deploy the app for development:
 ::
 
     $ git clone https://github.com/ezaquarii/vpn-at-home
-    $ cd vpnathome
+    $ cd vpn-at-home
+    $ make install_dependencies  # apt-get only, other distros must do it manually
+    ...follow instructions to install packages and Node.js...
+    $ exec bash  # reload your shell to update $PATH and reload bashrc, so Node.js works, exec will replace the process
     $ make devel
     ... backend is bootstrapped ...
     ... frontend is bootstrapped ...
     $ make runserver
 
-Open ``http://localhost:8001/`` and you should be able to log-in.
+Open ``http://localhost:8001/`` and you should be able to log-in. Your app data
+(config, ssh keys, etc) is stored in ``data`` directory in project's root.
 
-For development - Docker
-~~~~~~~~~~~~~~~
-
-Works out of the box, no prerequisites besides docker needed
-
-#. Clone the repo and go to the vpnathome directory.
-#. Run ``docker-compose up``. Docker will `install and start a development server`_ for you.
-#. Now you can go to ``http://localhost:8001/`` and you will be able to login.
-#. Make some changes. The container will automatically pick them up `via a volume`_.
-#. After you saved the changes, you can refresh ``http://localhost:8001/`` and will see them immediately.
-
-.. _`install and start a development server`: DockerfileDev
-.. _`via a volume`: docker-compose.yml#L11
-
-For production - Docker
-~~~~~~~~~~~~~~~~~~~~~~~
-
-Docker container can be created with ``make``:
-
-::
-
-    $ make docker
-
-Created image will be tagged with name ``vpnathome``.
-You can launch a container with a helper script:
-
-::
-
-    $ ./bin/docker_run.sh bootstrap
-    $ ./bin/docker_run.sh run
-
-...or roll out your own fancy scripts for this. Data will be stored in a volume ``data``.
+If you completely mess up, delete data and run ``env/bin/init.sh`` to boostrap
+the app again.
 
 For production - Debian package
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -213,19 +186,11 @@ Open ``http://localhost:8000`` and follow on-boarding tutorial.
 The package needs virtually zero configuration:
 
 - ``deb`` is self-deployable, as it contains entire virtualenv
-- installs into ``/srv/vpnathome`` (referred to as ``${ROOT}``)
+- installs into ``/usr/lib/vpnathome`` (referred to as ``${ROOT}``)
 - ``systemd`` service script ``vpnathome.service`` is installed and starts by default
 - ``daphne`` runs on ``http://127.0.0.1:8000`` - bound to **localhost** only
-- Contains bootstrapping script to automate app configuration (``${ROOT}/bin/bootstrap.sh``)
-
-Building a package will call ``sudo`` and ask you for a password. Root privileges are required
-during Python virtual environment installation step, as we must ``sudo mount -o bind ...`` and
-``sudo umount ...`` virtualenv destination directory. Why? Unfortunately, Python 3 virtualenv
-relocation is not reliable (and discouraged), so I decided to hack a bit during the build process
-and bootstrap directly into destination directory before packaging. Refer to ``Makefile`` ``install``
-target for details.
-
-.. note:: If ``make deb`` fails for whatever reason, make sure ``/srv/vpnathome`` is left unmounted.
+- Application ``$HOME`` is ``/var/lib/vpnathome`` and all application data is stored there
+- Bootstrapping script to automate app configuration in located in ``/var/lib/vpnathome/init.sh``
 
 OpenVPN server deployment
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -233,27 +198,15 @@ OpenVPN server deployment
 Once the app is up and running, you can log in as admin (using credentials set during bootstrapping phase) and
 create your server.
 
-After a server is configured, you can deploy it using provided **Ansible** scripts. Beware that *Ansible* will modify
-the target system!
+After a server is configured, you can deploy it using provided **Ansible** scripts by clicking ``Deploy``
+option in server list. Beware that *Ansible* will modify the target system!
 
 #. required packages will be installed
 #. firewall rules will be altered
 #. IPv4 forwarding will be enabled
 
-It is advised to deploy the server on a remote machine, but you can do it on localhost too. I personally test it
-on Vultr VPS.
-
-::
-
-    $ ./bin/deploy_vpn.sh --help
-    Usage:
-    ./bin/deploy_vpn.sh [--help|--local|--host HOST]
-
-    --help  - usage
-    --local - deploy OpenVPN server on the current machine (localhost)
-    --host  - deploy selected OpenVPN server only
-
-If you deploy to a ``HOST``, it must be one of the defined VPN servers.
+If the app fails to log into a target system, make sure you have the correct SSH keys uploaded to the server
+(check out ``data/ssh`` directory).
 
 Configuration
 -------------
@@ -264,27 +217,37 @@ configuration:
 - Admin login is *admin@locahost*
 - Admin password is *admin1234*
 - Database is located in ``${PROJECT_ROOT}/data/db/db.sqlite3``
-- Settings have ``development`` flag set to true ``true``
+- Settings have ``development`` flag set to true ``true`` causing frontend code to be taken from ``frontend`` project
 
-To set new superuser, use ``./bin/manage set_admin <email> <pass>`` command.
+Activate Python virtualenv when before running ``manage.py``!
+To set new superuser, use ``${PROJECT_ROOT}/env/bin/manage.py set_admin <email> <pass>`` command.
 
 App config
 ~~~~~~~~~~
 
-Configuration is loaded from ``settings.json`` located in deployment directory. The settings file is generated
-during a bootstrap stage, so there is no need to generate it manually. However, should you need to generate the
-script during development, you can do it with a supplied Django management command:
+Configuration is loaded from ``settings.json`` located in ``data`` directory in the current working directory.
+
+The settings file is generated during bootstrap stage (``init.sh``), so there is no need to generate it
+manually. However, should you need to generate the script during development, you can do it with a supplied
+Django management command:
 
 ::
 
-    $ ${ROOT}/bin/manage configure [--accept] [--devel] [--help] [--force]
+    $ source ${PROJECT_ROOT}/env/bin/activate  # activate Python virtual environment first!
+    $ ${PROJECT_ROOT}/env/bin/manage.py configure --help
 
-Once the file is generated (ie. after bootstrap), you must review and accept it by flipping the ``configured`` flag inside.
+Once the file is generated, you must review and accept it by flipping the ``configured`` flag.
+
+Alternative way is to run ``init.sh``:
+
+::
+
+    $ ${PROJECT_ROOT}/env/bin/init.sh [--no-smtp]
+
+Just follow the wizard. It will accept the configuration for you, so there is no need to flip the flag.
 
 .. note:: ``settings.json`` is excluded from Git repository, so you can safely put your real e-mail credentials there
           during development.
-
-You can also access **Django Admin** app, which is left enabled.
 
 OpenVPN config
 ~~~~~~~~~~~~~~
@@ -348,12 +311,18 @@ Provided ``Makefile``'s default target displays help:
 
     $ make
     Welcome to VPN@Home make system
-
-    Available targets:
-     * devel      - boostrap project for development (your first choice)
-     * virtualenv - install virtual environment and all dependencies
-     * runserver  - start development server
-     * test       - run full test suite
+    
+    Available top-level targets:
+     * install_dependencies - convenient shortcut to install build dependencies (packages and node.js)
+     * devel                - bootstrap both projects for development
+       * devel_backend      - bootstrap backend for development (dependency of devel)
+       * devel_frontend     - bootstrap frontend for development (dependency of devel)
+     * distclean            - clean projects, delete all data (start from 'git clone' state)
+     * runserver            - run development server (manage.py runserver)
+     * deb                  - build debian package
+       * remove_deb         - remove installed Debian package
+       * purge_deb          - purge installed Debian package
+       * install_deb        - install previously built debian package
 
 In development mode, frontend files are stored outside of this project, in ``frontend`` subproject. **Django** app
 will pick static and templates from frontend build directory.
