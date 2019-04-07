@@ -3,7 +3,7 @@ PATH := $(PWD)/bin:$(PATH)
 ENV := env
 PYTHON := $(ENV)/bin/python3
 
-.PHONY: devel devel_backend distclean runserver install install_backend install_virtualenv install_etc deb install_deb uninstall_deb foo
+.PHONY: devel devel_backend distclean runserver install install_backend install_virtualenv install_etc deb install_deb uninstall_deb
 
 all:
 	@echo "Welcome to VPN@Home make system"
@@ -44,9 +44,6 @@ env:
 	ln -sr scripts/deploy_vpn.sh env/bin/
 	ln -sr scripts/inventory.sh env/bin/
 	ln -sr scripts/init.sh env/bin/
-
-docker:
-	docker build -t vpnathome .
 
 install_dependencies:
 	@echo Installing packaged dependencies. You may be asked to type sudo passoword. It will
