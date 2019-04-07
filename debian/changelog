@@ -1,3 +1,9 @@
+vpnathome (2.0.2-1) unstable; urgency=medium
+
+  * Fixed deployment when running server via make runserver
+
+ -- Chris Narkiewicz <hello@ezaquarii.com>  Sun, 08 Apr 2019 13:55:00 +0100
+
 vpnathome (2.0.1-1) unstable; urgency=medium
 
   * Fixed devel deployment

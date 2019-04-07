@@ -1,12 +1,22 @@
 from os import getcwd, environ
 from os.path import abspath, dirname, join
+from distutils.sysconfig import get_python_lib
 
+
+def get_virtual_env_path():
+    return environ.get('VIRTUAL_ENV') or abspath(join(get_python_lib(), '../../../'))
+
+
+VIRTUALENV_PATH = get_virtual_env_path()
+ROOT_DIR = abspath(join(VIRTUALENV_PATH, '..'))
 MAIN_PKG_DIR = dirname(__file__)
-ROOT_DIR = abspath(join(dirname(__file__), '../..'))
-VIRTUAL_ENV_DIR = environ.get('VIRTUAL_ENV') or ''
 DATA_DIR = join(getcwd(), 'data')
-FRONTEND_DIR = abspath(join(ROOT_DIR, '../../../', 'frontend')) # we need to get out of venv into root dirs
-VERSION = "2.0.1"
+FRONTEND_DIR = abspath(join(ROOT_DIR, 'frontend'))  # we need to get out of venv into root dirs
+VERSION = "2.0.2"
+
+
+def get_virtual_env_path():
+    return environ.get('VIRTUAL_ENV') or abspath(join(get_python_lib(), '../../../'))
 
 
 def get_root_path(file_path):
@@ -16,7 +26,7 @@ def get_root_path(file_path):
     :param file_path: File path relative to project's root directory
     :return: Absolute path to file or dir
     """
-    return abspath(join(ROOT_DIR, file_path))
+    return abspath(join(VIRTUALENV_PATH, '..', file_path))
 
 
 def get_bin_path(file_path):
@@ -27,7 +37,7 @@ def get_bin_path(file_path):
     :param file_path: File path relative to project's bin directory
     :return: Absolute path to file or dir
     """
-    venv = environ.get('VIRTUAL_ENV') or ''
+    venv = get_virtual_env_path()
     return abspath(join(venv, 'bin', file_path))
 
 
