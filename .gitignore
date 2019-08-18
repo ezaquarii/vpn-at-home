@@ -15,4 +15,4 @@ debian/debhelper-build-stamp
 debian/*.debhelper
 build
 .pydistutils.cfg
-
+.cache
