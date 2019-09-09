@@ -1,6 +1,6 @@
 import os
+import getpass
 from os.path import join, abspath
-import username
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import OperationalError
@@ -14,6 +14,10 @@ User = get_user_model()
 def get_init_sh_path():
     d = os.environ.get('VIRTUAL_ENV', '')
     return abspath(join(d, 'bin/init.sh')) if d else '${VIRTUAL_ENV}/bin/init.sh'
+
+
+def get_process_user():
+    return os.environ['SUDO_USER'] if 'SUDO_USER' in os.environ else getpass.getuser()
 
 
 class CheckIsAppReadyMiddleware:
@@ -32,7 +36,7 @@ class CheckIsAppReadyMiddleware:
                 'init_sh': get_init_sh_path(),
                 'working_dir': os.getcwd(),
                 'virtual_env': os.environ.get('VIRTUAL_ENV'),
-                'user': username.user
+                'user': get_process_user()
             }
             setattr(request, 'app_not_ready', context)
         return self.get_response(request)

@@ -45,7 +45,6 @@ sqlparse==0.3.0
 traitlets==4.3.2
 Twisted==19.7.0
 txaio==18.8.1
-username==2.0.2
 validators==0.13.0
 wcwidth==0.1.7
 zope.interface==4.6.0
