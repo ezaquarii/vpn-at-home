@@ -85,9 +85,9 @@ Features:
 #. 1-click deployment of OpenVPN server to your favorite VPS provider
 #. DNS cache and ad blocking for VPN connected clients
 #. OpenVPN clients management
-#. generation of self-contained ovpn profiles for servers and clients
-#. profiles can be sent by e-mail to owner or downloaded as files
-#. tested on Ubuntu 18.04 and OpenBSD 6.4 (Vultr VPS)
+#. Generation of self-contained ovpn profiles for servers and clients
+#. Profiles can be sent by e-mail to owner or downloaded as files
+#. Tested on Ubuntu 18.04 and OpenBSD 6.4 (Vultr VPS)
 
 That's all folks.
 
