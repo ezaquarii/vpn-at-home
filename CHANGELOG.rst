@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2019-12-27 - release 2.1.0
+--------------------------
+
+* Increased certificate key size to 4096
+* Certificate validity time can be set on creation
+* Upgraded Django to 2.2.9
+
 2019-08-18 - release 2.0.3
 --------------------------
 

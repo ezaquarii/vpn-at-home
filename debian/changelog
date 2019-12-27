@@ -1,3 +1,11 @@
+vpnathome (2.1.0-1) unstable; urgency=medium
+
+  * Increased certificate key size to 4096
+  * Certificate validity time can be set on creation
+  * Upgraded Django to 2.2.9
+
+ -- Chris Narkiewicz <hello@ezaquarii.com>  Sun, 27 Dec 2019 03:25:00 +0100
+
 vpnathome (2.0.3-1) unstable; urgency=medium
 
   * Updated dependencies to newest versions

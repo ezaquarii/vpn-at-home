@@ -13,11 +13,30 @@
                 <i aria-hidden="true" class="server icon"></i>
             </div>
         </div>
+        <div class="fields">
+            <div class="eight wide field">
+                <label>Certificate validity period</label>
+                <input v-model="form.validity_time" min="1" max="1000" type="number">
+            </div>
+            <div class="eight wide field">
+                <label>Time unit</label>
+                <select v-model="form.validity_time_unit">
+                    <option value="days">Days</option>
+                    <option value="months">Months</option>
+                    <option value="years">Years</option>
+                </select>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-import { required } from 'vuelidate/lib/validators';
+import { required, minValue, maxValue } from 'vuelidate/lib/validators';
+import _ from 'lodash';
+
+function isTimeUnitValid (value) {
+    return _.indexOf(['days', 'months', 'years'], value) !== -1;
+}
 
 export default {
     name: 'NewClientForm',
@@ -29,13 +48,22 @@ export default {
             open: false,
             form: {
                 name: '',
-                server: this.servers[0].id
+                server: this.servers[0].id,
+                validity_time: 1,
+                validity_time_unit: 'years'
             }
         };
     },
     validations: {
         form: {
-            name: { required }
+            name: { required },
+            validity_time: {
+                minValue: minValue(1),
+                maxValue: maxValue(1000)
+            },
+            validity_time_unit: {
+                timeUnitValid: isTimeUnitValid
+            }
         }
     },
     computed: {

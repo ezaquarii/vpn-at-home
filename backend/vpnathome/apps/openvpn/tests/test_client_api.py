@@ -1,6 +1,8 @@
 from django.test.utils import override_settings
 from django.urls import reverse
 
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
 from rest_framework import status
 
 from vpnathome.apps.management.models import Settings
@@ -43,8 +45,8 @@ class CreateClientPermissions(Fixture):
 
 class CreateClient(Fixture):
 
-    create_client_dto_1 = dict(name='Client 1')
-    create_client_dto_2 = dict(name='Client 2')
+    create_client_dto_1 = dict(name='Client 1', validity_time=7, validity_time_unit='days')
+    create_client_dto_2 = dict(name='Client 2', validity_time=7, validity_time_unit='years')
 
     def setUp(self):
         super().setUp()
@@ -63,6 +65,22 @@ class CreateClient(Fixture):
     def test_created_client_has_proper_name(self):
         self.assertEqual(self.client_1.name, self.create_client_dto_1['name'])
         self.assertEqual(self.client_2.name, self.create_client_dto_2['name'])
+
+    def test_created_client_with_valididty_time(self):
+        self.assertEqual(self.client_1.name, self.create_client_dto_1['name'])
+        self.assertEqual(self.client_2.name, self.create_client_dto_2['name'])
+
+    def test_created_with_custom_validity_end(self):
+        end = self.client_1.cert.validity_end
+        start = self.client_1.cert.validity_start
+        delta = end - start
+        self.assertTrue(delta.days >= 7)
+        self.assertTrue(delta.days <= 8)
+
+        end = self.client_2.cert.validity_end
+        start = self.client_2.cert.validity_start
+        delta = end - start
+        self.assertTrue(delta.days >= 7 * 365)
 
     def test_cannot_create_client_without_server(self):
         Server.objects.all().delete()

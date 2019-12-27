@@ -12,7 +12,7 @@ ROOT_DIR = abspath(join(VIRTUALENV_PATH, '..'))
 MAIN_PKG_DIR = dirname(__file__)
 DATA_DIR = join(getcwd(), 'data')
 FRONTEND_DIR = abspath(join(ROOT_DIR, 'frontend'))  # we need to get out of venv into root dirs
-VERSION = "2.0.3"
+VERSION = "2.1.0"
 
 
 def get_virtual_env_path():

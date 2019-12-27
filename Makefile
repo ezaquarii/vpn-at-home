@@ -58,6 +58,7 @@ install_dependencies:
 		python3-venv \
 		devscripts \
 		debhelper \
+		dialog \
 		sudo \
 		dh-virtualenv \
 		libffi-dev \

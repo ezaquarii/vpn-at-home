@@ -1,4 +1,4 @@
-VPN​@​Home - 2.0.3
+VPN​@​Home - 2.1.0
 ==================
 
 .. raw:: html
@@ -34,8 +34,8 @@ Ubuntu 18.04 users can use pre-built packages:
     $ sudo apt-get install vpnathome
     $ firefox http://localhost:8000
 
-Ubuntu Disco Dingo 19.04 will follow soon.
 Other distro dwellers must follow manual instructions found below.
+Debian package building is automated, so there should be no trouble.
 
 What if I need halp!
 --------------------

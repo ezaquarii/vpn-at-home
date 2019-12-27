@@ -34,6 +34,20 @@
                 <i aria-hidden="true" class="server icon"></i>
             </div>
         </div>
+        <div class="fields">
+            <div class="eight wide field">
+                <label>Certificate validity period</label>
+                <input v-model="form.validity_time" min="1" max="1000" type="number">
+            </div>
+            <div class="eight wide field">
+                <label>Time unit</label>
+                <select v-model="form.validity_time_unit">
+                    <option value="days">Days</option>
+                    <option value="months">Months</option>
+                    <option value="years">Years</option>
+                </select>
+            </div>
+        </div>
         <div class="field">
             <div class="ui checked checkbox">
                 <input v-model="form.deploy_dns" type="checkbox">
@@ -44,7 +58,12 @@
 </template>
 
 <script>
-import { required } from 'vuelidate/lib/validators';
+import { maxValue, minValue, required } from 'vuelidate/lib/validators';
+import _ from 'lodash';
+
+function isTimeUnitValid (value) {
+    return _.indexOf(['days', 'months', 'years'], value) !== -1;
+}
 
 export default {
     name: 'NewServerForm',
@@ -57,7 +76,9 @@ export default {
                 port: 1194,
                 protocol: 'udp',
                 network: '172.30.0.0/16',
-                deploy_dns: false
+                deploy_dns: false,
+                validity_time: 1,
+                validity_time_unit: 'years'
             }
         };
     },
@@ -68,7 +89,14 @@ export default {
             port: { required },
             protocol: { required },
             network: { required },
-            deploy_dns: { required }
+            deploy_dns: { required },
+            validity_time: {
+                minValue: minValue(1),
+                maxValue: maxValue(1000)
+            },
+            validity_time_unit: {
+                timeUnitValid: isTimeUnitValid
+            }
         }
     },
     computed: {
