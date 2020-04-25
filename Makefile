@@ -52,6 +52,7 @@ distclean:
 
 env:
 	python3 -m venv env
+	$(PYTHON) env/bin/pip install pypi/wheel*tar.gz
 	$(PYTHON) env/bin/pip install --no-cache --no-index --find-links=pypi -r requirements.txt
 	ln -s $(CURDIR)/backend/vpnathome "`find env -name site-packages`"
 	ln -sr scripts/manage.py env/bin/
