@@ -12,7 +12,6 @@ Build-Depends: debhelper (>= 10),
 	devscripts (>= 2.17),
 	debhelper (>= 11),
 	sudo,
-	dh-virtualenv (>= 1.0),
 	libffi-dev (>= 2.14),
 	libssl-dev
 Standards-Version: 4.1.2

@@ -34,7 +34,21 @@ distclean:
 	@echo
 	@echo "Cleaning working directory"
 	@echo
-	git clean -fdx
+	rm -rf .cache
+	rm -rf .idea
+	rm -rf .pydistutils.cfg
+	rm -rf build/
+	rm -rf debian/.debhelper/
+	rm -rf debian/debhelper-build-stamp
+	rm -rf debian/files
+	rm -rf debian/vpnathome.postinst.debhelper
+	rm -rf debian/vpnathome.postrm.debhelper
+	rm -rf debian/vpnathome.prerm.debhelper
+	rm -rf debian/vpnathome.substvars
+	rm -rf debian/vpnathome/
+	rm -rf dist/
+	rm -rf env/
+	rm -rf vpnathome.egg-info/
 
 env:
 	python3 -m venv env
@@ -60,7 +74,6 @@ install_dependencies:
 		debhelper \
 		dialog \
 		sudo \
-		dh-virtualenv \
 		libffi-dev \
 		libssl-dev \
 		openvpn \
@@ -111,3 +124,17 @@ test_backend:
 
 test_frontend:
 	$(MAKE) -C frontend test
+
+.PHONY: build
+build:
+	(echo '[easy_install]'; \
+	 echo 'find_links = file://$(PWD)/pypi/') \
+		>$(PWD)/.pydistutils.cfg
+	python3 -m venv env
+	HOME=$(PWD) $(PYTHON) env/bin/pip install pypi/wheel*tar.gz
+	HOME=$(PWD) $(PYTHON) env/bin/pip install --no-cache --no-index --find-links=pypi -r requirements.txt
+	$(PYTHON) setup.py install
+
+build.stamp: build
+install: build.stamp
+	$(CURDIR)/install_venv.sh env ${DESTDIR}/

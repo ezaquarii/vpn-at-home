@@ -1,22 +1,4 @@
 #!/usr/bin/make -f
 
-export DH_VIRTUALENV_INSTALL_ROOT=/usr/lib/vpnathome/
-
 %:
-	dh $@ --with python-virtualenv
-
-override_dh_virtualenv:
-	echo $(PWD)
-	(echo '[easy_install]'; \
-	 echo "allow_hosts = ''"; \
-	 echo 'find_links = file://$(PWD)/pypi/') \
-		>$(PWD)/.pydistutils.cfg
-	HOME=$(PWD) dh_virtualenv --python /usr/bin/python3 \
-	              --install-suffix='venv' \
-	              --builtin-venv \
-	              --upgrade-pip \
-	              --extra-pip-arg --no-cache \
-	              --extra-pip-arg --no-index \
-	              --extra-pip-arg --find-links=pypi \
-		          --extra-pip-arg --verbose \
-	              --requirements=requirements.txt
+	dh $@

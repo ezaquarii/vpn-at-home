@@ -9,7 +9,7 @@ setup(
     name='vpnathome',
     packages=find_packages(where='backend'),
     package_dir={'vpnathome': 'backend/vpnathome'},
-    version='2.0.0',
+    version='2.1.0',
     include_package_data=True,
     package_data={'': ['*/*', '*/*/*', '*/*/*/*', '*/*/*/*/*']},  # nasty hack
     scripts=['scripts/init.sh', 'scripts/manage.py', 'scripts/run_daphne.sh', 'scripts/deploy_vpn.sh', 'scripts/inventory.sh'],
