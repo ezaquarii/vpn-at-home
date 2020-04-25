@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2019-04-25 - release 2.1.1
+--------------------------
+
+ * Removed dependency on dh_virtualenv
+ * Package compiledon Ubuntu 20.04
+
 2019-12-27 - release 2.1.0
 --------------------------
 

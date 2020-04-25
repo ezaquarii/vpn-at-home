@@ -1,3 +1,10 @@
+vpnathome (2.1.1-1) unstable; urgency=medium
+
+  * Removed dependency on dh_virtualenv
+  * Package compiledon Ubuntu 20.04
+
+ -- Chris Narkiewicz <hello@ezaquarii.com>  Fri, 25 Apr 2020 04:30:00 +0100
+
 vpnathome (2.1.0-1) unstable; urgency=medium
 
   * Increased certificate key size to 4096
