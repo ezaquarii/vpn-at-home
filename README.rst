@@ -25,7 +25,7 @@ Created with **Vue.js**, **Semantic UI** and **Django**. And with love, of cours
 Where I can find packages
 -------------------------
 
-Ubuntu 18.04 users can use pre-built packages:
+Ubuntu 20.04 users can use pre-built packages:
 
 ::
 
@@ -36,6 +36,10 @@ Ubuntu 18.04 users can use pre-built packages:
 
 Other distro dwellers must follow manual instructions found below.
 Debian package building is automated, so there should be no trouble.
+
+I do not maintain older Ubuntu versions as I don't run them.
+There is a package for 18.04 that Launchpad built for me automatically,
+but it is known to be broken.
 
 What if I need halp!
 --------------------
