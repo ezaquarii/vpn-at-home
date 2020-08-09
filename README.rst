@@ -1,3 +1,8 @@
+This software is no longer supported
+====================================
+
+I'm no longer maintaining this software.
+
 VPN​@​Home - 2.1.1
 ==================
 
